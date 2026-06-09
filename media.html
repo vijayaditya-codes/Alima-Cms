@@ -1,6 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
+  <!-- Inline Head Theme Script to prevent flash -->
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('alima-theme') || 'dark';
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Alima CMS - Media Library</title>
@@ -12,13 +24,14 @@
   
   <style>
     body {
-      background-color: #f8f9fc;
-      color: #111827;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      transition: background-color var(--transition-normal), color var(--transition-normal);
     }
 
     /* Upload Drag zone */
     .upload-container {
-      background: #ffffff;
+      background: var(--bg-card);
       border: 2px dashed var(--border-color-light);
       border-radius: var(--radius-card);
       padding: 40px;
@@ -81,7 +94,7 @@
     }
 
     .media-card {
-      background: #ffffff;
+      background: var(--bg-card);
       border: 1px solid var(--border-color-light);
       border-radius: var(--radius-card);
       overflow: hidden;
@@ -364,7 +377,7 @@
 
       if (mediaFiles.length === 0) {
         container.innerHTML = `
-          <div style="grid-column: 1 / -1; text-align: center; padding: 48px; background: white; border: 1px dashed var(--border-color-light); border-radius: var(--radius-card); width: 100%;">
+          <div style="grid-column: 1 / -1; text-align: center; padding: 48px; background: var(--bg-card); border: 1px dashed var(--border-color-light); border-radius: var(--radius-card); width: 100%;">
             <span style="font-size: 3rem; display: block; margin-bottom: 16px;">🖼️</span>
             <h4 style="font-size: 1.2rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">No assets inside Media Library</h4>
             <p style="color: var(--text-muted); font-size: 0.9rem;">Click the zone above to upload your project assets.</p>

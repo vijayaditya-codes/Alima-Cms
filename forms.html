@@ -1,6 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
+  <!-- Inline Head Theme Script to prevent flash -->
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('alima-theme') || 'dark';
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Alima CMS - Form Builder</title>
@@ -12,8 +24,9 @@
   
   <style>
     body {
-      background-color: #f8f9fc;
-      color: #111827;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      transition: background-color var(--transition-normal), color var(--transition-normal);
     }
 
     /* Tabs Filter Categories */
@@ -65,7 +78,7 @@
     }
 
     .field-card {
-      background: #ffffff;
+      background: var(--bg-card);
       border: 1px solid var(--border-color-light);
       border-radius: var(--radius-card);
       padding: 20px;
@@ -135,7 +148,7 @@
 
     /* Live Preview Card */
     .preview-card {
-      background: #ffffff;
+      background: var(--bg-card);
       border: 1px solid var(--border-color-light);
       border-radius: var(--radius-card);
       padding: 32px;
@@ -156,7 +169,7 @@
 
     /* Submissions Hub Styles */
     .submissions-table-card {
-      background: #ffffff;
+      background: var(--bg-card);
       border: 1px solid var(--border-color-light);
       border-radius: var(--radius-card);
       padding: 24px;
@@ -206,7 +219,7 @@
     .empty-state {
       text-align: center;
       padding: 48px;
-      background: #ffffff;
+      background: var(--bg-card);
       border: 1px dashed var(--border-color-light);
       border-radius: var(--radius-card);
       width: 100%;

@@ -1,6 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
+  <!-- Inline Head Theme Script to prevent flash -->
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('alima-theme') || 'dark';
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Alima CMS - Themes</title>
@@ -12,8 +24,9 @@
   
   <style>
     body {
-      background-color: #f8f9fc;
-      color: #111827;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      transition: background-color var(--transition-normal), color var(--transition-normal);
     }
 
     /* Tabs Filter Categories */
@@ -51,7 +64,7 @@
     }
 
     .theme-card {
-      background: #ffffff;
+      background: var(--bg-card);
       border: 1px solid var(--border-color-light);
       border-radius: var(--radius-card);
       overflow: hidden;
@@ -131,7 +144,7 @@
       right: 0;
       width: 360px;
       height: 100vh;
-      background: #ffffff;
+      background: var(--bg-card);
       box-shadow: -8px 0 32px rgba(0, 0, 0, 0.1);
       z-index: 1001;
       transform: translateX(100%);
@@ -214,7 +227,7 @@
     }
 
     .layout-toggle-btn.active {
-      background: #ffffff;
+      background: var(--bg-card);
       color: var(--color-primary);
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     }

@@ -1,6 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
+  <!-- Inline Head Theme Script to prevent flash -->
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('alima-theme') || 'dark';
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Alima CMS - Page Builder</title>
@@ -12,17 +24,19 @@
   
   <style>
     body {
-      background-color: #e2e8f0;
+      background-color: var(--bg-surface);
       height: 100vh;
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      color: var(--text-main);
+      transition: background-color var(--transition-normal), color var(--transition-normal);
     }
 
     /* Top Utility Bar */
     .builder-topbar {
       height: 64px;
-      background: #ffffff;
+      background: var(--bg-card);
       border-bottom: 1px solid var(--border-color-light);
       display: flex;
       justify-content: space-between;
@@ -68,7 +82,7 @@
     /* Sidebar Panels */
     .builder-panel {
       width: 260px;
-      background: #ffffff;
+      background: var(--bg-card);
       border-right: 1px solid var(--border-color-light);
       display: flex;
       flex-direction: column;
@@ -148,7 +162,7 @@
     }
 
     .canvas-toolbar {
-      background: #ffffff;
+      background: var(--bg-card);
       border: 1px solid var(--border-color-light);
       border-radius: var(--radius-pill);
       padding: 4px 8px;
@@ -179,7 +193,7 @@
     .builder-canvas {
       width: 780px;
       min-height: 600px;
-      background: #ffffff;
+      background: var(--bg-card);
       border-radius: var(--radius-card);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
       padding: 40px;

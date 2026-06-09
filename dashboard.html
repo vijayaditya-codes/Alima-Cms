@@ -1,9 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Alima CMS - Dashboard</title>
+  
+  <!-- Inline Head Theme Script to prevent flash -->
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('alima-theme') || 'dark';
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
+
   <!-- Google Fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
   
@@ -11,10 +24,10 @@
   <link rel="stylesheet" href="design-system.css">
   
   <style>
-    /* Light Mode Main area overrides */
     body {
-      background-color: #f8f9fc;
-      color: #111827;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      transition: background-color var(--transition-normal), color var(--transition-normal);
     }
 
     /* Stats Row grid layout */
@@ -25,7 +38,7 @@
     }
 
     .stat-card {
-      background: #ffffff;
+      background: var(--bg-card);
       border: 1px solid var(--border-color-light);
       border-radius: var(--radius-card);
       padding: 24px;
@@ -72,7 +85,7 @@
     }
 
     .website-card {
-      background: #ffffff;
+      background: var(--bg-card);
       border: 1px solid var(--border-color-light);
       border-radius: var(--radius-card);
       overflow: hidden;
@@ -151,7 +164,7 @@
 
     /* Recent activities section */
     .activity-list {
-      background: white;
+      background: var(--bg-card);
       border: 1px solid var(--border-color-light);
       border-radius: var(--radius-card);
       padding: 24px;
@@ -283,7 +296,16 @@
       <!-- Top header bar -->
       <header style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color-light); padding-bottom: 16px;">
         <h2 style="font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px;">Dashboard</h2>
-        <button class="alima-btn btn-primary" onclick="openCreateWebModal()">+ New Website</button>
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <!-- Theme Toggle Button -->
+          <button class="theme-toggle-btn" id="theme-toggle" style="width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--border-color-light); background: var(--bg-card); color: var(--text-main); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease;">
+            <!-- Moon Icon (Default for dark theme) -->
+            <svg id="moon-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            <!-- Sun Icon -->
+            <svg id="sun-icon" style="display:none;" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </button>
+          <button class="alima-btn btn-primary" onclick="openCreateWebModal()">+ New Website</button>
+        </div>
       </header>
 
       <!-- Numeric Stats cards -->
@@ -471,7 +493,7 @@
 
       if (docs.length === 0) {
         grid.innerHTML = `
-          <div style="grid-column: 1 / -1; text-align: center; padding: 48px; background: white; border: 1px dashed var(--border-color-light); border-radius: var(--radius-card); width: 100%;">
+          <div style="grid-column: 1 / -1; text-align: center; padding: 48px; background: var(--bg-card); border: 1px dashed var(--border-color-light); border-radius: var(--radius-card); width: 100%;">
             <span style="font-size: 3rem; display: block; margin-bottom: 16px;">🌐</span>
             <h4 style="font-size: 1.2rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">No digital campus sites created yet</h4>
             <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Deploy your professional portfolio, blog, or departmental page on Alima.</p>

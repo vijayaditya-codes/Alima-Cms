@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alima | The Foundation of Your Digital Campus</title>
+  
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+  
+  <!-- Inline Head Theme Script to prevent flash -->
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('alima-theme') || 'dark';
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
+
+  <style>
+    /* Styling variables */
+    :root {
+      --font-heading: 'Plus Jakarta Sans', sans-serif;
+      --font-body: 'Inter', sans-serif;
+
+      --color-primary: #7c3aed;
+      --color-accent: #06b6d4;
+      --color-success: #10b981;
+      --color-warning: #f59e0b;
+      --color-error: #ef4444;
+
+      --bg-main: #f8f9fc;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      
+      --card-bg: #ffffff;
+      --card-border: #e5e7eb;
+      --nav-bg: rgba(248, 249, 252, 0.7);
+      --nav-border: rgba(17, 24, 39, 0.05);
+      --blob-opacity: 0.04;
+      --particle-color: rgba(124, 58, 237, 0.15);
+      
+      --gradient-primary: linear-gradient(135deg, #7c3aed 0%, #06b6d4 100%);
+      --gradient-primary-hover: linear-gradient(135deg, #9061f9 0%, #22d3ee 100%);
+      
+      --radius-card: 12px;
+      --radius-pill: 50px;
+      --shadow-standard: 0 4px 20px rgba(0, 0, 0, 0.03);
+      --shadow-hover: 0 10px 30px rgba(124, 58, 237, 0.08);
+
+      --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    html.dark {
+      --bg-main: #0a0a1a;
+      --text-main: #ffffff;
+      --text-muted: #94a3b8;
+      
+      --card-bg: rgba(255, 255, 255, 0.04);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --nav-bg: rgba(10, 10, 26, 0.7);
+      --nav-border: rgba(255, 255, 255, 0.08);
+      --blob-opacity: 0.12;
+      --particle-color: rgba(255, 255, 255, 0.3);
+      
+      --shadow-standard: 0 4px 24px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 10px 32px rgba(124, 58, 237, 0.15);
+    }
+
+    /* Core Resets */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      line-height: 1.5;
+      transition: background-color var(--transition-normal), color var(--transition-normal);
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+    }
+
+    /* Navbar styling */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 80px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5%;
+      border-bottom: 1px solid transparent;
+      transition: all var(--transition-normal);
+    }
+
+    .navbar.scrolled {
+      background: var(--nav-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--nav-border);
+      height: 70px;
+    }
+
+    .brand-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      background: var(--gradient-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 1.25rem;
+      font-family: var(--font-heading);
+      box-shadow: 0 4px 10px rgba(124, 58, 237, 0.3);
+    }
+
+    .brand-text {
+      font-size: 1.35rem;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    /* Buttons system */
+    .alima-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.925rem;
+      padding: 10px 24px;
+      border-radius: var(--radius-pill);
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      gap: 8px;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--gradient-primary);
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(124, 58, 237, 0.2);
+    }
+
+    .btn-primary:hover {
+      background: var(--gradient-primary-hover);
+      transform: translateY(-1.5px);
+      box-shadow: 0 6px 20px rgba(124, 58, 237, 0.3);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-main);
+      border: 1.5px solid var(--card-border);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(124, 58, 237, 0.05);
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+
+    .btn-link-action {
+      background: transparent;
+      color: var(--text-muted);
+      border: none;
+    }
+
+    .btn-link-action:hover {
+      color: var(--text-main);
+    }
+
+    /* Theme Toggle */
+    .theme-toggle-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1.5px solid var(--card-border);
+      background: var(--card-bg);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle-btn:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      transform: scale(1.05);
+    }
+
+    /* Hero Section */
+    .hero-section {
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 24px 80px;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    #hero-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    /* Radial Gradient Blobs */
+    .radial-blob {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: -1;
+      opacity: var(--blob-opacity);
+      filter: blur(140px);
+      transition: opacity var(--transition-normal);
+    }
+
+    .blob-purple {
+      width: 550px;
+      height: 550px;
+      background: radial-gradient(circle, #7c3aed 0%, rgba(124, 58, 237, 0) 70%);
+      bottom: -150px;
+      left: -150px;
+    }
+
+    .blob-cyan {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, #06b6d4 0%, rgba(6, 182, 212, 0) 70%);
+      top: -150px;
+      right: -150px;
+    }
+
+    .hero-content {
+      max-w: 880px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeUpEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes fadeUpEntrance {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .promo-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      background: rgba(124, 58, 237, 0.08);
+      color: var(--color-primary);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(124, 58, 237, 0.15);
+    }
+
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      line-height: 1.15;
+      letter-spacing: -1.5px;
+    }
+
+    .hero-title span {
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    @media (max-width: 768px) {
+      .hero-title { font-size: 2.5rem; }
+    }
+
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 680px;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .hero-small-text {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Bounce arrow indicator */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.5rem;
+      color: var(--text-muted);
+      animation: bounce 2s infinite;
+      cursor: pointer;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); }
+      40% { transform: translateY(-12px) translateX(-50%); }
+      60% { transform: translateY(-6px) translateX(-50%); }
+    }
+
+    /* Standard Layout section wrapper */
+    .section-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 100px 24px;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 60px;
+    }
+
+    .section-header h2 {
+      font-size: 2.25rem;
+      margin-bottom: 16px;
+    }
+
+    .section-header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+
+    /* Features Grid styling */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+    }
+
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-card);
+      padding: 36px;
+      box-shadow: var(--shadow-standard);
+      transition: all var(--transition-normal);
+      opacity: 0;
+      transform: translateY(40px);
+    }
+
+    .feature-card.reveal {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .feature-card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-4px);
+    }
+
+    .feature-card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(124, 58, 237, 0.08);
+      color: var(--color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 24px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 12px;
+    }
+
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    /* How It Works Section */
+    .steps-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      position: relative;
+    }
+
+    @media (max-width: 1024px) {
+      .steps-row { grid-template-columns: 1fr; gap: 40px; }
+    }
+
+    .step-card {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .step-card.reveal {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .step-circle {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--gradient-primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+      position: relative;
+    }
+
+    .step-card h3 {
+      font-size: 1.15rem;
+      margin-bottom: 10px;
+    }
+
+    .step-card p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      line-height: 1.6;
+      max-width: 200px;
+    }
+
+    /* Testimonials grid */
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .testimonial-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-card);
+      padding: 32px;
+      box-shadow: var(--shadow-standard);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      transition: all var(--transition-normal);
+    }
+
+    .testimonial-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .testimonial-quote {
+      font-size: 0.95rem;
+      color: var(--text-main);
+      font-style: italic;
+      line-height: 1.6;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: auto;
+    }
+
+    .author-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--gradient-primary);
+      color: white;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      box-shadow: 0 2px 8px rgba(124, 58, 237, 0.2);
+    }
+
+    .author-meta h4 {
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .author-meta span {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* CTA Section */
+    .cta-banner {
+      background: var(--gradient-dark);
+      text-align: center;
+      border-radius: 24px;
+      padding: 80px 40px;
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow-hover);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-banner h2 {
+      font-size: 2.5rem;
+      color: #ffffff;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Footer styling */
+    .footer {
+      border-top: 1px solid var(--card-border);
+      padding: 60px 5% 40px;
+      background: var(--bg-main);
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      transition: all var(--transition-normal);
+    }
+
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 40px;
+    }
+
+    .footer-brand {
+      max-width: 320px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .footer-tagline {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 60px;
+      flex-wrap: wrap;
+    }
+
+    .footer-column {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .footer-column h4 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-main);
+    }
+
+    .footer-column a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+
+    .footer-column a:hover {
+      color: var(--color-primary);
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--card-border);
+      padding-top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Fixed Header Navigation Bar -->
+  <nav class="navbar" id="navbar">
+    <a href="#" class="brand-link">
+      <div class="brand-icon">A</div>
+      <span class="brand-text">alima</span>
+    </a>
+    
+    <div class="nav-actions">
+      <!-- Dark/Light Mode Trigger -->
+      <button class="theme-toggle-btn" onclick="toggleTheme()" id="theme-btn">
+        <!-- Moon Icon (Default for dark theme) -->
+        <svg id="moon-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        <!-- Sun Icon -->
+        <svg id="sun-icon" style="display:none;" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+      </button>
+
+      <div class="nav-buttons-container" id="nav-buttons">
+        <a href="login.html" class="alima-btn btn-link-action">Sign in</a>
+        <a href="login.html" class="alima-btn btn-primary">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Fullscreen Animated Hero -->
+  <section class="hero-section">
+    <!-- Animated particle constellation -->
+    <canvas id="hero-canvas"></canvas>
+    
+    <!-- Ambient color blobs -->
+    <div class="radial-blob blob-purple"></div>
+    <div class="radial-blob blob-cyan"></div>
+
+    <div class="hero-content">
+      <div class="promo-badge">✦ The next generation CMS</div>
+      <h1 class="hero-title">Build your digital campus.<br><span>Without limits.</span></h1>
+      <p class="hero-subtitle">Alima gives you everything to create, manage and publish stunning websites — no coding needed.</p>
+      
+      <div class="hero-actions">
+        <a href="login.html" class="alima-btn btn-primary" id="hero-cta-button" style="padding: 14px 36px; font-size: 1rem;">Get Started Free →</a>
+        <a href="#features" class="alima-btn btn-ghost" style="padding: 14px 36px; font-size: 1rem;">See how it works</a>
+      </div>
+      <span class="hero-small-text">Free forever · No credit card · Ready in 60 seconds</span>
+    </div>
+
+    <!-- Bounce Down arrow -->
+    <div class="scroll-indicator" onclick="scrollToFeatures()">↓</div>
+  </section>
+
+  <!-- Features Grid Section -->
+  <section class="section-container" id="features">
+    <div class="section-header">
+      <h2>Everything you need. Nothing you don't.</h2>
+      <p>Configure complete sites using built-in high-performance CMS tools.</p>
+    </div>
+
+    <div class="features-grid">
+      <!-- 1 -->
+      <div class="feature-card">
+        <div class="feature-card-icon">🧩</div>
+        <h3>Drag & Drop Builder</h3>
+        <p>Build content layouts visually with text blocks, media objects, video streams, and responsive grid spacers.</p>
+      </div>
+      <!-- 2 -->
+      <div class="feature-card">
+        <div class="feature-card-icon">🎨</div>
+        <h3>10+ Beautiful Themes</h3>
+        <p>Start with a high-fidelity academic, blog, or department portfolio template built to fit design-system standards.</p>
+      </div>
+      <!-- 3 -->
+      <div class="feature-card">
+        <div class="feature-card-icon">🔗</div>
+        <h3>Custom Domains</h3>
+        <p>Assign custom subdomain routes instantly. Live domain redirects are supported in your publisher board.</p>
+      </div>
+      <!-- 4 -->
+      <div class="feature-card">
+        <div class="feature-card-icon">🖼</div>
+        <h3>Media Library</h3>
+        <p>Store, search, and delete media files. Resumable percent progress indicators track uploads in real-time.</p>
+      </div>
+      <!-- 5 -->
+      <div class="feature-card">
+        <div class="feature-card-icon">🔍</div>
+        <h3>Built-in SEO</h3>
+        <p>Edit metadata titles and page descriptions with counter rules. Simulate Google listings instantly.</p>
+      </div>
+      <!-- 6 -->
+      <div class="feature-card">
+        <div class="feature-card-icon">🚀</div>
+        <h3>Publish Instantly</h3>
+        <p>Trigger production sitemap builds and schedule releases. Publish multiple page updates in a single batch.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="section-container" style="border-top: 1px solid var(--card-border);">
+    <div class="section-header">
+      <h2>From zero to published in 4 steps</h2>
+      <p>Configure and launch page resources in minutes.</p>
+    </div>
+
+    <div class="steps-row">
+      <div class="step-card">
+        <div class="step-circle">1</div>
+        <h3>Sign up free</h3>
+        <p>Authenticate with Google Single Sign-On or standard campus email credentials.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-circle">2</div>
+        <h3>Choose a theme</h3>
+        <p>Select color swatches, font styles, and layouts in the theme visualizer drawer.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-circle">3</div>
+        <h3>Build your pages</h3>
+        <p>Drag content cards, write copy, upload media assets, and link inputs.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-circle">4</div>
+        <h3>Publish</h3>
+        <p>Take your page live instantly or set schedules for future releases.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="section-container" style="border-top: 1px solid var(--card-border);">
+    <div class="section-header">
+      <h2>Loved by administrators & scholars</h2>
+      <p>Hear what colleagues across departments say about Alima.</p>
+    </div>
+
+    <div class="testimonials-grid">
+      <!-- Testimonial 1 -->
+      <div class="testimonial-card">
+        <p class="testimonial-quote">"We created our biotechnology research group site in less than an hour. The media storage uploads and live sitemaps handled indexing automatically."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">SJ</div>
+          <div class="author-meta">
+            <h4>Dr. Sarah Jenkins</h4>
+            <span>Associate Professor, Biology</span>
+          </div>
+        </div>
+      </div>
+      <!-- Testimonial 2 -->
+      <div class="testimonial-card">
+        <p class="testimonial-quote">"Having the dynamic form builder integrated directly with submissions logs saved our admissions team weeks of data entries."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">MR</div>
+          <div class="author-meta">
+            <h4>Marcus Ross</h4>
+            <span>Admissions Coordinator</span>
+          </div>
+        </div>
+      </div>
+      <!-- Testimonial 3 -->
+      <div class="testimonial-card">
+        <p class="testimonial-quote">"The dark theme options and sitemaps are absolute lifesavers. Students love the responsive layouts on mobile."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">EC</div>
+          <div class="author-meta">
+            <h4>Elena Rostova</h4>
+            <span>CS Student Council</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA section banner -->
+  <section class="section-container">
+    <div class="cta-banner" style="background: linear-gradient(135deg, #0a0a1a 0%, #12122a 100%);">
+      <div class="radial-blob blob-purple" style="opacity: 0.15; left: 10%; bottom: -50px;"></div>
+      <h2>Ready to build your campus?</h2>
+      <a href="login.html" class="alima-btn btn-primary" id="section-cta-button" style="padding: 16px 40px; font-size: 1rem; position: relative; z-index: 2;">Get Started Free →</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#" class="brand-link">
+          <div class="brand-icon">A</div>
+          <span class="brand-text">alima</span>
+        </a>
+        <p class="footer-tagline">The Foundation of Your Digital Campus. Beautiful, responsive, and secure site-building tools.</p>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-column">
+          <h4>Product</h4>
+          <a href="#features">Features</a>
+          <a href="#">Pricing</a>
+          <a href="#">CMS Themes</a>
+        </div>
+        <div class="footer-column">
+          <h4>Resources</h4>
+          <a href="#">Guides</a>
+          <a href="#">Integrations</a>
+          <a href="#">University Portal</a>
+        </div>
+        <div class="footer-column">
+          <h4>Company</h4>
+          <a href="#">About Us</a>
+          <a href="#">Blog</a>
+          <a href="#">Support Contact</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2025 Alima. Built for the digital campus.</span>
+      <div style="display:flex; gap: 20px;">
+        <a href="#" style="color:var(--text-muted); text-decoration:none;">Privacy Policy</a>
+        <a href="#" style="color:var(--text-muted); text-decoration:none;">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Firebase CDN Script Module -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyC_N1xjjA1b31lFDsPf4pcIoPNuSSu0_lI",
+      authDomain: "alima-cms-8138.firebaseapp.com",
+      projectId: "alima-cms-8138",
+      storageBucket: "alima-cms-8138.firebasestorage.app",
+      messagingSenderId: "1023415028391",
+      appId: "1:1023415028391:web:f9e1f19a70f327cd696982"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, (user) => {
+      const navButtons = document.getElementById('nav-buttons');
+      if (user) {
+        if (navButtons) {
+          navButtons.innerHTML = `
+            <a href="dashboard.html" class="alima-btn btn-primary">Go to Dashboard →</a>
+          `;
+        }
+        
+        const heroCta = document.getElementById('hero-cta-button');
+        if (heroCta) {
+          heroCta.href = "dashboard.html";
+          heroCta.innerHTML = "Go to Dashboard →";
+        }
+        
+        const sectionCta = document.getElementById('section-cta-button');
+        if (sectionCta) {
+          sectionCta.href = "dashboard.html";
+          sectionCta.innerHTML = "Go to Dashboard →";
+        }
+      }
+    });
+  </script>
+
+  <script>
+    // 1. Scroll navbar blur trigger
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('navbar');
+      if (window.scrollY > 40) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+    });
+
+    // 2. Scroll button action
+    function scrollToFeatures() {
+      document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // 3. Theme toggle functions
+    function updateThemeIcon() {
+      const isDark = document.documentElement.classList.contains('dark');
+      const moon = document.getElementById('moon-icon');
+      const sun = document.getElementById('sun-icon');
+      if (isDark) {
+        moon.style.display = 'block';
+        sun.style.display = 'none';
+      } else {
+        moon.style.display = 'none';
+        sun.style.display = 'block';
+      }
+    }
+    updateThemeIcon();
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('alima-theme', isDark ? 'dark' : 'light');
+      updateThemeIcon();
+      
+      // Update canvas particle settings dynamically on theme change
+      if (window.initCanvasParticles) {
+        window.initCanvasParticles();
+      }
+    }
+
+    // 4. Scroll Reveal Animations (Intersection Observer)
+    const revealOptions = {
+      threshold: 0.15,
+      rootMargin: "0px 0px -50px 0px"
+    };
+
+    const cardObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('reveal');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, revealOptions);
+
+    document.querySelectorAll('.feature-card, .step-card').forEach(card => {
+      cardObserver.observe(card);
+    });
+
+    // 5. Hero Particle Constellation Loop
+    const canvas = document.getElementById('hero-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    const numParticles = 120;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.radius = Math.random() * 2 + 0.5;
+        this.vx = (Math.random() - 0.5) * 0.25;
+        this.vy = (Math.random() - 0.5) * 0.25;
+        this.alpha = Math.random() * 0.5 + 0.3;
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+
+        if (this.x < 0) this.x = canvas.width;
+        if (this.x > canvas.width) this.x = 0;
+        if (this.y < 0) this.y = canvas.height;
+        if (this.y > canvas.height) this.y = 0;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        
+        // Dynamic colors matching CSS variables
+        const isDark = document.documentElement.classList.contains('dark');
+        ctx.fillStyle = isDark ? '#ffffff' : '#7c3aed';
+        ctx.globalAlpha = isDark ? this.alpha : this.alpha * 0.3;
+        ctx.fill();
+        ctx.globalAlpha = 1.0;
+      }
+    }
+
+    function initCanvasParticles() {
+      particles = [];
+      for (let i = 0; i < numParticles; i++) {
+        particles.push(new Particle());
+      }
+    }
+    window.initCanvasParticles = initCanvasParticles;
+    initCanvasParticles();
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const isDark = document.documentElement.classList.contains('dark');
+
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+
+      // Connections lines draw
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const p1 = particles[i];
+          const p2 = particles[j];
+          const dx = p1.x - p2.x;
+          const dy = p1.y - p2.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < 110) {
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            const lineOpacity = (1 - dist / 110) * 0.12 * Math.min(p1.alpha, p2.alpha);
+            ctx.strokeStyle = isDark ? `rgba(255, 255, 255, ${lineOpacity})` : `rgba(124, 58, 237, ${lineOpacity})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+  </script>
+</body>
+</html>

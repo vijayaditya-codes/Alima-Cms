@@ -7,6 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize Sidebar Collapsing
   initSidebar();
   
+  // Initialize Theme System
+  initThemeToggle();
+  
   // Page load fade-in check
   document.body.classList.add('loaded');
 });
@@ -179,3 +182,55 @@ async function logActivity(action) {
 }
 
 window.logActivity = logActivity;
+
+/**
+ * 4. Theme System Management
+ */
+function initThemeToggle() {
+  const toggleBtns = document.querySelectorAll('.theme-toggle-btn, #theme-btn, #theme-toggle');
+  
+  // Set initial icon state on all buttons
+  updateThemeIcon();
+
+  toggleBtns.forEach(btn => {
+    // Avoid double bindings
+    if (btn.dataset.themeBound) return;
+    btn.dataset.themeBound = 'true';
+    
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleTheme();
+    });
+  });
+}
+
+function toggleTheme() {
+  const isDark = document.documentElement.classList.toggle('dark');
+  localStorage.setItem('alima-theme', isDark ? 'dark' : 'light');
+  updateThemeIcon();
+  
+  // Update canvas particles if they exist
+  if (window.initCanvasParticles) {
+    window.initCanvasParticles();
+  }
+}
+
+function updateThemeIcon() {
+  const isDark = document.documentElement.classList.contains('dark');
+  
+  const moonIcons = document.querySelectorAll('#moon-icon, .moon-icon');
+  const sunIcons = document.querySelectorAll('#sun-icon, .sun-icon');
+  
+  moonIcons.forEach(icon => {
+    icon.style.display = isDark ? 'block' : 'none';
+  });
+  
+  sunIcons.forEach(icon => {
+    icon.style.display = isDark ? 'none' : 'block';
+  });
+}
+
+// Bind to window for global scope accessibility
+window.initThemeToggle = initThemeToggle;
+window.toggleTheme = toggleTheme;
+window.updateThemeIcon = updateThemeIcon;
