@@ -662,6 +662,190 @@
       border-top: 1px solid var(--card-border);
       padding-top: 30px;
     }
+
+    /* Modal Styles */
+    .alima-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 10, 26, 0.4);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .alima-modal-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+    .alima-modal {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      width: 90%;
+      max-width: 550px;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-hover);
+      transform: translateY(20px);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .alima-modal-overlay.active .alima-modal {
+      transform: translateY(0);
+    }
+    .modal-header {
+      padding: 24px 24px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .modal-header h3 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      line-height: 1;
+      transition: color var(--transition-normal);
+    }
+    .modal-close:hover {
+      color: var(--text-main);
+    }
+    .modal-body {
+      padding: 24px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    
+    /* Support Form Styles */
+    .support-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 12px;
+    }
+    .support-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      text-align: left;
+    }
+    .support-input-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+    .support-input, .support-select, .support-textarea {
+      width: 100%;
+      background: var(--bg-main);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: var(--text-main);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
+    }
+    .support-input:focus, .support-select:focus, .support-textarea:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.15);
+    }
+    .support-textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    .support-btn {
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      transition: opacity var(--transition-normal), transform var(--transition-normal);
+    }
+    .support-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+    .support-btn:active {
+      transform: translateY(0);
+    }
+    .support-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+    .support-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--color-success);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .support-status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--color-success);
+      animation: pulse-dot 1.5s infinite;
+    }
+    @keyframes pulse-dot {
+      0% { transform: scale(0.8); opacity: 0.5; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(0.8); opacity: 0.5; }
+    }
+    .support-success-message {
+      text-align: center;
+      padding: 24px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      animation: fadeIn 0.4s ease forwards;
+    }
+    .success-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--color-success);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+    }
+    .spinner {
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top: 2px solid white;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -859,21 +1043,21 @@
       <div class="footer-links">
         <div class="footer-column">
           <h4>Product</h4>
-          <a href="#features">Features</a>
-          <a href="#">Pricing</a>
-          <a href="#">CMS Themes</a>
+          <a href="#features" onclick="openInfoModal('features', event)">Features</a>
+          <a href="#" onclick="openInfoModal('pricing', event)">Pricing</a>
+          <a href="#" onclick="openInfoModal('themes', event)">CMS Themes</a>
         </div>
         <div class="footer-column">
           <h4>Resources</h4>
-          <a href="#">Guides</a>
-          <a href="#">Integrations</a>
-          <a href="#">University Portal</a>
+          <a href="#" onclick="openInfoModal('guides', event)">Guides</a>
+          <a href="#" onclick="openInfoModal('integrations', event)">Integrations</a>
+          <a href="#" onclick="openInfoModal('portal', event)">University Portal</a>
         </div>
         <div class="footer-column">
           <h4>Company</h4>
-          <a href="#">About Us</a>
-          <a href="#">Blog</a>
-          <a href="#">Support Contact</a>
+          <a href="#" onclick="openInfoModal('about', event)">About Us</a>
+          <a href="#" onclick="openInfoModal('blog', event)">Blog</a>
+          <a href="#" onclick="openInfoModal('support', event)">Support Contact</a>
         </div>
       </div>
     </div>
@@ -881,8 +1065,8 @@
     <div class="footer-bottom">
       <span>© 2025 Alima. Built for the digital campus.</span>
       <div style="display:flex; gap: 20px;">
-        <a href="#" style="color:var(--text-muted); text-decoration:none;">Privacy Policy</a>
-        <a href="#" style="color:var(--text-muted); text-decoration:none;">Terms of Service</a>
+        <a href="#" style="color:var(--text-muted); text-decoration:none;" onclick="openInfoModal('privacy', event)">Privacy Policy</a>
+        <a href="#" style="color:var(--text-muted); text-decoration:none;" onclick="openInfoModal('terms', event)">Terms of Service</a>
       </div>
     </div>
   </footer>
@@ -1105,6 +1289,294 @@
         btn.style.transform = 'translate(0px, 0px) scale(1)';
       });
     });
+
+    // 8. Info Modal Dynamic Content Data
+    const modalData = {
+      features: {
+        title: "🧩 Alima Platform Features",
+        html: `
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <p>Alima CMS comes packed with powerful, high-performance tools built from the ground up for academic environments:</p>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:8px;">
+              <div style="background:var(--bg-main); padding:12px; border-radius:12px; border:1px solid var(--card-border);">
+                <strong style="color:var(--text-main); display:block; margin-bottom:4px;">🧩 Page Builder</strong>
+                Drag & drop headings, lists, images, galleries, map widgets, and custom code blocks visually.
+              </div>
+              <div style="background:var(--bg-main); padding:12px; border-radius:12px; border:1px solid var(--card-border);">
+                <strong style="color:var(--text-main); display:block; margin-bottom:4px;">🎨 CMS Themes</strong>
+                Choose from pro academic, blog, or business templates that support seamless light/dark rendering.
+              </div>
+              <div style="background:var(--bg-main); padding:12px; border-radius:12px; border:1px solid var(--card-border);">
+                <strong style="color:var(--text-main); display:block; margin-bottom:4px;">🔌 Modular Plugins</strong>
+                Configure Disqus comment sheets, Google Analytics streams, WhatsApp widgets, and email captures.
+              </div>
+              <div style="background:var(--bg-main); padding:12px; border-radius:12px; border:1px solid var(--card-border);">
+                <strong style="color:var(--text-main); display:block; margin-bottom:4px;">🚀 Instant Publishing</strong>
+                Schedule layouts launches, manage live site tags, and revert pages back to drafts in one click.
+              </div>
+            </div>
+          </div>
+        `
+      },
+      pricing: {
+        title: "💰 Simple, Transparent Pricing",
+        html: `
+          <div style="display:flex; flex-direction:column; gap:20px;">
+            <p>Alima CMS is built to serve departments of all sizes, offering high performance databases with clear boundaries:</p>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+              <div style="background:var(--bg-main); padding:16px; border-radius:12px; border:1px solid var(--card-border); display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <strong style="color:var(--text-main); font-size:1rem;">Campus Free</strong>
+                  <span style="display:block; font-size:0.75rem; color:var(--text-muted);">For individual portfolios and research labs</span>
+                </div>
+                <div style="text-align:right; font-weight:800; color:var(--color-primary); font-size:1.15rem;">Free Forever</div>
+              </div>
+              <div style="background:var(--bg-main); padding:16px; border-radius:12px; border:2px solid var(--color-primary); display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <strong style="color:var(--text-main); font-size:1rem;">Department Pro</strong>
+                  <span style="display:block; font-size:0.75rem; color:var(--text-muted);">For academic departments and corporate portals</span>
+                </div>
+                <div style="text-align:right; font-weight:800; color:var(--color-primary); font-size:1.15rem;">$29<span style="font-size:0.75rem; font-weight:600; color:var(--text-muted);">/mo</span></div>
+              </div>
+              <div style="background:var(--bg-main); padding:16px; border-radius:12px; border:1px solid var(--card-border); display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <strong style="color:var(--text-main); font-size:1rem;">Enterprise Campus</strong>
+                  <span style="display:block; font-size:0.75rem; color:var(--text-muted);">SSO integration, advanced SLA, custom Firestore scaling</span>
+                </div>
+                <div style="text-align:right; font-weight:800; color:var(--color-primary); font-size:1.15rem;">Custom</div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      themes: {
+        title: "🎨 Premium CMS Themes",
+        html: `
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <p>Our templates are structured around academic research requirements, supporting responsive design files, grids, and tables:</p>
+            <ul style="padding-left:20px; display:flex; flex-direction:column; gap:8px;">
+              <li><strong>AcademiaX (Education)</strong>: Classy layout with dark blue banners and amber borders designed for university course portals.</li>
+              <li><strong>Folio (Portfolio)</strong>: Minimalist CV grid using charcoal displays and cream cards to showcase scholar papers and portfolios.</li>
+              <li><strong>LaunchPad (Business)</strong>: Enterprise layout featuring high-contrast gradients and glowing components.</li>
+              <li><strong>InkFlow (Blog)</strong>: Clean, column-driven editorial layout prioritizing research publication blogs.</li>
+            </ul>
+          </div>
+        `
+      },
+      guides: {
+        title: "📚 University Site Builder Guides",
+        html: `
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <p>Explore step-by-step guides to design websites, configure settings, and deploy content securely:</p>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <a href="#" style="color:var(--color-primary); text-decoration:none; font-weight:600;">📖 Quick Start Deployment Manual</a>
+              <p style="font-size:0.8rem; margin-top:-6px; margin-bottom:6px;">Initialize websites and configure subdomains prefix settings inside 60 seconds.</p>
+              <a href="#" style="color:var(--color-primary); text-decoration:none; font-weight:600;">📖 Drag & Drop Builder Grid System</a>
+              <p style="font-size:0.8rem; margin-top:-6px; margin-bottom:6px;">Learn how to stack split layouts, custom CTA buttons, and embed YouTube media frames.</p>
+              <a href="#" style="color:var(--color-primary); text-decoration:none; font-weight:600;">📖 Activating Plugins & Analytics</a>
+              <p style="font-size:0.8rem; margin-top:-6px;">Sync tracking credentials and Disqus commentboards with Cloud Firestore maps.</p>
+            </div>
+          </div>
+        `
+      },
+      integrations: {
+        title: "🔌 Plugins & Custom Integrations",
+        html: `
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <p>Deploy interactive widgets directly on your digital campus sites without writing scripts:</p>
+            <ul style="padding-left:20px; display:flex; flex-direction:column; gap:8px;">
+              <li><strong>Google Analytics</strong>: Paste Tracking IDs to monitor active student traffic.</li>
+              <li><strong>Disqus Comment Boards</strong>: Provide interactive comment threads under blogs.</li>
+              <li><strong>WhatsApp Chat Button</strong>: Floating green widget redirects visitors to support.</li>
+              <li><strong>Newsletter Capture</strong>: Collect student email subscriptions with custom modal dialog overlays.</li>
+            </ul>
+          </div>
+        `
+      },
+      portal: {
+        title: "🏫 Alima University Portal",
+        html: `
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <p>Our centralized portal provides department-wide controls for academic institutes:</p>
+            <ul style="padding-left:20px; display:flex; flex-direction:column; gap:8px;">
+              <li><strong>Departmental Workspaces</strong>: Segment access codes between students, professors, and administration chairs.</li>
+              <li><strong>Centralized Domain Management</strong>: Deploy all portfolios under standard university formats (*.edu mapping).</li>
+              <li><strong>SSO Authentication</strong>: Connect standard campus email formats seamlessly via Firebase security keys.</li>
+            </ul>
+          </div>
+        `
+      },
+      about: {
+        title: "🏢 About Alima CMS",
+        html: `
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <p>Alima was founded with a singular mission: <strong>to elevate how academic entities communicate research and build directories on the web.</strong></p>
+            <p>Academic websites are often outdated, clunky, or require extensive HTML knowledge. Alima eliminates these hurdles by combining a <strong>visual drag-and-drop page canvas</strong> with a <strong>gorgeous design system</strong> and reliable <strong>Firebase cloud architecture</strong>.</p>
+            <p>Today, Alima supports hundreds of scholar CVs, biology research labs, and CS student councils globally.</p>
+          </div>
+        `
+      },
+      blog: {
+        title: "✍️ The Alima Journal",
+        html: `
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <p>Read the latest insights from our engineering and design teams:</p>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+              <div>
+                <strong style="color:var(--text-main); display:block; font-size:0.95rem;">🚀 Announcing our Firestore-Backed Plugins Engine</strong>
+                <span style="font-size:0.75rem; color:var(--text-muted);">Published June 2026</span>
+              </div>
+              <div>
+                <strong style="color:var(--text-main); display:block; font-size:0.95rem;">📈 How Biotech Research Labs Optimize Static Page SEO</strong>
+                <span style="font-size:0.75rem; color:var(--text-muted);">Published May 2026</span>
+              </div>
+              <div>
+                <strong style="color:var(--text-main); display:block; font-size:0.95rem;">🎨 Case Study: Building Light/Dark Theme-Flash Prevention in CSS</strong>
+                <span style="font-size:0.75rem; color:var(--text-muted);">Published April 2026</span>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      support: {
+        title: "🛠️ 24/7 Academic Support Desk",
+        html: `
+          <div id="support-container" style="display:flex; flex-direction:column; gap:16px; text-align:left;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+              <p style="margin:0; font-size:0.9rem; color:var(--text-muted);">Send a direct message to our active support queue:</p>
+              <div class="support-status-badge">
+                <span class="support-status-dot"></span>
+                <span>Active</span>
+              </div>
+            </div>
+            
+            <form id="support-ticket-form" class="support-form" onsubmit="handleSupportSubmit(event)">
+              <div class="support-input-group">
+                <label class="support-input-label">Academic Email Address</label>
+                <input type="email" id="support-email" class="support-input" required placeholder="you@university.edu">
+              </div>
+              <div class="support-input-group">
+                <label class="support-input-label">Inquiry Department</label>
+                <select id="support-dept" class="support-select" required style="cursor:pointer;">
+                  <option value="domain">Domain & DNS Setup</option>
+                  <option value="builder">Drag-and-Drop Builder</option>
+                  <option value="plugins">Plugins & Integrations</option>
+                  <option value="billing">Billing & Upgrades</option>
+                  <option value="other">General Academic Inquiry</option>
+                </select>
+              </div>
+              <div class="support-input-group">
+                <label class="support-input-label">Message Details</label>
+                <textarea id="support-message" class="support-textarea" required placeholder="Describe your issue or request..."></textarea>
+              </div>
+              
+              <button type="submit" id="support-submit-btn" class="support-btn">
+                <span>Submit Support Ticket</span>
+              </button>
+            </form>
+            
+            <div style="border-top:1px solid var(--card-border); padding-top:12px; display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; color:var(--text-muted); flex-wrap:wrap; gap:8px;">
+              <span>📧 Email: <a href="mailto:support@alima.site" style="color:var(--color-primary); text-decoration:none; font-weight:600;">support@alima.site</a></span>
+              <span>Queue Wait Time: <strong>~12 mins</strong></span>
+            </div>
+          </div>
+        `
+      },
+      privacy: {
+        title: "🔒 Privacy Policy",
+        html: `
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <p>Your privacy is paramount. Alima CMS collects and secures data using modern cloud encryption principles:</p>
+            <ul style="padding-left:20px; display:flex; flex-direction:column; gap:6px;">
+              <li>We securely store user profiles and workspace configurations in Google Cloud Firestore.</li>
+              <li>Local theme states and credentials are saved client-side inside standard browser local storage settings.</li>
+              <li>Analytics keys remain private and are only injected into matching domain header scripts.</li>
+            </ul>
+          </div>
+        `
+      },
+      terms: {
+        title: "📜 Terms of Service",
+        html: `
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <p>By deploying websites on Alima's publishing platform, you agree to our standard academic code of conduct:</p>
+            <ul style="padding-left:20px; display:flex; flex-direction:column; gap:6px;">
+              <li>Users retain all copyright and ownership claims over copy text and media uploads.</li>
+              <li>Spam, malware scripting, or illegal material hosting will result in subdomain termination.</li>
+              <li>Server uptime SLA metrics are hosted at 99.9% availability via Firebase hosting nodes.</li>
+            </ul>
+          </div>
+        `
+      }
+    };
+
+    function openInfoModal(key, e) {
+      if (e) e.preventDefault();
+      const data = modalData[key];
+      if (!data) return;
+
+      document.getElementById('info-modal-title').textContent = data.title;
+      document.getElementById('info-modal-body').innerHTML = data.html;
+      document.getElementById('info-modal-overlay').classList.add('active');
+    }
+    window.openInfoModal = openInfoModal;
+
+    function closeInfoModal() {
+      document.getElementById('info-modal-overlay').classList.remove('active');
+    }
+    window.closeInfoModal = closeInfoModal;
+
+    function handleSupportSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('support-submit-btn');
+      if (!btn) return;
+      
+      const email = document.getElementById('support-email').value;
+      const dept = document.getElementById('support-dept').value;
+      
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> <span>Filing Ticket...</span>';
+      
+      setTimeout(function() {
+        const container = document.getElementById('support-container');
+        if (container) {
+          const deptNames = {
+            domain: 'Domain & DNS Setup',
+            builder: 'Drag-and-Drop Builder',
+            plugins: 'Plugins & Integrations',
+            billing: 'Billing & Upgrades',
+            other: 'General Academic Inquiry'
+          };
+          const deptLabel = deptNames[dept] || dept;
+          container.innerHTML = '<div class="support-success-message">' +
+            '<div class="success-icon">✓</div>' +
+            '<h4 style="color:var(--text-main); font-size:1.15rem; margin-top:8px; font-weight:800;">Support Ticket Filed!</h4>' +
+            '<p style="color:var(--text-muted); font-size:0.85rem; margin:0 0 12px 0;">' +
+              'We have logged your ticket for <strong>' + email + '</strong> regarding <strong>' + deptLabel + '</strong>.' +
+            '</p>' +
+            '<p style="color:var(--text-muted); font-size:0.85rem; margin:0;">' +
+              'A systems engineer will contact you directly within <strong>12 minutes</strong>. Keep an eye on your inbox!' +
+            '</p>' +
+            '<button onclick="closeInfoModal()" class="support-btn" style="margin-top:16px; width:100%; background:var(--card-border); color:var(--text-main); border:1px solid var(--card-border);">' +
+              'Close Window' +
+            '</button>' +
+          '</div>';
+        }
+      }, 1500);
+    }
+    window.handleSupportSubmit = handleSupportSubmit;
   </script>
+  <!-- Dynamic Information Modal -->
+  <div class="alima-modal-overlay" id="info-modal-overlay" onclick="closeInfoModal()">
+    <div class="alima-modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 id="info-modal-title">Information</h3>
+        <button class="modal-close" onclick="closeInfoModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="info-modal-body" style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; max-height: 60vh; overflow-y: auto;">
+        <!-- Dynamic content injected here -->
+      </div>
+    </div>
+  </div>
 </body>
 </html>
