@@ -3,54 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alima CMS - Login & Signup</title>
-  <!-- Google Fonts -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
-  
+  <title>Alima CMS - Login</title>
+  <link rel="stylesheet" href="design-system.css">
   <style>
-    :root {
-      /* Brand colors */
-      --color-primary: #7c3aed;
-      --color-accent: #06b6d4;
-      --color-success: #10b981;
-      --color-error: #ef4444;
-      --color-warning: #f59e0b;
-      
-      --gradient-primary: linear-gradient(135deg, #7c3aed 0%, #06b6d4 100%);
-      --gradient-primary-hover: linear-gradient(135deg, #9055f2 0%, #0ec7e6 100%);
-      
-      --font-heading: 'Plus Jakarta Sans', sans-serif;
-      --font-body: 'Inter', sans-serif;
-      
-      --radius-standard: 12px;
-      --radius-card: 20px;
-      --radius-pill: 50px;
-      
-      --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      --transition-spring: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
+    /* Fullscreen login styling */
     body {
-      font-family: var(--font-body);
       background-color: #0a0a1a;
       color: #ffffff;
       min-height: 100vh;
-      overflow: hidden;
+      overflow-x: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
     }
 
-    /* Background elements */
     #starfield {
       position: absolute;
       inset: 0;
@@ -60,137 +27,131 @@
       pointer-events: none;
     }
 
-    .background-orb {
+    /* Radial blobs */
+    .blur-blob {
       position: absolute;
       border-radius: 50%;
       pointer-events: none;
       z-index: 1;
-      mix-blend-mode: screen;
-      opacity: 0.45;
+      opacity: 0.15;
     }
 
-    .orb-purple {
+    .blob-purple {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, #7c3aed 0%, rgba(124, 58, 237, 0) 70%);
+      bottom: -100px;
+      left: -100px;
+      filter: blur(300px);
+    }
+
+    .blob-cyan {
       width: 450px;
       height: 450px;
-      background: radial-gradient(circle, rgba(124, 58, 237, 0.6) 0%, rgba(124, 58, 237, 0) 70%);
-      bottom: -150px;
-      left: -150px;
-      filter: blur(80px);
-      animation: floatOrbPurple 25s infinite ease-in-out;
+      background: radial-gradient(circle, #06b6d4 0%, rgba(6, 182, 212, 0) 70%);
+      top: -100px;
+      right: -100px;
+      filter: blur(250px);
     }
 
-    .orb-cyan {
-      width: 400px;
-      height: 400px;
-      background: radial-gradient(circle, rgba(6, 182, 212, 0.55) 0%, rgba(6, 182, 212, 0) 70%);
-      top: -120px;
-      right: -120px;
-      filter: blur(60px);
-      animation: floatOrbCyan 20s infinite ease-in-out;
-    }
-
-    @keyframes floatOrbPurple {
-      0%, 100% {
-        transform: scale(1) translate(0, 0);
-      }
-      33% {
-        transform: scale(1.15) translate(40px, -60px);
-      }
-      66% {
-        transform: scale(0.9) translate(-20px, 30px);
-      }
-    }
-
-    @keyframes floatOrbCyan {
-      0%, 100% {
-        transform: scale(1) translate(0, 0);
-      }
-      40% {
-        transform: scale(1.2) translate(-50px, 60px);
-      }
-      70% {
-        transform: scale(0.95) translate(30px, -30px);
-      }
-    }
-
-    /* Core Container & Card */
-    .auth-wrapper {
-      position: relative;
-      z-index: 10;
-      width: 100%;
-      max-width: 960px;
-      padding: 24px;
-    }
-
-    .auth-container {
+    /* Layout structure */
+    .login-container {
       display: grid;
-      grid-template-columns: 1.15fr 1fr;
-      background: rgba(255, 255, 255, 0.02);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: var(--radius-card);
-      overflow: hidden;
-      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4), 
-                  inset 0 1px 0 rgba(255, 255, 255, 0.05);
-      animation: cardEntrance 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-      opacity: 0;
-      transform: translateY(40px);
-    }
-
-    .auth-card {
-      background: transparent;
-      backdrop-filter: none;
-      -webkit-backdrop-filter: none;
-      border: none;
-      box-shadow: none;
-      padding: 40px;
-      position: relative;
-      overflow: hidden;
+      grid-template-columns: 1fr 1fr;
       width: 100%;
-    }
-
-    .auth-banner {
-      position: relative;
-      display: flex;
-      align-items: flex-end;
+      max-width: 1100px;
       padding: 40px;
-      border-left: 1px solid rgba(255, 255, 255, 0.08);
-      overflow: hidden;
+      z-index: 10;
+      gap: 60px;
+      align-items: center;
     }
 
-    .banner-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(10, 10, 26, 0.95) 0%, rgba(10, 10, 26, 0.2) 70%, rgba(10, 10, 26, 0.4) 100%);
-      z-index: 1;
+    /* Left Branding Side */
+    .left-branding {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
     }
 
-    .banner-content {
-      position: relative;
-      z-index: 2;
-      animation: fadeInBanner 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    .logo-circle {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.02);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    .logo-char {
+      font-size: 64px;
+      font-weight: 800;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-family: var(--font-heading);
+    }
+
+    .brand-title-v2 {
+      font-family: var(--font-heading);
+      font-size: 42px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-top: -12px;
+    }
+
+    .brand-tagline-v2 {
+      color: #94a3b8;
+      font-size: 1.1rem;
+      margin-top: -20px;
+    }
+
+    .features-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #e2e8f0;
+      font-size: 0.95rem;
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(10px);
+      animation: fadeInUp 0.5s ease forwards;
     }
 
-    @keyframes fadeInBanner {
+    @keyframes fadeInUp {
       to {
         opacity: 1;
         transform: translateY(0);
       }
     }
 
-    @media (max-width: 768px) {
-      .auth-wrapper {
-        max-width: 460px;
-      }
-      .auth-container {
-        grid-template-columns: 1fr;
-      }
-      .auth-banner {
-        display: none;
-      }
+    /* Right Form Card Side */
+    .right-card-side {
+      perspective: 1000px;
+    }
+
+    .glass-card-v2 {
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 48px;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
+      animation: cardEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+      transform: translateY(30px);
+      position: relative;
+      overflow: hidden;
     }
 
     @keyframes cardEntrance {
@@ -200,333 +161,175 @@
       }
     }
 
-    /* Logo & Branding */
-    .brand-container {
+    /* Tab switcher */
+    .tabs-v2 {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      margin-bottom: 32px;
-    }
-
-    .brand-logo {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: var(--gradient-primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-heading);
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: #ffffff;
-      box-shadow: 0 0 20px rgba(124, 58, 237, 0.4);
-      margin-bottom: 12px;
-      position: relative;
-    }
-
-    .brand-logo::after {
-      content: '';
-      position: absolute;
-      inset: -3px;
-      border-radius: 50%;
-      padding: 1.5px;
-      background: var(--gradient-primary);
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      mask-composite: exclude;
-    }
-
-    .brand-name {
-      font-family: var(--font-heading);
-      font-size: 1.75rem;
-      font-weight: 800;
-      letter-spacing: 4px;
-      color: #ffffff;
-      text-transform: uppercase;
-      line-height: 1.2;
-    }
-
-    .brand-tagline {
-      font-size: 0.825rem;
-      color: rgba(255, 255, 255, 0.45);
-      margin-top: 6px;
-      font-weight: 500;
-    }
-
-    /* Tabs Navigation */
-    .tabs-nav {
-      display: flex;
-      position: relative;
       margin-bottom: 32px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      padding-bottom: 2px;
+      position: relative;
     }
 
-    .tab-btn {
+    .tab-btn-v2 {
       flex: 1;
       background: none;
       border: none;
       color: rgba(255, 255, 255, 0.5);
       font-family: var(--font-heading);
-      font-size: 0.95rem;
-      font-weight: 600;
+      font-size: 1.05rem;
+      font-weight: 700;
       padding: 12px 0;
       cursor: pointer;
-      transition: color var(--transition-normal);
       text-align: center;
+      transition: color var(--transition-normal);
       z-index: 2;
     }
 
-    .tab-btn.active {
+    .tab-btn-v2.active {
       color: #ffffff;
     }
 
-    .tabs-underline {
+    .tabs-underline-v2 {
       position: absolute;
       bottom: -1px;
       left: 0;
       width: 50%;
       height: 2px;
       background: var(--gradient-primary);
-      border-radius: 2px;
-      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      transition: transform var(--transition-normal);
       z-index: 1;
     }
 
-    /* Forms container toggler */
-    .forms-viewport {
-      display: flex;
-      width: 200%;
-      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    /* Form Panels Viewport */
+    .viewport-container {
+      overflow: hidden;
+      width: 100%;
     }
 
-    .form-panel {
+    .viewport-v2 {
+      display: flex;
+      width: 200%;
+      transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .form-panel-v2 {
       width: 50%;
       display: flex;
       flex-direction: column;
       gap: 20px;
     }
 
-    /* Form Inputs */
-    .input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .input-label {
-      font-family: var(--font-heading);
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: rgba(255, 255, 255, 0.4);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      transition: color var(--transition-normal);
-    }
-
-    .input-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-
-    .auth-input {
+    /* Dark Input styling */
+    .alima-input-dark {
       width: 100%;
       background: transparent;
       border: none;
-      border-bottom: 1.5px solid rgba(255, 255, 255, 0.12);
-      padding: 10px 0;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+      padding: 12px 0;
+      color: white;
       font-family: var(--font-body);
       font-size: 0.95rem;
-      color: #ffffff;
       outline: none;
-      transition: all var(--transition-normal);
+      transition: border-bottom-color var(--transition-normal);
     }
 
-    .auth-input:focus {
+    .alima-input-dark:focus {
       border-bottom-color: var(--color-primary);
-      box-shadow: 0 6px 12px -6px rgba(124, 58, 237, 0.25);
+      box-shadow: 0 6px 12px -6px rgba(124, 58, 237, 0.2);
     }
 
-    .input-group:focus-within .input-label {
-      color: var(--color-accent);
+    /* Password Input with eye icon */
+    .password-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
     }
 
-    /* Eye Icon for Password toggle */
-    .pwd-toggle {
+    .pwd-toggle-v2 {
       position: absolute;
       right: 0;
       background: none;
       border: none;
-      color: rgba(255, 255, 255, 0.35);
+      color: rgba(255, 255, 255, 0.4);
       cursor: pointer;
       font-size: 1rem;
       padding: 8px;
-      transition: color var(--transition-normal);
     }
 
-    .pwd-toggle:hover {
+    .pwd-toggle-v2:hover {
       color: white;
     }
 
-    .options-row {
+    /* Strength meter */
+    .strength-wrapper {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.825rem;
-      margin-top: -4px;
-    }
-
-    .remember-me {
-      display: flex;
-      align-items: center;
+      flex-direction: column;
       gap: 6px;
-      cursor: pointer;
-      color: rgba(255, 255, 255, 0.6);
+      margin-top: -8px;
     }
 
-    .remember-me input {
-      accent-color: var(--color-primary);
-      cursor: pointer;
-    }
-
-    .forgot-link {
-      color: var(--color-accent);
-      text-decoration: none;
-      transition: color var(--transition-normal);
-    }
-
-    .forgot-link:hover {
-      color: #22d3ee;
-      text-decoration: underline;
-    }
-
-    /* Buttons & Actions */
-    .submit-btn {
+    .strength-bar-container {
       width: 100%;
-      background: var(--gradient-primary);
-      color: #ffffff;
-      border: none;
-      font-family: var(--font-heading);
-      font-weight: 700;
-      font-size: 0.95rem;
-      padding: 14px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
       border-radius: var(--radius-pill);
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 8px;
+      overflow: hidden;
     }
 
-    .submit-btn:hover {
-      transform: scale(1.03);
-      box-shadow: 0 8px 28px rgba(124, 58, 237, 0.45), 0 0 12px rgba(6, 182, 212, 0.2);
+    .strength-bar {
+      width: 0%;
+      height: 100%;
+      background: var(--color-error);
+      border-radius: var(--radius-pill);
+      transition: width 0.3s ease, background-color 0.3s ease;
     }
 
-    .submit-btn:active {
-      transform: scale(0.98);
-    }
-
-    .separator {
-      display: flex;
-      align-items: center;
-      text-align: center;
-      color: rgba(255, 255, 255, 0.25);
+    .strength-text {
       font-size: 0.75rem;
-      margin: 16px 0;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* Separator */
+    .separator-v2 {
+      display: flex;
+      align-items: center;
+      color: rgba(255, 255, 255, 0.2);
+      font-size: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 1px;
+      margin: 12px 0;
     }
 
-    .separator::before, .separator::after {
+    .separator-v2::before, .separator-v2::after {
       content: '';
       flex: 1;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     }
 
-    .separator:not(:empty)::before {
-      margin-right: 12px;
-    }
+    .separator-v2:not(:empty)::before { margin-right: 12px; }
+    .separator-v2:not(:empty)::after { margin-left: 12px; }
 
-    .separator:not(:empty)::after {
-      margin-left: 12px;
-    }
-
-    /* Google Sign-In button */
-    .google-btn {
-      width: 100%;
-      background: #ffffff;
-      color: #111827;
-      border: none;
-      font-family: var(--font-heading);
-      font-weight: 600;
-      font-size: 0.9rem;
-      padding: 12px;
-      border-radius: var(--radius-pill);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      transition: all var(--transition-normal);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .google-btn:hover {
-      background: #f3f4f6;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-    }
-
-    .google-btn:active {
-      transform: translateY(0);
-    }
-
-    .google-icon {
-      width: 18px;
-      height: 18px;
-    }
-
-    /* Feedback & Trigger Animations */
-    .shake-error {
-      animation: shakeForm 0.4s cubic-bezier(.36,.07,.19,.97) both;
-    }
-
-    @keyframes shakeForm {
-      10%, 90% { transform: translate3d(-2px, 0, 0); }
-      20%, 80% { transform: translate3d(4px, 0, 0); }
-      30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
-      40%, 60% { transform: translate3d(6px, 0, 0); }
-    }
-
-    /* Ripple Success Animation */
-    .success-overlay {
+    /* Success overlay */
+    .success-overlay-v2 {
       position: absolute;
       inset: 0;
-      background: rgba(10, 10, 26, 0.95);
-      border-radius: var(--radius-card);
+      background: #0a0a1a;
       z-index: 100;
       display: flex;
       align-items: center;
       justify-content: center;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.4s ease;
+      transition: opacity 0.3s ease;
     }
 
-    .success-overlay.active {
+    .success-overlay-v2.active {
       opacity: 1;
       pointer-events: all;
     }
 
-    .success-ring {
+    .success-ring-v2 {
       width: 80px;
       height: 80px;
       border-radius: 50%;
@@ -535,220 +338,203 @@
       align-items: center;
       justify-content: center;
       position: relative;
-      transform: scale(0.5);
-      opacity: 0;
-      transition: all 0.5s var(--transition-spring);
     }
 
-    .success-overlay.active .success-ring {
-      transform: scale(1);
-      opacity: 1;
-    }
-
-    .checkmark {
+    .checkmark-v2 {
       font-size: 2.5rem;
       font-weight: bold;
       color: var(--color-success);
-      transform: scale(0);
-      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.5) 0.3s;
     }
 
-    .success-overlay.active .checkmark {
-      transform: scale(1);
+    .google-btn-v2 {
+      background: white;
+      color: #000000;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      border-radius: var(--radius-pill);
+      height: 52px;
+      width: 100%;
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition-normal);
     }
 
-    .success-ripple {
-      position: absolute;
-      inset: -4px;
-      border-radius: 50%;
-      border: 4px solid var(--color-success);
-      opacity: 1;
-      transform: scale(1);
+    .google-btn-v2:hover {
+      background: #f1f5f9;
+      transform: translateY(-1px);
     }
 
-    .success-overlay.active .success-ripple {
-      animation: checkmarkRipple 1.2s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
-    }
-
-    @keyframes checkmarkRipple {
-      0% {
-        transform: scale(1);
-        opacity: 0.8;
+    /* Responsive adjustments */
+    @media (max-width: 840px) {
+      .login-container {
+        grid-template-columns: 1fr;
+        max-width: 480px;
+        gap: 40px;
       }
-      100% {
-        transform: scale(1.6);
-        opacity: 0;
+      .left-branding {
+        align-items: center;
+        text-align: center;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- Starfield Canvas -->
+  <!-- Particle Background Canvas -->
   <canvas id="starfield"></canvas>
 
-  <!-- Pulsing Glowing Orbs -->
-  <div class="background-orb orb-purple"></div>
-  <div class="background-orb orb-cyan"></div>
+  <!-- Blurred color blobs -->
+  <div class="blur-blob blob-purple"></div>
+  <div class="blur-blob blob-cyan"></div>
 
-  <!-- Main Login Card -->
-  <div class="auth-wrapper">
-    <div class="auth-container">
-      
-      <div class="auth-card" id="auth-card">
-        <!-- Success Ripple Overlay -->
-        <div class="success-overlay" id="success-overlay">
-          <div class="success-ring">
-            <div class="success-ripple"></div>
-            <span class="checkmark">✓</span>
+  <!-- Primary Wrapper Container -->
+  <div class="login-container">
+    
+    <!-- Left Branding Info -->
+    <div class="left-branding">
+      <div class="logo-circle">
+        <span class="logo-char">A</span>
+      </div>
+      <div>
+        <h1 class="brand-title-v2">alima</h1>
+        <p class="brand-tagline-v2">The Foundation of Your Digital Campus</p>
+      </div>
+
+      <div class="features-list">
+        <div class="feature-item" style="animation-delay: 0.1s;">
+          <span>✦</span> Build beautiful websites in minutes
+        </div>
+        <div class="feature-item" style="animation-delay: 0.3s;">
+          <span>✦</span> Drag & drop page builder
+        </div>
+        <div class="feature-item" style="animation-delay: 0.5s;">
+          <span>✦</span> Custom domains & SEO tools
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Interactive Card -->
+    <div class="right-card-side">
+      <div class="glass-card-v2" id="auth-card">
+        
+        <!-- Success Animation Ring Overlay -->
+        <div class="success-overlay-v2" id="success-overlay">
+          <div class="success-ring-v2">
+            <span class="checkmark-v2">✓</span>
           </div>
         </div>
 
-        <!-- Branding Header -->
-        <div class="brand-container">
-          <div class="brand-logo">A</div>
-          <h1 class="brand-name">alima</h1>
-          <p class="brand-tagline">The Foundation of Your Digital Campus</p>
+        <!-- Switch Tab Nav -->
+        <div class="tabs-v2">
+          <button class="tab-btn-v2 active" id="tab-login" onclick="switchFormTab('login')">Sign In</button>
+          <button class="tab-btn-v2" id="tab-signup" onclick="switchFormTab('signup')">Create Account</button>
+          <div class="tabs-underline-v2" id="tab-underline"></div>
         </div>
 
-      <!-- Tabs Navigation -->
-      <div class="tabs-nav">
-        <button class="tab-btn active" onclick="switchTab('login')">Sign In</button>
-        <button class="tab-btn" onclick="switchTab('signup')">Sign Up</button>
-        <div class="tabs-underline" id="tab-underline"></div>
-      </div>
-
-      <!-- Forms Container -->
-      <div style="overflow: hidden; width: 100%;">
-        <div class="forms-viewport" id="forms-viewport">
-          
-          <!-- LOGIN FORM -->
-          <form class="form-panel" id="login-form" onsubmit="handleAuthSubmit(event, 'login')">
-            <div class="input-group">
-              <label class="input-label" for="login-email">Campus Email</label>
-              <div class="input-wrapper">
-                <input type="email" id="login-email" class="auth-input" placeholder="you@university.edu" required>
+        <!-- Form Panels Viewport -->
+        <div class="viewport-container">
+          <div class="viewport-v2" id="forms-viewport">
+            
+            <!-- 1. SIGN IN PANEL -->
+            <form class="form-panel-v2" id="login-form" onsubmit="handleAuthAction(event, 'login')">
+              <div class="alima-input-group">
+                <label class="alima-input-label">Campus Email</label>
+                <input type="email" id="login-email" class="alima-input-dark" placeholder="you@university.edu" required>
               </div>
-            </div>
 
-            <div class="input-group">
-              <label class="input-label" for="login-pwd">Password</label>
-              <div class="input-wrapper">
-                <input type="password" id="login-pwd" class="auth-input" placeholder="••••••••" required>
-                <button type="button" class="pwd-toggle" onclick="togglePasswordVisibility('login-pwd')">👁️</button>
+              <div class="alima-input-group">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <label class="alima-input-label">Password</label>
+                  <a href="#" class="forgot-link" style="color: var(--color-primary); font-size: 0.8rem; text-decoration: none;" onclick="triggerPasswordReset(event)">Forgot password?</a>
+                </div>
+                <div class="password-wrapper">
+                  <input type="password" id="login-pwd" class="alima-input-dark" placeholder="••••••••" required>
+                  <button type="button" class="pwd-toggle-v2" onclick="togglePasswordInput('login-pwd')">👁️</button>
+                </div>
               </div>
-            </div>
 
-            <div class="options-row">
-              <label class="remember-me">
-                <input type="checkbox"> Remember on this device
-              </label>
-              <a href="#" class="forgot-link" onclick="forgotPassword(event)">Forgot Password?</a>
-            </div>
+              <button type="submit" class="alima-btn btn-primary" style="height: 52px; width: 100%;">Sign In</button>
 
-            <button type="submit" class="submit-btn">
-              <span>Secure Authentication</span> ➔
-            </button>
+              <div class="separator-v2">or continue with</div>
 
-            <div class="separator">or connect with</div>
+              <button type="button" class="google-btn-v2" onclick="handleGoogleSignIn()">
+                <svg width="20" height="20" viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M23.49 12.27c0-.81-.07-1.59-.2-2.34H12v4.44h6.44c-.28 1.48-1.12 2.73-2.38 3.58l3.7 2.87c2.16-2 3.4-4.94 3.4-8.55z"/>
+                  <path fill="#34A853" d="M12 23c3.24 0 5.97-1.07 7.96-2.91l-3.7-2.87c-1.03.69-2.34 1.1-4.26 1.1-3.23 0-5.78-1.75-6.7-4.48L1.48 16.92C3.39 20.33 7.35 23 12 23z"/>
+                  <path fill="#FBBC05" d="M5.3 14.96c-.24-.72-.38-1.48-.38-2.27s.14-1.55.38-2.27L1.48 7.46C.54 9.36 0 11.53 0 12.8s.54 3.44 1.48 5.34l3.82-3.18z"/>
+                  <path fill="#EA4335" d="M12 5.04c1.66 0 3.2.57 4.38 1.69l3.27-3.27C17.67 1.57 15.01 1 12 1 7.35 1 3.39 3.67 1.48 7.56l3.82 2.96c.92-2.73 3.47-4.48 6.7-4.48z"/>
+                </svg>
+                Sign in with Google
+              </button>
+            </form>
 
-            <button type="button" class="google-btn" onclick="handleGoogleConnect()">
-              <svg class="google-icon" viewBox="0 0 24 24">
-                <path fill="#EA4335" d="M12 5.04c1.66 0 3.2.57 4.38 1.69l3.27-3.27C17.67 1.57 15.01 1 12 1 7.35 1 3.39 3.67 1.48 7.56l3.82 2.96c.92-2.73 3.47-4.48 6.7-4.48z"/>
-                <path fill="#4285F4" d="M23.49 12.27c0-.81-.07-1.59-.2-2.34H12v4.44h6.44c-.28 1.48-1.12 2.73-2.38 3.58l3.7 2.87c2.16-2 3.4-4.94 3.4-8.55z"/>
-                <path fill="#FBBC05" d="M5.3 14.96c-.24-.72-.38-1.48-.38-2.27s.14-1.55.38-2.27L1.48 7.46C.54 9.36 0 11.53 0 12.8s.54 3.44 1.48 5.34l3.82-3.18z"/>
-                <path fill="#34A853" d="M12 23c3.24 0 5.97-1.07 7.96-2.91l-3.7-2.87c-1.03.69-2.34 1.1-4.26 1.1-3.23 0-5.78-1.75-6.7-4.48L1.48 16.92C3.39 20.33 7.35 23 12 23z"/>
-              </svg>
-              Continue with Google
-            </button>
-            <div class="error-message" id="login-error-msg" style="color: var(--color-error); font-size: 0.85rem; text-align: center; margin-top: 12px; display: none; font-weight: 500;"></div>
-          </form>
-
-          <!-- SIGNUP FORM -->
-          <form class="form-panel" id="signup-form" onsubmit="handleAuthSubmit(event, 'signup')">
-            <div class="input-group">
-              <label class="input-label" for="signup-name">Full Name</label>
-              <div class="input-wrapper">
-                <input type="text" id="signup-name" class="auth-input" placeholder="e.g. Professor Smith" required>
+            <!-- 2. CREATE ACCOUNT PANEL -->
+            <form class="form-panel-v2" id="signup-form" onsubmit="handleAuthAction(event, 'signup')">
+              <div class="alima-input-group">
+                <label class="alima-input-label">Full Name</label>
+                <input type="text" id="signup-name" class="alima-input-dark" placeholder="e.g. John Doe" required>
               </div>
-            </div>
 
-            <div class="input-group">
-              <label class="input-label" for="signup-email">Academic Email</label>
-              <div class="input-wrapper">
-                <input type="email" id="signup-email" class="auth-input" placeholder="you@university.edu" required>
+              <div class="alima-input-group">
+                <label class="alima-input-label">Campus Email</label>
+                <input type="email" id="signup-email" class="alima-input-dark" placeholder="you@university.edu" required>
               </div>
-            </div>
 
-            <div class="input-group">
-              <label class="input-label" for="signup-pwd">Create Secure Password</label>
-              <div class="input-wrapper">
-                <input type="password" id="signup-pwd" class="auth-input" placeholder="Min. 8 characters" required>
-                <button type="button" class="pwd-toggle" onclick="togglePasswordVisibility('signup-pwd')">👁️</button>
+              <div class="alima-input-group">
+                <label class="alima-input-label">Password</label>
+                <div class="password-wrapper">
+                  <input type="password" id="signup-pwd" class="alima-input-dark" placeholder="Min 8 characters" oninput="checkPwdStrength(this.value)" required>
+                  <button type="button" class="pwd-toggle-v2" onclick="togglePasswordInput('signup-pwd')">👁️</button>
+                </div>
               </div>
-            </div>
 
-            <button type="submit" class="submit-btn" style="margin-top: 16px;">
-              <span>Initialize Workspace</span> ➔
-            </button>
+              <!-- Password Strength Bar -->
+              <div class="strength-wrapper">
+                <div class="strength-bar-container">
+                  <div class="strength-bar" id="strength-bar"></div>
+                </div>
+                <span class="strength-text" id="strength-label">Password Strength: Very Weak</span>
+              </div>
 
-            <div class="separator">or connect with</div>
+              <div class="alima-input-group">
+                <label class="alima-input-label">Confirm Password</label>
+                <div class="password-wrapper">
+                  <input type="password" id="signup-confirm" class="alima-input-dark" placeholder="••••••••" required>
+                  <button type="button" class="pwd-toggle-v2" onclick="togglePasswordInput('signup-confirm')">👁️</button>
+                </div>
+              </div>
 
-            <button type="button" class="google-btn" onclick="handleGoogleConnect()">
-              <svg class="google-icon" viewBox="0 0 24 24">
-                <path fill="#EA4335" d="M12 5.04c1.66 0 3.2.57 4.38 1.69l3.27-3.27C17.67 1.57 15.01 1 12 1 7.35 1 3.39 3.67 1.48 7.56l3.82 2.96c.92-2.73 3.47-4.48 6.7-4.48z"/>
-                <path fill="#4285F4" d="M23.49 12.27c0-.81-.07-1.59-.2-2.34H12v4.44h6.44c-.28 1.48-1.12 2.73-2.38 3.58l3.7 2.87c2.16-2 3.4-4.94 3.4-8.55z"/>
-                <path fill="#FBBC05" d="M5.3 14.96c-.24-.72-.38-1.48-.38-2.27s.14-1.55.38-2.27L1.48 7.46C.54 9.36 0 11.53 0 12.8s.54 3.44 1.48 5.34l3.82-3.18z"/>
-                <path fill="#34A853" d="M12 23c3.24 0 5.97-1.07 7.96-2.91l-3.7-2.87c-1.03.69-2.34 1.1-4.26 1.1-3.23 0-5.78-1.75-6.7-4.48L1.48 16.92C3.39 20.33 7.35 23 12 23z"/>
-              </svg>
-              Continue with Google
-            </button>
-            <div class="error-message" id="signup-error-msg" style="color: var(--color-error); font-size: 0.85rem; text-align: center; margin-top: 12px; display: none; font-weight: 500;"></div>
-          </form>
+              <button type="submit" class="alima-btn btn-primary" style="height: 52px; width: 100%;">Create Account</button>
+            </form>
 
+          </div>
         </div>
 
       </div>
-      
-      <!-- Right side: Premium Visual Banner -->
-      <div class="auth-banner">
-        <img src="login_banner.png" alt="Branding Banner" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;">
-        <div class="banner-overlay"></div>
-        <div class="banner-content">
-          <h2 style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 800; margin-bottom: 12px; background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Build Your Digital Campus</h2>
-          <p style="color: rgba(255,255,255,0.75); font-size: 0.9rem; line-height: 1.55; font-weight: 500;">Create professional departmental sites, academic portfolios, student blogs, and custom forms on Alima's blazing fast CMS platform.</p>
-        </div>
-      </div>
-
     </div>
+
   </div>
 
-  <!-- Shared JS utilities -->
+  <!-- Shared JS Utilities -->
   <script src="shared.js"></script>
 
-  <!-- Firebase config import -->
+  <!-- Firebase configuration import -->
   <script type="module" src="firebase.js"></script>
 
   <script type="module">
     import { auth, db, googleProvider } from "./firebase.js";
-    import { 
-      signInWithEmailAndPassword, 
-      createUserWithEmailAndPassword, 
-      signInWithPopup, 
-      updateProfile,
-      sendPasswordResetEmail
-    } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-    import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+    import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signInWithPopup, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+    import { setDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-    // ---------------------------------------------------------
-    // 1. Interactive Star-field & Constellation Network
-    // ---------------------------------------------------------
+    // 1. Particle System animation
     const canvas = document.getElementById('starfield');
     const ctx = canvas.getContext('2d');
     let stars = [];
-    const numStars = 120;
-    
-    let mouse = { x: null, y: null, radius: 180 };
+    const numStars = 150;
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
@@ -757,108 +543,33 @@
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Initialize stars
     for (let i = 0; i < numStars; i++) {
       stars.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
         radius: Math.random() * 1.5 + 0.5,
-        baseVx: (Math.random() - 0.5) * 0.15,
-        baseVy: (Math.random() - 0.5) * 0.15,
-        vx: 0,
-        vy: 0,
-        opacity: Math.random() * 0.6 + 0.3,
-        color: Math.random() > 0.4 ? '#7c3aed' : '#06b6d4'
+        vx: (Math.random() - 0.5) * 0.15,
+        vy: (Math.random() - 0.5) * 0.15,
+        opacity: Math.random() * 0.6 + 0.3
       });
-      stars[i].vx = stars[i].baseVx;
-      stars[i].vy = stars[i].baseVy;
     }
-
-    // Listen to mouse movement
-    window.addEventListener('mousemove', (e) => {
-      mouse.x = e.x;
-      mouse.y = e.y;
-    });
-
-    window.addEventListener('mouseleave', () => {
-      mouse.x = null;
-      mouse.y = null;
-    });
-
-    // Burst of particles on click
-    window.addEventListener('click', (e) => {
-      const authCard = document.getElementById('auth-card');
-      if (authCard && authCard.contains(e.target)) return;
-
-      for (let i = 0; i < 20; i++) {
-        stars.push({
-          x: e.x,
-          y: e.y,
-          radius: Math.random() * 2 + 1,
-          baseVx: (Math.random() - 0.5) * 3,
-          baseVy: (Math.random() - 0.5) * 3,
-          vx: (Math.random() - 0.5) * 3,
-          vy: (Math.random() - 0.5) * 3,
-          opacity: 1,
-          temporary: true,
-          color: Math.random() > 0.5 ? '#10b981' : '#f59e0b'
-        });
-      }
-    });
 
     function animateStars() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      // Update and draw stars
       for (let i = 0; i < stars.length; i++) {
         const s = stars[i];
-
-        // Magnetic Attraction
-        if (mouse.x !== null && mouse.y !== null) {
-          const dx = mouse.x - s.x;
-          const dy = mouse.y - s.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          
-          if (dist < mouse.radius) {
-            const force = (mouse.radius - dist) / mouse.radius;
-            s.vx += (dx / dist) * force * 0.12;
-            s.vy += (dy / dist) * force * 0.12;
-            
-            const speed = Math.sqrt(s.vx * s.vx + s.vy * s.vy);
-            const maxSpeed = s.temporary ? 4 : 1.5;
-            if (speed > maxSpeed) {
-              s.vx = (s.vx / speed) * maxSpeed;
-              s.vy = (s.vy / speed) * maxSpeed;
-            }
-          } else {
-            s.vx = s.vx * 0.95 + s.baseVx * 0.05;
-            s.vy = s.vy * 0.95 + s.baseVy * 0.05;
-          }
-        } else {
-          s.vx = s.vx * 0.95 + s.baseVx * 0.05;
-          s.vy = s.vy * 0.95 + s.baseVy * 0.05;
-        }
-
         s.x += s.vx;
         s.y += s.vy;
 
-        if (s.temporary) {
-          s.opacity -= 0.015;
-          if (s.opacity <= 0) {
-            stars.splice(i, 1);
-            i--;
-            continue;
-          }
-        } else {
-          if (s.x < 0) s.x = canvas.width;
-          if (s.x > canvas.width) s.x = 0;
-          if (s.y < 0) s.y = canvas.height;
-          if (s.y > canvas.height) s.y = 0;
-        }
+        if (s.x < 0) s.x = canvas.width;
+        if (s.x > canvas.width) s.x = 0;
+        if (s.y < 0) s.y = canvas.height;
+        if (s.y > canvas.height) s.y = 0;
 
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-        ctx.fillStyle = s.color;
+        ctx.fillStyle = '#ffffff';
         ctx.globalAlpha = s.opacity;
         ctx.fill();
         ctx.globalAlpha = 1.0;
@@ -868,13 +579,13 @@
           const dx = s.x - s2.x;
           const dy = s.y - s2.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          
+
           if (dist < 100) {
             ctx.beginPath();
             ctx.moveTo(s.x, s.y);
             ctx.lineTo(s2.x, s2.y);
-            const alpha = (1 - dist / 100) * 0.12 * Math.min(s.opacity, s2.opacity);
-            ctx.strokeStyle = `rgba(124, 58, 237, ${alpha})`;
+            const alpha = (1 - dist / 100) * 0.15 * Math.min(s.opacity, s2.opacity);
+            ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }
@@ -885,30 +596,34 @@
     }
     animateStars();
 
-    // ---------------------------------------------------------
-    // 2. Tab Navigation & Form Switch
-    // ---------------------------------------------------------
-    function switchTab(tab) {
+    // 2. Auth state observer
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        window.location.href = "dashboard.html";
+      }
+    });
+
+    // 3. Form switcher tabs
+    function switchFormTab(mode) {
       const underline = document.getElementById('tab-underline');
       const viewport = document.getElementById('forms-viewport');
-      const buttons = document.querySelectorAll('.tab-btn');
-      
-      if (tab === 'login') {
-        buttons[0].classList.add('active');
-        buttons[1].classList.remove('active');
+      const tabs = document.querySelectorAll('.tab-btn-v2');
+
+      if (mode === 'login') {
+        tabs[0].classList.add('active');
+        tabs[1].classList.remove('active');
         underline.style.transform = 'translateX(0%)';
         viewport.style.transform = 'translateX(0%)';
       } else {
-        buttons[0].classList.remove('active');
-        buttons[1].classList.add('active');
+        tabs[0].classList.remove('active');
+        tabs[1].classList.add('active');
         underline.style.transform = 'translateX(100%)';
         viewport.style.transform = 'translateX(-50%)';
       }
     }
 
-    // Toggle Password Visibility
-    function togglePasswordVisibility(inputId) {
-      const input = document.getElementById(inputId);
+    function togglePasswordInput(id) {
+      const input = document.getElementById(id);
       if (input.type === 'password') {
         input.type = 'text';
       } else {
@@ -916,174 +631,171 @@
       }
     }
 
-    // ---------------------------------------------------------
-    // 3. Authentication Submissions & Validation Animations
-    // ---------------------------------------------------------
-    function handleAuthSubmit(event, mode) {
+    // Password strength check
+    function checkPwdStrength(val) {
+      const bar = document.getElementById('strength-bar');
+      const label = document.getElementById('strength-label');
+
+      if (!val) {
+        bar.style.width = '0%';
+        label.textContent = 'Password Strength: Very Weak';
+        return;
+      }
+
+      let score = 0;
+      if (val.length >= 8) score++;
+      if (/[A-Z]/.test(val)) score++;
+      if (/[0-9]/.test(val)) score++;
+      if (/[^A-Za-z0-9]/.test(val)) score++;
+
+      if (val.length < 6) {
+        bar.style.width = '25%';
+        bar.style.backgroundColor = 'var(--color-error)';
+        label.textContent = 'Password Strength: Weak';
+      } else if (score < 2) {
+        bar.style.width = '50%';
+        bar.style.backgroundColor = 'var(--color-warning)';
+        label.textContent = 'Password Strength: Medium';
+      } else {
+        bar.style.width = '100%';
+        bar.style.backgroundColor = 'var(--color-success)';
+        label.textContent = 'Password Strength: Strong';
+      }
+    }
+
+    // Forms actions handlers
+    async function handleAuthAction(event, mode) {
       event.preventDefault();
       const card = document.getElementById('auth-card');
-      const emailId = mode === 'login' ? 'login-email' : 'signup-email';
-      const pwdId = mode === 'login' ? 'login-pwd' : 'signup-pwd';
-      const errorMsgId = mode === 'login' ? 'login-error-msg' : 'signup-error-msg';
-      
-      const emailVal = document.getElementById(emailId).value.trim();
-      const pwdVal = document.getElementById(pwdId).value.trim();
-      const errorEl = document.getElementById(errorMsgId);
-
-      if (errorEl) errorEl.style.display = 'none';
+      const btn = event.submitter;
+      const initialText = btn.textContent;
 
       if (mode === 'login') {
-        signInWithEmailAndPassword(auth, emailVal, pwdVal)
-          .then((userCredential) => {
-            triggerSuccessState(card);
-          })
-          .catch((error) => {
-            triggerErrorState(card, "Invalid email or password", errorMsgId);
-          });
+        const email = document.getElementById('login-email').value.trim();
+        const pwd = document.getElementById('login-pwd').value.trim();
+
+        try {
+          btn.disabled = true;
+          btn.innerHTML = `<span class="shimmer-skeleton" style="width: 24px; height: 24px; display: inline-block; border-radius: 50%;"></span>`;
+          
+          await signInWithEmailAndPassword(auth, email, pwd);
+          triggerSuccessState(card, btn);
+        } catch (err) {
+          btn.disabled = false;
+          btn.textContent = initialText;
+          shakeCard(card);
+          AlimaToast.show("Authentication Failed", "Invalid campus email credentials or password.", "error");
+        }
       } else {
-        const nameVal = document.getElementById('signup-name').value.trim();
-        if (pwdVal.length < 8) {
-          triggerErrorState(card, "Password must be at least 8 characters.", errorMsgId);
+        const name = document.getElementById('signup-name').value.trim();
+        const email = document.getElementById('signup-email').value.trim();
+        const pwd = document.getElementById('signup-pwd').value.trim();
+        const confirmPwd = document.getElementById('signup-confirm').value.trim();
+
+        if (pwd.length < 8) {
+          AlimaToast.show("Validation Error", "Password must be at least 8 characters.", "error");
           return;
         }
 
-        createUserWithEmailAndPassword(auth, emailVal, pwdVal)
-          .then((userCredential) => {
-            const user = userCredential.user;
-            return updateProfile(user, {
-              displayName: nameVal
-            }).then(async () => {
-              // Save user profile to Firestore
-              try {
-                await setDoc(doc(db, "users", user.uid), {
-                  uid: user.uid,
-                  email: user.email,
-                  displayName: nameVal,
-                  createdAt: new Date().toISOString(),
-                  websites: []
-                });
-              } catch (fsErr) {
-                console.error("Firestore sync error:", fsErr);
-              }
-              triggerSuccessState(card);
-            });
-          })
-          .catch((error) => {
-            let msg = translateAuthError(error.code);
-            triggerErrorState(card, msg, errorMsgId);
+        if (pwd !== confirmPwd) {
+          AlimaToast.show("Validation Error", "Passwords do not match.", "error");
+          return;
+        }
+
+        try {
+          btn.disabled = true;
+          btn.innerHTML = `<span class="shimmer-skeleton" style="width: 24px; height: 24px; display: inline-block; border-radius: 50%;"></span>`;
+
+          const userCreds = await createUserWithEmailAndPassword(auth, email, pwd);
+          const user = userCreds.user;
+          await updateProfile(user, { displayName: name });
+          
+          // Save in users collection
+          await setDoc(doc(db, "users", user.uid), {
+            uid: user.uid,
+            displayName: name,
+            email: email,
+            createdAt: new Date().toISOString()
           });
+
+          // Log action
+          await window.logActivity("Registered account");
+          
+          triggerSuccessState(card, btn);
+        } catch (err) {
+          btn.disabled = false;
+          btn.textContent = initialText;
+          shakeCard(card);
+          AlimaToast.show("Registration Failed", err.message || "An account could not be created.", "error");
+        }
       }
     }
 
-    function translateAuthError(code) {
-      switch (code) {
-        case 'auth/invalid-credential':
-        case 'auth/wrong-password':
-        case 'auth/user-not-found':
-          return "Invalid email credentials or password.";
-        case 'auth/email-already-in-use':
-          return "This campus email is already registered.";
-        case 'auth/invalid-email':
-          return "Please enter a valid university email format.";
-        case 'auth/weak-password':
-          return "Password selection is too weak. Min 6 characters.";
-        default:
-          return "Authentication system sync error. Try again.";
+    async function handleGoogleSignIn() {
+      const card = document.getElementById('auth-card');
+      try {
+        const result = await signInWithPopup(auth, googleProvider);
+        const user = result.user;
+        
+        await setDoc(doc(db, "users", user.uid), {
+          uid: user.uid,
+          displayName: user.displayName || user.email.split('@')[0],
+          email: user.email,
+          createdAt: new Date().toISOString()
+        }, { merge: true });
+
+        await window.logActivity("Signed in with Google");
+        
+        triggerSuccessState(card, document.querySelector('#login-form button[type="submit"]'));
+      } catch (err) {
+        shakeCard(card);
+        AlimaToast.show("Google Sign In Failed", "Could not complete authentication with Google.", "error");
       }
     }
 
-    function triggerErrorState(card, message, errorMsgId) {
+    async function triggerPasswordReset(event) {
+      event.preventDefault();
+      const email = document.getElementById('login-email').value.trim();
+      if (!email) {
+        AlimaToast.show("Email Required", "Please fill in your Campus Email field to request a reset link.", "warning");
+        return;
+      }
+
+      try {
+        await sendPasswordResetEmail(auth, email);
+        AlimaToast.show("Reset Link Sent", "Check your campus email inbox for instructions.", "success");
+      } catch (err) {
+        AlimaToast.show("Reset Error", "Failed to dispatch password reset request.", "error");
+      }
+    }
+
+    function shakeCard(card) {
       card.classList.remove('shake-error');
-      void card.offsetWidth; // Force reflow
+      void card.offsetWidth;
       card.classList.add('shake-error');
-
-      setTimeout(() => {
-        card.classList.remove('shake-error');
-      }, 500);
-
-      const errorEl = document.getElementById(errorMsgId);
-      if (errorEl) {
-        errorEl.textContent = message;
-        errorEl.style.display = 'block';
-      } else {
-        alert(message);
-      }
     }
 
-    function triggerSuccessState(card) {
+    function triggerSuccessState(card, btn) {
+      if (btn) {
+        btn.style.backgroundColor = 'var(--color-success)';
+        btn.style.backgroundImage = 'none';
+        btn.textContent = '✓ Success';
+      }
+      
       const overlay = document.getElementById('success-overlay');
       overlay.classList.add('active');
 
       setTimeout(() => {
-        window.location.href = 'dashboard.html';
-      }, 1500);
+        window.location.href = "dashboard.html";
+      }, 1000);
     }
 
-    function handleGoogleConnect() {
-      const card = document.getElementById('auth-card');
-      const activeTab = document.querySelector('.tab-btn.active').textContent.toLowerCase().includes('signup') ? 'signup' : 'login';
-      const errorMsgId = activeTab === 'login' ? 'login-error-msg' : 'signup-error-msg';
-      const errorEl = document.getElementById(errorMsgId);
-      if (errorEl) errorEl.style.display = 'none';
-
-      signInWithPopup(auth, googleProvider)
-        .then(async (result) => {
-          const user = result.user;
-          try {
-            await setDoc(doc(db, "users", user.uid), {
-              uid: user.uid,
-              email: user.email,
-              displayName: user.displayName || user.email.split('@')[0],
-              createdAt: new Date().toISOString(),
-              websites: []
-            }, { merge: true });
-          } catch (fsErr) {
-            console.error("Firestore sync error:", fsErr);
-          }
-          triggerSuccessState(card);
-        })
-        .catch((error) => {
-          triggerErrorState(card, "Failed to authenticate with your Google account.", errorMsgId);
-        });
-    }
-
-    function forgotPassword(event) {
-      event.preventDefault();
-      const emailInput = document.getElementById('login-email');
-      const emailVal = emailInput.value.trim();
-
-      if (!emailVal) {
-        if (window.AlimaToast) {
-          window.AlimaToast.show("Reset Error", "Please enter your email address in the Campus Email field first.", "error");
-        } else {
-          alert("Please enter your email address in the Campus Email field first.");
-        }
-        return;
-      }
-
-      sendPasswordResetEmail(auth, emailVal)
-        .then(() => {
-          if (window.AlimaToast) {
-            window.AlimaToast.show("Password Reset", "Reset link sent to your email", "success");
-          } else {
-            alert("Reset link sent to your email");
-          }
-        })
-        .catch((error) => {
-          if (window.AlimaToast) {
-            window.AlimaToast.show("Reset Error", "Failed to send reset email. Ensure the format is correct.", "error");
-          } else {
-            alert("Failed to send reset email. Ensure the format is correct.");
-          }
-        });
-    }
-
-    // Bind modules scoping to window for inline onclick accessibility
-    window.switchTab = switchTab;
-    window.togglePasswordVisibility = togglePasswordVisibility;
-    window.handleAuthSubmit = handleAuthSubmit;
-    window.handleGoogleConnect = handleGoogleConnect;
-    window.forgotPassword = forgotPassword;
+    window.switchFormTab = switchFormTab;
+    window.togglePasswordInput = togglePasswordInput;
+    window.checkPwdStrength = checkPwdStrength;
+    window.handleAuthAction = handleAuthAction;
+    window.handleGoogleSignIn = handleGoogleSignIn;
+    window.triggerPasswordReset = triggerPasswordReset;
   </script>
 </body>
 </html>

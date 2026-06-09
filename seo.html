@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alima CMS - SEO Settings</title>
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+  
+  <!-- Shared Design System CSS -->
+  <link rel="stylesheet" href="design-system.css">
+  
+  <style>
+    body {
+      background-color: #f8f9fc;
+      color: #111827;
+    }
+
+    /* SEO Workspace layout */
+    .seo-layout {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 1024px) {
+      .seo-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Google Search Simulation Mockup */
+    .google-mockup {
+      background: #ffffff;
+      border: 1px solid var(--border-color-light);
+      border-radius: var(--radius-card);
+      padding: 24px;
+      box-shadow: var(--shadow-standard);
+      font-family: Arial, sans-serif; /* matches google style font */
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 16px;
+    }
+
+    .google-link {
+      font-size: 14px;
+      color: #202124;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      line-height: 1.3;
+    }
+
+    .google-title {
+      font-size: 20px;
+      color: #1a0dab;
+      text-decoration: none;
+      line-height: 1.3;
+      margin-bottom: 2px;
+      display: inline-block;
+      word-break: break-word;
+    }
+
+    .google-title:hover {
+      text-decoration: underline;
+    }
+
+    .google-desc {
+      font-size: 14px;
+      color: #4d5156;
+      line-height: 1.58;
+      word-break: break-word;
+    }
+
+    /* Character Counter styling */
+    .counter-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      align-self: flex-end;
+    }
+
+    .counter-badge.warning {
+      color: var(--color-warning);
+    }
+
+    .counter-badge.danger {
+      color: var(--color-error);
+    }
+
+    /* Pre Sitemap block styling */
+    .sitemap-pre {
+      background: var(--bg-sidebar);
+      color: #cbd5e1;
+      font-family: monospace;
+      font-size: 0.85rem;
+      padding: 20px;
+      border-radius: var(--radius-standard);
+      overflow-x: auto;
+      max-height: 300px;
+      border: 1px solid var(--border-color-dark);
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Sidebar navigation -->
+    <aside class="alima-sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon">A</div>
+        <span class="brand-text">Alima CMS</span>
+        <button class="sidebar-toggle">❮</button>
+      </div>
+      
+      <ul class="sidebar-menu">
+        <li class="menu-item">
+          <a href="dashboard.html" class="menu-link">
+            <i>🏠</i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="dashboard.html#websites-section" class="menu-link">
+            <i>🌐</i>
+            <span>My Websites</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="dashboard.html#websites-section" class="menu-link" onclick="AlimaToast.show('Content Manager', 'To edit content, click \'Edit Site\' on any of your websites.', 'info', 4000)">
+            <i>📄</i>
+            <span>Content</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="builder.html" class="menu-link">
+            <i>🧩</i>
+            <span>Page Builder</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="themes.html" class="menu-link">
+            <i>🎨</i>
+            <span>Themes</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="media.html" class="menu-link">
+            <i>🖼</i>
+            <span>Media Library</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="forms.html" class="menu-link">
+            <i>📋</i>
+            <span>Forms</span>
+          </a>
+        </li>
+        <li class="menu-item active">
+          <a href="seo.html" class="menu-link">
+            <i>🔍</i>
+            <span>SEO Settings</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="publishing.html" class="menu-link">
+            <i>🚀</i>
+            <span>Publishing</span>
+          </a>
+        </li>
+        <li class="menu-item" style="margin-top: auto;">
+          <a href="#" class="menu-link" onclick="handleSignOutAction()">
+            <i>🚪</i>
+            <span>Sign Out</span>
+          </a>
+        </li>
+      </ul>
+      
+      <div class="sidebar-footer">
+        <div class="user-avatar" id="sidebar-avatar">--</div>
+        <div class="user-info">
+          <span class="user-name" id="sidebar-username">Loading...</span>
+          <span class="user-role">Campus Admin</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="alima-main-content page-fade-scale">
+      
+      <!-- Top header bar -->
+      <header style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color-light); padding-bottom: 16px; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <h2 style="font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px;">SEO & Site Maps</h2>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">Optimize search engine indexing visibility and preview sitemaps.</p>
+        </div>
+        
+        <!-- Site selectors -->
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 0.9rem; font-weight: 700; color: var(--text-muted);">Website:</span>
+            <select id="site-selector" class="alima-input" style="width: 200px; height: 42px; padding: 0 16px; cursor: pointer;" onchange="loadSitePages(this.value)">
+              <option value="">Loading sites...</option>
+            </select>
+          </div>
+          
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 0.9rem; font-weight: 700; color: var(--text-muted);">Page:</span>
+            <select id="page-selector" class="alima-input" style="width: 180px; height: 42px; padding: 0 16px; cursor: pointer;" onchange="loadPageSEOData(this.value)">
+              <option value="">Loading pages...</option>
+            </select>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Columns Grid -->
+      <section class="seo-layout">
+        
+        <!-- Column 1: Config Cards -->
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+          
+          <div class="alima-card" style="position: relative;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+              <h3 style="font-size: 1.25rem; font-weight: 800;">SEO Metadata</h3>
+              <div style="display: flex; gap: 8px;">
+                <button class="alima-btn btn-ghost btn-sm" id="btn-create-page-direct" onclick="openCreatePageModal()">+ New Page</button>
+                <button class="alima-btn btn-primary btn-sm" onclick="savePageSEOData()">Save SEO Config</button>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+              
+              <!-- Meta Title -->
+              <div class="alima-input-group">
+                <div style="display: flex; justify-content: space-between;">
+                  <label class="alima-input-label">Meta Page Title</label>
+                  <span class="counter-badge" id="title-counter">0 / 60</span>
+                </div>
+                <input type="text" id="meta-title-input" class="alima-input" placeholder="e.g. Scholar Profile | Dr. Sarah Jenkins" oninput="syncSEOPairings()">
+                <p style="font-size: 0.75rem; color: var(--text-muted);">Recommended length is between 50 and 60 characters for best display layout.</p>
+              </div>
+
+              <!-- Meta Description -->
+              <div class="alima-input-group">
+                <div style="display: flex; justify-content: space-between;">
+                  <label class="alima-input-label">Meta Description Description</label>
+                  <span class="counter-badge" id="desc-counter">0 / 160</span>
+                </div>
+                <textarea id="meta-desc-input" class="alima-input" rows="4" style="resize: vertical;" placeholder="e.g. Discover publications, curriculum vitae, classroom lecture schedules, and ongoing biotechnology research projects." oninput="syncSEOPairings()"></textarea>
+                <p style="font-size: 0.75rem; color: var(--text-muted);">Summarize the page content within 150-160 characters for Google indexing snipping.</p>
+              </div>
+
+              <!-- OG Image URL -->
+              <div class="alima-input-group">
+                <label class="alima-input-label">Social Share (Open Graph) Image URL</label>
+                <div style="display: flex; gap: 8px;">
+                  <input type="text" id="meta-og-image-input" class="alima-input" placeholder="https://example.com/assets/og-home.jpg" oninput="syncSEOPairings()">
+                  <button class="alima-btn btn-outline btn-sm" onclick="openMediaSelectorModal()">Media Library</button>
+                </div>
+                <p style="font-size: 0.75rem; color: var(--text-muted);">Image used for Facebook, Twitter, and Slack link share cards (Ratio 1200x630px).</p>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Dynamic Sitemap block -->
+          <div class="alima-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <div>
+                <h3 style="font-size: 1.25rem; font-weight: 800;">XML Sitemap Compilation</h3>
+                <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 2px;">Dynamically calculated list of sitemap indexing rules.</p>
+              </div>
+              <button class="alima-btn btn-ghost btn-sm" style="border: 1.5px solid var(--border-color-light);" onclick="copySitemapXml()">Copy XML</button>
+            </div>
+
+            <pre class="sitemap-pre"><code id="sitemap-code-block">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"&gt;
+  &lt;!-- Select website to compile sitemap --&gt;
+&lt;/urlset&gt;</code></pre>
+          </div>
+
+        </div>
+
+        <!-- Column 2: Live Simulator -->
+        <div>
+          <div style="position: sticky; top: 32px; display: flex; flex-direction: column; gap: 24px;">
+            
+            <!-- Google Simulation -->
+            <div>
+              <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main);">Google Search Engine Simulation</h3>
+              <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px; margin-bottom: 12px;">Simulates appearance on mobile and desktop search engine result pages.</p>
+              
+              <div class="google-mockup">
+                <div class="google-link">
+                  <span style="font-size: 1rem; color: #202124;">🌐</span>
+                  <span id="google-url-text">https://portfolio.alima.site</span>
+                </div>
+                <a href="#" class="google-title" id="google-title-text" onclick="event.preventDefault()">Scholar Profile | Dr. Sarah Jenkins</a>
+                <p class="google-desc" id="google-desc-text">Discover publications, curriculum vitae, classroom lecture schedules, and ongoing biotechnology research projects.</p>
+              </div>
+            </div>
+
+            <!-- Social Card Card Preview -->
+            <div class="alima-card" style="padding: 20px;">
+              <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 12px;">Social Feed Card Preview</h3>
+              <div style="border: 1px solid var(--border-color-light); border-radius: 8px; overflow: hidden; background: white;">
+                <div id="social-preview-image-box" style="height: 160px; background: var(--gradient-dark); display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                  <span style="color: #cbd5e1; font-size: 0.9rem;">No OG Image URL Provided</span>
+                </div>
+                <div style="padding: 14px; display: flex; flex-direction: column; gap: 4px;">
+                  <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;" id="social-preview-domain">alima.site</span>
+                  <strong style="font-size: 0.95rem; color: var(--text-main); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="social-preview-title">Open Graph Title</strong>
+                  <p style="font-size: 0.825rem; color: var(--text-muted); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" id="social-preview-desc">Form description goes here...</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Create Page Modal -->
+  <div class="alima-modal-overlay" id="create-page-modal">
+    <div class="alima-modal">
+      <div class="modal-header">
+        <h3 style="font-size: 1.4rem; font-weight: 700;">Create Site Page</h3>
+        <button class="modal-close" onclick="closeCreatePageModal()">&times;</button>
+      </div>
+      <form id="create-page-form" onsubmit="submitNewPage(event)">
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          
+          <div class="alima-input-group">
+            <label class="alima-input-label">Page Title</label>
+            <input type="text" id="new-page-title" class="alima-input" placeholder="e.g. Publications" required>
+          </div>
+
+          <div class="alima-input-group">
+            <label class="alima-input-label">Page URL Slug</label>
+            <input type="text" id="new-page-slug" class="alima-input" placeholder="e.g. publications" required>
+          </div>
+
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="alima-btn btn-ghost" onclick="closeCreatePageModal()">Cancel</button>
+          <button type="submit" class="alima-btn btn-primary">Create Page</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Media Library Selection Modal -->
+  <div class="alima-modal-overlay" id="media-select-modal">
+    <div class="alima-modal" style="max-width: 650px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.4rem; font-weight: 700;">Select OG Image Asset</h3>
+        <button class="modal-close" onclick="closeMediaSelectorModal()">&times;</button>
+      </div>
+      
+      <div style="max-height: 350px; overflow-y: auto; margin-top: 12px; display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px;" id="media-selection-grid">
+        <!-- populated dynamically -->
+        <div style="grid-column:1/-1; text-align:center; padding: 24px; color:var(--text-muted);">No images found inside Media Library.</div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="alima-btn btn-ghost" onclick="closeMediaSelectorModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shared JS Utilities -->
+  <script src="shared.js"></script>
+
+  <!-- Firebase configuration import -->
+  <script type="module" src="firebase.js"></script>
+
+  <script type="module">
+    import { auth, db } from "./firebase.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+    import { collection, query, where, getDocs, addDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+    let websites = [];
+    let selectedWebsiteId = "";
+    
+    let pages = [];
+    let selectedPageId = "";
+    let mediaList = [];
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      const name = user.displayName || user.email;
+      document.getElementById('sidebar-username').textContent = name;
+      document.getElementById('sidebar-avatar').textContent = name.slice(0, 2).toUpperCase();
+
+      // Retrieve websites and load media files array in background
+      await loadWebsites(user.uid);
+      await fetchMediaFiles(user.uid);
+    });
+
+    // 1. Websites list fetch
+    async function loadWebsites(uid) {
+      try {
+        const q = query(collection(db, "websites"), where("ownerUid", "==", uid));
+        const snap = await getDocs(q);
+        const selector = document.getElementById('site-selector');
+        selector.innerHTML = '';
+        websites = [];
+
+        if (snap.empty) {
+          selector.innerHTML = `<option value="">No Sites Found</option>`;
+          document.getElementById('page-selector').innerHTML = `<option value="">No Pages</option>`;
+          disableSEOInputs(true);
+          return;
+        }
+
+        snap.forEach(d => {
+          websites.push({ id: d.id, ...d.data() });
+          const opt = document.createElement('option');
+          opt.value = d.id;
+          opt.textContent = `${d.data().subdomain}.alima.site`;
+          selector.appendChild(opt);
+        });
+
+        selectedWebsiteId = websites[0].id;
+        selector.value = selectedWebsiteId;
+        
+        await loadSitePages(selectedWebsiteId);
+
+      } catch (err) {
+        console.error("Failed to load websites list:", err);
+      }
+    }
+
+    // 2. Fetch pages for active website
+    async function loadSitePages(webId) {
+      if (!webId) return;
+      selectedWebsiteId = webId;
+
+      try {
+        const q = query(collection(db, "pages"), where("websiteId", "==", webId));
+        const snap = await getDocs(q);
+        const selector = document.getElementById('page-selector');
+        selector.innerHTML = '';
+        pages = [];
+
+        if (snap.empty) {
+          selector.innerHTML = `<option value="">No Pages Found</option>`;
+          selectedPageId = "";
+          disableSEOInputs(true);
+          
+          // Clear inputs
+          document.getElementById('meta-title-input').value = "";
+          document.getElementById('meta-desc-input').value = "";
+          document.getElementById('meta-og-image-input').value = "";
+          
+          syncSEOPairings();
+          compileSitemapCode();
+          return;
+        }
+
+        disableSEOInputs(false);
+
+        snap.forEach(d => {
+          pages.push({ id: d.id, ...d.data() });
+          const opt = document.createElement('option');
+          opt.value = d.id;
+          opt.textContent = `${d.data().title} (${d.data().slug || '/'})`;
+          selector.appendChild(opt);
+        });
+
+        // Default selector select
+        selectedPageId = pages[0].id;
+        selector.value = selectedPageId;
+
+        await loadPageSEOData(selectedPageId);
+        
+        // Compile sitemap XML text
+        compileSitemapCode();
+
+      } catch (err) {
+        console.error("Failed to load site pages:", err);
+      }
+    }
+
+    // 3. Load SEO values for active Page
+    function loadPageSEOData(pageId) {
+      if (!pageId) return;
+      selectedPageId = pageId;
+      const page = pages.find(p => p.id === pageId);
+      if (!page) return;
+
+      const titleInput = document.getElementById('meta-title-input');
+      const descInput = document.getElementById('meta-desc-input');
+      const ogInput = document.getElementById('meta-og-image-input');
+
+      if (page.seo) {
+        titleInput.value = page.seo.title || "";
+        descInput.value = page.seo.description || "";
+        ogInput.value = page.seo.ogImage || "";
+      } else {
+        titleInput.value = "";
+        descInput.value = "";
+        ogInput.value = "";
+      }
+
+      syncSEOPairings();
+    }
+
+    // Sync input lengths and mockup visuals
+    function syncSEOPairings() {
+      const title = document.getElementById('meta-title-input').value;
+      const desc = document.getElementById('meta-desc-input').value;
+      const ogImg = document.getElementById('meta-og-image-input').value.trim();
+
+      const activeWeb = websites.find(w => w.id === selectedWebsiteId);
+      const activePage = pages.find(p => p.id === selectedPageId);
+
+      const subDomain = activeWeb ? `${activeWeb.subdomain}.alima.site` : 'portfolio.alima.site';
+      const slug = activePage ? (activePage.slug === 'home' || activePage.slug === '/' ? '' : ` › ${activePage.slug}`) : '';
+
+      // Counters
+      const titleCounter = document.getElementById('title-counter');
+      const descCounter = document.getElementById('desc-counter');
+
+      titleCounter.textContent = `${title.length} / 60`;
+      descCounter.textContent = `${desc.length} / 160`;
+
+      // Color triggers on counter
+      titleCounter.className = "counter-badge";
+      if (title.length > 60) titleCounter.classList.add('danger');
+      else if (title.length > 50) titleCounter.classList.add('warning');
+
+      descCounter.className = "counter-badge";
+      if (desc.length > 160) descCounter.classList.add('danger');
+      else if (desc.length > 140) descCounter.classList.add('warning');
+
+      // Google mockup sync
+      document.getElementById('google-url-text').innerHTML = `https://${subDomain}${slug}`;
+      document.getElementById('google-title-text').textContent = title || (activePage ? `${activePage.title} | Alima Site` : 'Page Title');
+      document.getElementById('google-desc-text').textContent = desc || 'Please fill in meta description parameters to simulate search engine snips...';
+
+      // Social card preview sync
+      document.getElementById('social-preview-domain').textContent = subDomain.toUpperCase();
+      document.getElementById('social-preview-title').textContent = title || (activePage ? activePage.title : 'Page Share Card');
+      document.getElementById('social-preview-desc').textContent = desc || 'Description text is simulated here...';
+      
+      const imgBox = document.getElementById('social-preview-image-box');
+      if (ogImg) {
+        imgBox.innerHTML = `<img src="${ogImg}" style="width:100%; height:100%; object-fit:cover;">`;
+      } else {
+        imgBox.innerHTML = `<span style="color: #cbd5e1; font-size: 0.9rem;">No OG Image URL Provided</span>`;
+      }
+    }
+
+    // Save SEO metadata back to page document
+    async function savePageSEOData() {
+      if (!selectedPageId) {
+        AlimaToast.show("Select Page", "Please choose a page to record SEO updates.", "warning");
+        return;
+      }
+
+      const title = document.getElementById('meta-title-input').value.trim();
+      const desc = document.getElementById('meta-desc-input').value.trim();
+      const ogImg = document.getElementById('meta-og-image-input').value.trim();
+
+      try {
+        const ref = doc(db, "pages", selectedPageId);
+        const seoObj = {
+          title: title,
+          description: desc,
+          ogImage: ogImg
+        };
+
+        await updateDoc(ref, {
+          seo: seoObj,
+          updatedAt: new Date().toISOString()
+        });
+
+        // Update local memory state
+        const idx = pages.findIndex(p => p.id === selectedPageId);
+        if (idx !== -1) pages[idx].seo = seoObj;
+
+        await window.logActivity(`Saved SEO configurations on page "${pages.find(p => p.id === selectedPageId).title}"`);
+        AlimaToast.show("SEO Updated", "Search engine optimization data persistent in Firestore.", "success");
+
+        // Reload sitemap block
+        compileSitemapCode();
+
+      } catch (err) {
+        AlimaToast.show("Save Failed", "Firestore could not receive SEO data structures.", "error");
+      }
+    }
+
+    // Disable input states if no pages exist
+    function disableSEOInputs(val) {
+      document.getElementById('meta-title-input').disabled = val;
+      document.getElementById('meta-desc-input').disabled = val;
+      document.getElementById('meta-og-image-input').disabled = val;
+    }
+
+    // Modal creation fallback
+    function openCreatePageModal() {
+      document.getElementById('create-page-modal').classList.add('active');
+      document.getElementById('new-page-title').value = '';
+      document.getElementById('new-page-slug').value = '';
+    }
+
+    function closeCreatePageModal() {
+      document.getElementById('create-page-modal').classList.remove('active');
+    }
+
+    async function submitNewPage(e) {
+      e.preventDefault();
+      if (!selectedWebsiteId) return;
+
+      const title = document.getElementById('new-page-title').value.trim();
+      const slugInput = document.getElementById('new-page-slug').value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '');
+
+      if (!slugInput) {
+        AlimaToast.show("Validation Error", "Please provide a valid slug syntax.", "error");
+        return;
+      }
+
+      try {
+        const newPage = {
+          websiteId: selectedWebsiteId,
+          title: title,
+          slug: slugInput,
+          status: 'draft',
+          blocks: [],
+          seo: {
+            title: `${title} | Alima Site`,
+            description: `Check out our ${title.toLowerCase()} page on Alima.`,
+            ogImage: ''
+          },
+          updatedAt: new Date().toISOString()
+        };
+
+        await addDoc(collection(db, "pages"), newPage);
+        closeCreatePageModal();
+
+        await window.logActivity(`Created page layout "${title}"`);
+        AlimaToast.show("Page Created", `Successfully initialized layout "${title}".`, "success");
+
+        // Re-query and select new page
+        await loadSitePages(selectedWebsiteId);
+
+      } catch (err) {
+        AlimaToast.show("Page Creation Failed", "Could not commit document.", "error");
+      }
+    }
+
+    // XML sitemap generator
+    function compileSitemapCode() {
+      const codeBlock = document.getElementById('sitemap-code-block');
+      const activeWeb = websites.find(w => w.id === selectedWebsiteId);
+      
+      if (!activeWeb || pages.length === 0) {
+        codeBlock.textContent = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- No page mappings found to serialize -->
+</urlset>`;
+        return;
+      }
+
+      const domain = `${activeWeb.subdomain}.alima.site`;
+      const dateStr = new Date().toISOString().split('T')[0];
+
+      let urlsXml = '';
+      pages.forEach(p => {
+        const slug = p.slug === 'home' || p.slug === '/' ? '' : p.slug;
+        const priority = p.slug === 'home' || p.slug === '/' ? '1.0' : '0.8';
+        urlsXml += `  <url>
+    <loc>https://${domain}/${slug}</loc>
+    <lastmod>${dateStr}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>${priority}</priority>
+  </url>\n`;
+      });
+
+      codeBlock.textContent = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urlsXml}</urlset>`;
+    }
+
+    function copySitemapXml() {
+      const text = document.getElementById('sitemap-code-block').textContent;
+      const el = document.createElement('textarea');
+      el.value = text;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+
+      AlimaToast.show("XML Copied", "Sitemap XML copied to clipboard.", "success");
+    }
+
+    // Media library search selector
+    async function fetchMediaFiles(uid) {
+      try {
+        const q = query(collection(db, "media"), where("ownerUid", "==", uid));
+        const snap = await getDocs(q);
+        mediaList = [];
+        snap.forEach(d => {
+          if (d.data().type.startsWith('image/')) {
+            mediaList.push(d.data());
+          }
+        });
+      } catch (err) {
+        console.warn("Could not retrieve media gallery preview:", err);
+      }
+    }
+
+    function openMediaSelectorModal() {
+      const grid = document.getElementById('media-selection-grid');
+      grid.innerHTML = '';
+
+      if (mediaList.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 24px; color: var(--text-muted);">
+            No image assets found inside Media Library. Feel free to copy-paste URLs manually.
+          </div>
+        `;
+      } else {
+        mediaList.forEach(m => {
+          const item = document.createElement('div');
+          item.style.cssText = `
+            border: 1px solid var(--border-color-light);
+            border-radius: 8px;
+            overflow: hidden;
+            height: 100px;
+            cursor: pointer;
+            position: relative;
+            background: var(--gradient-dark);
+          `;
+          item.innerHTML = `<img src="${m.url}" style="width:100%; height:100%; object-fit:cover;" title="${m.name}">`;
+          
+          item.onclick = () => {
+            document.getElementById('meta-og-image-input').value = m.url;
+            syncSEOPairings();
+            closeMediaSelectorModal();
+          };
+
+          grid.appendChild(item);
+        });
+      }
+
+      document.getElementById('media-select-modal').classList.add('active');
+    }
+
+    function closeMediaSelectorModal() {
+      document.getElementById('media-select-modal').classList.remove('active');
+    }
+
+    // Bind triggers
+    window.loadSitePages = loadSitePages;
+    window.loadPageSEOData = loadPageSEOData;
+    window.syncSEOPairings = syncSEOPairings;
+    window.savePageSEOData = savePageSEOData;
+    
+    window.openCreatePageModal = openCreatePageModal;
+    window.closeCreatePageModal = closeCreatePageModal;
+    window.submitNewPage = submitNewPage;
+    window.copySitemapXml = copySitemapXml;
+    
+    window.openMediaSelectorModal = openMediaSelectorModal;
+    window.closeMediaSelectorModal = closeMediaSelectorModal;
+
+    async function handleSignOutAction() {
+      if (confirm("Are you sure you want to sign out?")) {
+        signOut(auth).then(() => {
+          window.location.href = "login.html";
+        });
+      }
+    }
+    window.handleSignOutAction = handleSignOutAction;
+
+  </script>
+</body>
+</html>

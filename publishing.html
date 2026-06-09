@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alima CMS - Publishing Hub</title>
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+  
+  <!-- Shared Design System CSS -->
+  <link rel="stylesheet" href="design-system.css">
+  
+  <style>
+    body {
+      background-color: #f8f9fc;
+      color: #111827;
+    }
+
+    /* Status Pill overrides */
+    .alima-badge.badge-published {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--color-success);
+    }
+    .alima-badge.badge-published::before {
+      background-color: var(--color-success);
+    }
+
+    .alima-badge.badge-scheduled {
+      background: rgba(6, 182, 212, 0.1);
+      color: var(--color-accent);
+    }
+    .alima-badge.badge-scheduled::before {
+      background-color: var(--color-accent);
+    }
+
+    /* Release table formatting */
+    .publishing-table-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color-light);
+      border-radius: var(--radius-card);
+      padding: 24px;
+      box-shadow: var(--shadow-standard);
+      overflow: hidden;
+    }
+
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      margin-top: 16px;
+      border-radius: var(--radius-standard);
+      border: 1px solid var(--border-color-light);
+    }
+
+    .publishing-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    .publishing-table th {
+      background-color: var(--bg-surface);
+      color: var(--text-main);
+      font-family: var(--font-heading);
+      font-weight: 700;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border-color-light);
+      white-space: nowrap;
+    }
+
+    .publishing-table td {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border-color-light);
+      color: var(--text-main);
+      vertical-align: middle;
+    }
+
+    .publishing-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .publishing-table tr:hover td {
+      background-color: rgba(124, 58, 237, 0.02);
+    }
+
+    /* Schedule Config Form Row */
+    .schedule-control-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      width: auto;
+    }
+
+    .schedule-input {
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      border: 1px solid var(--border-color-light);
+      border-radius: 6px;
+      padding: 6px 10px;
+      outline: none;
+    }
+
+    .schedule-input:focus {
+      border-color: var(--color-primary);
+    }
+
+    /* Bulk actions menu bar */
+    .bulk-bar {
+      background: #ffffff;
+      border: 1px solid var(--border-color-light);
+      border-radius: var(--radius-card);
+      padding: 16px 24px;
+      display: none; /* toggled based on checkbox selection counts */
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-hover);
+      margin-bottom: 20px;
+      border-left: 4px solid var(--color-primary);
+      animation: slideDown 0.2s ease;
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .bulk-count {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-main);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Sidebar navigation -->
+    <aside class="alima-sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon">A</div>
+        <span class="brand-text">Alima CMS</span>
+        <button class="sidebar-toggle">❮</button>
+      </div>
+      
+      <ul class="sidebar-menu">
+        <li class="menu-item">
+          <a href="dashboard.html" class="menu-link">
+            <i>🏠</i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="dashboard.html#websites-section" class="menu-link">
+            <i>🌐</i>
+            <span>My Websites</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="dashboard.html#websites-section" class="menu-link" onclick="AlimaToast.show('Content Manager', 'To edit content, click \'Edit Site\' on any of your websites.', 'info', 4000)">
+            <i>📄</i>
+            <span>Content</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="builder.html" class="menu-link">
+            <i>🧩</i>
+            <span>Page Builder</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="themes.html" class="menu-link">
+            <i>🎨</i>
+            <span>Themes</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="media.html" class="menu-link">
+            <i>🖼</i>
+            <span>Media Library</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="forms.html" class="menu-link">
+            <i>📋</i>
+            <span>Forms</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="seo.html" class="menu-link">
+            <i>🔍</i>
+            <span>SEO Settings</span>
+          </a>
+        </li>
+        <li class="menu-item active">
+          <a href="publishing.html" class="menu-link">
+            <i>🚀</i>
+            <span>Publishing</span>
+          </a>
+        </li>
+        <li class="menu-item" style="margin-top: auto;">
+          <a href="#" class="menu-link" onclick="handleSignOutAction()">
+            <i>🚪</i>
+            <span>Sign Out</span>
+          </a>
+        </li>
+      </ul>
+      
+      <div class="sidebar-footer">
+        <div class="user-avatar" id="sidebar-avatar">--</div>
+        <div class="user-info">
+          <span class="user-name" id="sidebar-username">Loading...</span>
+          <span class="user-role">Campus Admin</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="alima-main-content page-fade-scale">
+      
+      <!-- Top header bar -->
+      <header style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color-light); padding-bottom: 16px; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <h2 style="font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px;">Publishing Release Control</h2>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">Launch layout structures to the web instantly or configure scheduled time pipelines.</p>
+        </div>
+        
+        <!-- Site selectors -->
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 0.9rem; font-weight: 700; color: var(--text-muted);">Website:</span>
+          <select id="site-selector" class="alima-input" style="width: 220px; cursor: pointer; height: 44px; padding: 0 16px;" onchange="loadSitePages(this.value)">
+            <option value="">Loading sites...</option>
+          </select>
+        </div>
+      </header>
+
+      <!-- Bulk actions control bar -->
+      <div class="bulk-bar" id="bulk-actions-bar">
+        <span class="bulk-count" id="bulk-selected-count">0 items selected</span>
+        <div style="display: flex; gap: 8px;">
+          <button class="alima-btn btn-primary btn-sm" onclick="triggerBulkAction('publish')">Bulk Publish</button>
+          <button class="alima-btn btn-outline btn-sm" onclick="triggerBulkAction('unpublish')">Revert to Draft</button>
+        </div>
+      </div>
+
+      <!-- Release Pages Table Card -->
+      <section style="display: flex; flex-direction: column; gap: 24px;">
+        
+        <div class="publishing-table-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; border-bottom: 1px solid var(--border-color-light); padding-bottom: 16px;">
+            <h3 style="font-size: 1.25rem; font-weight: 800;">Site Pages Index</h3>
+            <button class="alima-btn btn-primary btn-sm" onclick="openCreatePageModal()">+ Add New Page</button>
+          </div>
+
+          <div class="table-container">
+            <table class="publishing-table">
+              <thead>
+                <tr>
+                  <th style="width: 40px; text-align: center;">
+                    <input type="checkbox" id="select-all-pages" style="accent-color: var(--color-primary); cursor: pointer;" onchange="toggleSelectAll(this.checked)">
+                  </th>
+                  <th>Page Name</th>
+                  <th>Slug URL Path</th>
+                  <th>Current Status</th>
+                  <th>Publication Scheduler</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="pages-table-body">
+                <tr>
+                  <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 40px;">Select a website to populate layout page documents.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Create Page Modal -->
+  <div class="alima-modal-overlay" id="create-page-modal">
+    <div class="alima-modal">
+      <div class="modal-header">
+        <h3 style="font-size: 1.4rem; font-weight: 700;">Add Site Page</h3>
+        <button class="modal-close" onclick="closeCreatePageModal()">&times;</button>
+      </div>
+      <form id="create-page-form" onsubmit="submitNewPage(event)">
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          
+          <div class="alima-input-group">
+            <label class="alima-input-label">Page Title</label>
+            <input type="text" id="new-page-title" class="alima-input" placeholder="e.g. Courses & Class Syllabi" required>
+          </div>
+
+          <div class="alima-input-group">
+            <label class="alima-input-label">URL Slug Prefix</label>
+            <input type="text" id="new-page-slug" class="alima-input" placeholder="e.g. syllabi" required>
+          </div>
+
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="alima-btn btn-ghost" onclick="closeCreatePageModal()">Cancel</button>
+          <button type="submit" class="alima-btn btn-primary">Create Page</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Shared JS Utilities -->
+  <script src="shared.js"></script>
+
+  <!-- Firebase configuration import -->
+  <script type="module" src="firebase.js"></script>
+
+  <script type="module">
+    import { auth, db } from "./firebase.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+    import { collection, query, where, getDocs, addDoc, updateDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+    let websites = [];
+    let selectedWebsiteId = "";
+    
+    let pages = [];
+    let selectedPageIds = [];
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      const name = user.displayName || user.email;
+      document.getElementById('sidebar-username').textContent = name;
+      document.getElementById('sidebar-avatar').textContent = name.slice(0, 2).toUpperCase();
+
+      // Load Websites List
+      await loadWebsites(user.uid);
+    });
+
+    // 1. Websites fetch
+    async function loadWebsites(uid) {
+      try {
+        const q = query(collection(db, "websites"), where("ownerUid", "==", uid));
+        const snap = await getDocs(q);
+        const selector = document.getElementById('site-selector');
+        selector.innerHTML = '';
+        websites = [];
+
+        if (snap.empty) {
+          selector.innerHTML = `<option value="">No Sites Found</option>`;
+          document.getElementById('pages-table-body').innerHTML = `
+            <tr>
+              <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 40px;">
+                No campus sites created yet. Initialize a site on the dashboard to trigger page releases.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        snap.forEach(d => {
+          websites.push({ id: d.id, ...d.data() });
+          const opt = document.createElement('option');
+          opt.value = d.id;
+          opt.textContent = `${d.data().subdomain}.alima.site`;
+          selector.appendChild(opt);
+        });
+
+        selectedWebsiteId = websites[0].id;
+        selector.value = selectedWebsiteId;
+
+        await loadSitePages(selectedWebsiteId);
+
+      } catch (err) {
+        console.error("Failed to load websites list:", err);
+      }
+    }
+
+    // 2. Fetch pages for selected website
+    async function loadSitePages(webId) {
+      if (!webId) return;
+      selectedWebsiteId = webId;
+      selectedPageIds = [];
+      document.getElementById('select-all-pages').checked = false;
+      syncBulkActionsBar();
+
+      try {
+        const q = query(collection(db, "pages"), where("websiteId", "==", webId));
+        const snap = await getDocs(q);
+        
+        pages = [];
+        const container = document.getElementById('pages-table-body');
+        container.innerHTML = '';
+
+        snap.forEach(d => {
+          pages.push({ id: d.id, ...d.data() });
+        });
+
+        if (pages.length === 0) {
+          container.innerHTML = `
+            <tr>
+              <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 40px;">
+                This website has no pages yet. Click "+ Add New Page" to draft layout records.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        // Sort by slug alphabetical
+        pages.sort((a,b) => (a.slug || '').localeCompare(b.slug || ''));
+
+        pages.forEach(p => {
+          const tr = document.createElement('tr');
+          tr.id = `page-${p.id}`;
+
+          const status = p.status || 'draft';
+          const badgeClass = `badge-${status}`;
+          
+          let scheduleStr = '-';
+          if (status === 'scheduled' && p.scheduledAt) {
+            const date = new Date(p.scheduledAt);
+            scheduleStr = `📅 ${date.toLocaleDateString()} ${date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+          }
+
+          const localDateVal = p.scheduledAt ? p.scheduledAt.slice(0, 16) : "";
+
+          // Action button structures depending on status
+          let actionBtnHtml = '';
+          if (status === 'published') {
+            actionBtnHtml = `<button class="alima-btn btn-ghost btn-sm" style="color: var(--color-warning);" onclick="changePageStatus('${p.id}', 'draft')">Revert Draft</button>`;
+          } else {
+            actionBtnHtml = `<button class="alima-btn btn-primary btn-sm" onclick="changePageStatus('${p.id}', 'published')">Publish Now</button>`;
+          }
+
+          tr.innerHTML = `
+            <td style="text-align: center;">
+              <input type="checkbox" class="page-row-check" value="${p.id}" style="accent-color: var(--color-primary); cursor: pointer;" onchange="toggleSelectRow('${p.id}', this.checked)">
+            </td>
+            <td style="font-weight: 600;">${escapeHtml(p.title)}</td>
+            <td><code>/${escapeHtml(p.slug || '')}</code></td>
+            <td>
+              <span class="alima-badge ${badgeClass}">${status}</span>
+            </td>
+            <td>
+              <div class="schedule-control-group">
+                <input type="datetime-local" id="sched-input-${p.id}" class="schedule-input" value="${localDateVal}">
+                <button class="action-icon-btn" onclick="schedulePageRelease('${p.id}')" title="Apply schedule">✓</button>
+                ${status === 'scheduled' ? `<button class="action-icon-btn delete" onclick="cancelPageSchedule('${p.id}')" title="Cancel schedule">&times;</button>` : ''}
+              </div>
+              <span style="font-size:0.75rem; color:var(--text-muted); display:block; margin-top:4px;">${scheduleStr}</span>
+            </td>
+            <td>
+              <div style="display: flex; gap: 8px; align-items:center;">
+                ${actionBtnHtml}
+                <button class="action-icon-btn delete" onclick="deletePageDirect('${p.id}', '${p.title}')" title="Delete page">🗑️</button>
+              </div>
+            </td>
+          `;
+
+          container.appendChild(tr);
+        });
+
+      } catch (err) {
+        console.error("Failed to load site pages:", err);
+      }
+    }
+
+    // 3. Status Change Direct Actions
+    async function changePageStatus(id, newStatus) {
+      try {
+        const ref = doc(db, "pages", id);
+        const updatePayload = {
+          status: newStatus,
+          updatedAt: new Date().toISOString()
+        };
+
+        if (newStatus !== 'scheduled') {
+          updatePayload.scheduledAt = null;
+        }
+
+        await updateDoc(ref, updatePayload);
+        
+        await window.logActivity(`Changed page release status to ${newStatus}`);
+        AlimaToast.show("Status Updated", `Page changed to ${newStatus.toUpperCase()}`, "success");
+        
+        await loadSitePages(selectedWebsiteId);
+
+      } catch (err) {
+        AlimaToast.show("Operation Failed", "Could not change status.", "error");
+      }
+    }
+
+    // 4. Scheduling Engine Actions
+    async function schedulePageRelease(id) {
+      const input = document.getElementById(`sched-input-${id}`);
+      const val = input.value;
+      if (!val) {
+        AlimaToast.show("Validation Check", "Please pick a date and time to schedule release.", "warning");
+        return;
+      }
+
+      const selectedDate = new Date(val);
+      if (selectedDate <= new Date()) {
+        AlimaToast.show("Validation Check", "Schedule time must be in the future.", "warning");
+        return;
+      }
+
+      try {
+        const ref = doc(db, "pages", id);
+        await updateDoc(ref, {
+          status: 'scheduled',
+          scheduledAt: selectedDate.toISOString(),
+          updatedAt: new Date().toISOString()
+        });
+
+        await window.logActivity(`Scheduled page publication release`);
+        AlimaToast.show("Publication Scheduled", `Successfully scheduled page release.`, "success");
+        await loadSitePages(selectedWebsiteId);
+
+      } catch (err) {
+        AlimaToast.show("Schedule Failed", "Could not write schedule parameters.", "error");
+      }
+    }
+
+    async function cancelPageSchedule(id) {
+      try {
+        const ref = doc(db, "pages", id);
+        await updateDoc(ref, {
+          status: 'draft',
+          scheduledAt: null,
+          updatedAt: new Date().toISOString()
+        });
+
+        await window.logActivity(`Cancelled scheduled publication`);
+        AlimaToast.show("Schedule Cancelled", "Page reverted to draft status.", "success");
+        await loadSitePages(selectedWebsiteId);
+
+      } catch (err) {
+        AlimaToast.show("Cancel Failed", "Could not clear schedules.", "error");
+      }
+    }
+
+    // 5. Bulk Actions Logic
+    function toggleSelectRow(id, isChecked) {
+      if (isChecked) {
+        if (!selectedPageIds.includes(id)) selectedPageIds.push(id);
+      } else {
+        selectedPageIds = selectedPageIds.filter(val => val !== id);
+      }
+      
+      // Sync master check status
+      const totalChecks = document.querySelectorAll('.page-row-check').length;
+      document.getElementById('select-all-pages').checked = (selectedPageIds.length === totalChecks && totalChecks > 0);
+      
+      syncBulkActionsBar();
+    }
+
+    function toggleSelectAll(isChecked) {
+      selectedPageIds = [];
+      const checkboxes = document.querySelectorAll('.page-row-check');
+      checkboxes.forEach(cb => {
+        cb.checked = isChecked;
+        if (isChecked) {
+          selectedPageIds.push(cb.value);
+        }
+      });
+      syncBulkActionsBar();
+    }
+
+    function syncBulkActionsBar() {
+      const bar = document.getElementById('bulk-actions-bar');
+      const text = document.getElementById('bulk-selected-count');
+
+      if (selectedPageIds.length > 0) {
+        text.textContent = `${selectedPageIds.length} pages selected`;
+        bar.style.display = 'flex';
+      } else {
+        bar.style.display = 'none';
+      }
+    }
+
+    async function triggerBulkAction(action) {
+      if (selectedPageIds.length === 0) return;
+      const confirmMsg = action === 'publish' 
+        ? `Are you sure you want to PUBLISH all ${selectedPageIds.length} selected pages?` 
+        : `Are you sure you want to revert all ${selectedPageIds.length} selected pages back to drafts?`;
+      
+      if (!confirm(confirmMsg)) return;
+
+      const newStatus = action === 'publish' ? 'published' : 'draft';
+
+      try {
+        const batchPromises = selectedPageIds.map(id => {
+          const ref = doc(db, "pages", id);
+          return updateDoc(ref, {
+            status: newStatus,
+            scheduledAt: null,
+            updatedAt: new Date().toISOString()
+          });
+        });
+
+        await Promise.all(batchPromises);
+        
+        await window.logActivity(`Executed bulk status updates on ${selectedPageIds.length} pages`);
+        AlimaToast.show("Bulk Actions Complete", `Successfully updated status on selected items.`, "success");
+        
+        await loadSitePages(selectedWebsiteId);
+
+      } catch (err) {
+        AlimaToast.show("Bulk Action Failed", "Failed to update batch of page releases.", "error");
+      }
+    }
+
+    // Page creation / deletions direct triggers
+    function openCreatePageModal() {
+      document.getElementById('create-page-modal').classList.add('active');
+      document.getElementById('new-page-title').value = '';
+      document.getElementById('new-page-slug').value = '';
+    }
+
+    function closeCreatePageModal() {
+      document.getElementById('create-page-modal').classList.remove('active');
+    }
+
+    async function submitNewPage(e) {
+      e.preventDefault();
+      if (!selectedWebsiteId) return;
+
+      const title = document.getElementById('new-page-title').value.trim();
+      const slugInput = document.getElementById('new-page-slug').value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '');
+
+      if (!slugInput) {
+        AlimaToast.show("Validation Error", "Please provide a valid slug syntax.", "error");
+        return;
+      }
+
+      try {
+        const newPage = {
+          websiteId: selectedWebsiteId,
+          title: title,
+          slug: slugInput,
+          status: 'draft',
+          blocks: [],
+          seo: {
+            title: `${title} | Alima Site`,
+            description: `Check out our ${title.toLowerCase()} page on Alima.`,
+            ogImage: ''
+          },
+          updatedAt: new Date().toISOString()
+        };
+
+        await addDoc(collection(db, "pages"), newPage);
+        closeCreatePageModal();
+
+        await window.logActivity(`Created page layout "${title}"`);
+        AlimaToast.show("Page Created", `Successfully initialized layout "${title}".`, "success");
+
+        await loadSitePages(selectedWebsiteId);
+
+      } catch (err) {
+        AlimaToast.show("Page Creation Failed", "Could not commit document.", "error");
+      }
+    }
+
+    async function deletePageDirect(id, name) {
+      if (!confirm(`Are you sure you want to delete the page "${name}"? This action is permanent.`)) return;
+
+      try {
+        const tr = document.getElementById(`page-${id}`);
+        if (tr) {
+          tr.style.opacity = '0';
+          tr.style.transform = 'scale(0.95)';
+          setTimeout(() => tr.remove(), 250);
+        }
+
+        await deleteDoc(doc(db, "pages", id));
+        await window.logActivity(`Deleted page "${name}"`);
+        AlimaToast.show("Page Deleted", "Page layout document cleared.", "success");
+        
+        setTimeout(async () => {
+          await loadSitePages(selectedWebsiteId);
+        }, 300);
+
+      } catch (err) {
+        AlimaToast.show("Deletion Failed", "Failed to clear page record.", "error");
+      }
+    }
+
+    // Helper sanitization
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Bind triggers
+    window.loadSitePages = loadSitePages;
+    window.changePageStatus = changePageStatus;
+    window.schedulePageRelease = schedulePageRelease;
+    window.cancelPageSchedule = cancelPageSchedule;
+    
+    window.toggleSelectRow = toggleSelectRow;
+    window.toggleSelectAll = toggleSelectAll;
+    window.triggerBulkAction = triggerBulkAction;
+    
+    window.openCreatePageModal = openCreatePageModal;
+    window.closeCreatePageModal = closeCreatePageModal;
+    window.submitNewPage = submitNewPage;
+    window.deletePageDirect = deletePageDirect;
+
+    async function handleSignOutAction() {
+      if (confirm("Are you sure you want to sign out?")) {
+        signOut(auth).then(() => {
+          window.location.href = "login.html";
+        });
+      }
+    }
+    window.handleSignOutAction = handleSignOutAction;
+
+  </script>
+</body>
+</html>

@@ -3,54 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alima CMS - Choose Your Theme</title>
+  <title>Alima CMS - Themes</title>
   <!-- Google Fonts -->
-  
-  <!-- Google Fonts -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap">
   
   <!-- Shared Design System CSS -->
   <link rel="stylesheet" href="design-system.css">
   
   <style>
-    /* Themes Specific Styling */
-    
-    /* Ensure the active sidebar item highlights Themes */
-    .alima-sidebar .sidebar-menu .menu-item:first-child .menu-link {
-      color: var(--text-on-dark-muted);
-      background: transparent;
-      font-weight: 500;
-    }
-    .alima-sidebar .sidebar-menu .menu-item:first-child::before {
-      display: none;
-    }
-    
-    .alima-sidebar .sidebar-menu .menu-item:nth-child(5) .menu-link {
-      color: #c084fc;
-      background: rgba(124, 58, 237, 0.12);
-      font-weight: 600;
-    }
-    
-    .alima-sidebar .sidebar-menu .menu-item:nth-child(5)::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 12%;
-      height: 76%;
-      width: 4px;
-      background: var(--gradient-primary);
-      border-radius: 0 4px 4px 0;
-      box-shadow: 0 0 12px var(--color-primary);
+    body {
+      background-color: #f8f9fc;
+      color: #111827;
     }
 
-    /* Filter Category Header Tabs */
-    .filter-tabs-container {
-      position: relative;
-      margin-top: 24px;
-      border-bottom: 1px solid var(--border-color-light);
+    /* Tabs Filter Categories */
+    .filter-tabs {
       display: flex;
-      gap: 32px;
-      padding-bottom: 2px;
+      gap: 24px;
+      border-bottom: 1px solid var(--border-color-light);
+      margin-top: 12px;
+      margin-bottom: 24px;
     }
 
     .filter-tab {
@@ -60,35 +32,22 @@
       font-size: 0.95rem;
       font-weight: 600;
       color: var(--text-muted);
-      padding: 12px 4px;
+      padding: 10px 4px;
       cursor: pointer;
-      transition: color var(--transition-fast);
-      position: relative;
-      z-index: 2;
+      border-bottom: 2px solid transparent;
+      transition: all var(--transition-normal);
     }
 
     .filter-tab.active {
       color: var(--color-primary);
+      border-bottom-color: var(--color-primary);
     }
 
-    .filter-underline {
-      position: absolute;
-      bottom: -1px;
-      left: 0;
-      height: 2.5px;
-      background: var(--gradient-primary);
-      border-radius: 2px;
-      transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
-      z-index: 1;
-      width: 0;
-    }
-
-    /* Responsive Grid */
+    /* Themes Grid */
     .themes-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 32px;
-      margin-top: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
     }
 
     .theme-card {
@@ -97,106 +56,62 @@
       border-radius: var(--radius-card);
       overflow: hidden;
       box-shadow: var(--shadow-standard);
-      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      transition: all var(--transition-normal);
       display: flex;
       flex-direction: column;
       position: relative;
     }
 
-    .theme-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: var(--radius-card);
-      padding: 1.5px;
-      background: var(--gradient-card-border);
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      mask-composite: exclude;
-      opacity: 0;
-      transition: opacity var(--transition-normal);
-      pointer-events: none;
-      z-index: 5;
-    }
-
-    /* Hover elevation + glowing border */
     .theme-card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-4px);
       box-shadow: var(--shadow-hover);
     }
 
-    .theme-card:hover::before {
-      opacity: 1;
+    .theme-card.active-theme {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 16px rgba(124, 58, 237, 0.15);
     }
 
-    /* Thumbnail gradients */
-    .theme-thumb {
-      height: 200px;
+    .theme-card.active-theme::after {
+      content: 'Active';
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: var(--color-primary);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      letter-spacing: 0.5px;
+    }
+
+    .theme-thumbnail {
+      height: 160px;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
       color: white;
       font-family: var(--font-heading);
-      overflow: hidden;
-      border-bottom: 1px solid var(--border-color-light);
-    }
-
-    .theme-thumb-pattern {
-      position: absolute;
-      inset: 0;
-      opacity: 0.12;
-      background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 0), radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 0);
-      background-size: 16px 16px;
-      background-position: 0 0, 8px 8px;
-    }
-
-    .theme-preview-box {
-      width: 140px;
-      height: 90px;
-      border-radius: 6px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-      border: 1px solid rgba(255,255,255,0.1);
-      display: flex;
-      flex-direction: column;
-      padding: 10px;
-      position: relative;
-      z-index: 2;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .theme-details {
-      padding: 24px;
+      padding: 20px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 12px;
       flex-grow: 1;
     }
 
-    .theme-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .theme-name {
-      font-family: var(--font-heading);
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text-main);
-    }
-
-    .theme-card-actions {
-      display: flex;
-      gap: 12px;
-      margin-top: auto;
-    }
-
-    /* Sliding Drawer Styles */
+    /* Sliding customizer panel */
     .customizer-drawer-overlay {
       position: fixed;
       inset: 0;
-      background-color: rgba(10, 10, 26, 0.4);
+      background: rgba(10, 10, 26, 0.4);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       z-index: 1000;
@@ -214,14 +129,13 @@
       position: fixed;
       top: 0;
       right: 0;
-      width: 380px;
+      width: 360px;
       height: 100vh;
       background: #ffffff;
-      border-left: 1px solid var(--border-color-light);
-      box-shadow: -10px 0 40px rgba(0,0,0,0.15);
+      box-shadow: -8px 0 32px rgba(0, 0, 0, 0.1);
       z-index: 1001;
       transform: translateX(100%);
-      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       display: flex;
       flex-direction: column;
     }
@@ -244,7 +158,7 @@
       flex-grow: 1;
       display: flex;
       flex-direction: column;
-      gap: 28px;
+      gap: 24px;
     }
 
     .drawer-footer {
@@ -254,114 +168,55 @@
       gap: 12px;
     }
 
-    /* Color picker swatches list */
-    .color-swatch-list {
+    .picker-row {
       display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .color-swatch-item {
-      display: flex;
-      align-items: center;
       justify-content: space-between;
-    }
-
-    .swatch-label {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-
-    .picker-box {
-      display: flex;
       align-items: center;
-      gap: 8px;
     }
 
-    .hex-text {
-      font-size: 0.825rem;
-      font-family: var(--font-body);
-      font-weight: 500;
-      color: var(--text-main);
-      background: var(--bg-surface);
-      padding: 4px 8px;
-      border-radius: 4px;
-      border: 1px solid var(--border-color-light);
-    }
-
-    /* Font Pairings previews cards */
-    .font-pairing-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
+    /* Font pairings cards list */
     .font-pairing-card {
-      border: 1.5px solid var(--border-color-light);
+      border: 1px solid var(--border-color-light);
       border-radius: var(--radius-standard);
-      padding: 16px;
+      padding: 12px;
       cursor: pointer;
       display: flex;
       justify-content: space-between;
       align-items: center;
       transition: all var(--transition-fast);
-      background: #ffffff;
-    }
-
-    .font-pairing-card:hover {
-      border-color: var(--color-primary);
-      background: rgba(124, 58, 237, 0.02);
     }
 
     .font-pairing-card.selected {
       border-color: var(--color-primary);
-      box-shadow: 0 0 10px rgba(124, 58, 237, 0.08);
-      background: rgba(124, 58, 237, 0.04);
+      background: rgba(124, 58, 237, 0.03);
     }
 
-    .pairing-letters {
-      font-size: 1.8rem;
-      font-weight: 700;
-      line-height: 1;
-    }
-
-    /* Layout width toggles */
+    /* Layout toggler */
     .layout-toggle-group {
       display: flex;
       background: var(--bg-surface);
       padding: 4px;
       border-radius: var(--radius-pill);
-      border: 1px solid var(--border-color-light);
     }
 
     .layout-toggle-btn {
       flex: 1;
       border: none;
       background: none;
-      padding: 10px 0;
+      padding: 8px 0;
       font-family: var(--font-heading);
       font-size: 0.85rem;
       font-weight: 600;
-      color: var(--text-muted);
       border-radius: var(--radius-pill);
       cursor: pointer;
-      transition: all var(--transition-fast);
+      color: var(--text-muted);
       text-align: center;
     }
 
     .layout-toggle-btn.active {
       background: #ffffff;
       color: var(--color-primary);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    }
-
-    .theme-card.active-theme {
-      border-color: var(--color-primary);
-      box-shadow: 0 0 20px rgba(124, 58, 237, 0.2);
-    }
-    .theme-card.active-theme::before {
-      opacity: 1;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     }
   </style>
 </head>
@@ -369,7 +224,7 @@
 
   <div class="app-container">
     
-    <!-- Sidebar Navigation -->
+    <!-- Sidebar navigation -->
     <aside class="alima-sidebar">
       <div class="sidebar-brand">
         <div class="brand-icon">A</div>
@@ -391,7 +246,7 @@
           </a>
         </li>
         <li class="menu-item">
-          <a href="dashboard.html#websites-section" class="menu-link">
+          <a href="dashboard.html#websites-section" class="menu-link" onclick="AlimaToast.show('Content Manager', 'To edit content, click \'Edit Site\' on any of your websites.', 'info', 4000)">
             <i>📄</i>
             <span>Content</span>
           </a>
@@ -403,7 +258,7 @@
           </a>
         </li>
         <li class="menu-item active">
-          <a href="#" class="menu-link">
+          <a href="themes.html" class="menu-link">
             <i>🎨</i>
             <span>Themes</span>
           </a>
@@ -415,31 +270,25 @@
           </a>
         </li>
         <li class="menu-item">
-          <a href="#" class="menu-link">
+          <a href="forms.html" class="menu-link">
             <i>📋</i>
             <span>Forms</span>
           </a>
         </li>
         <li class="menu-item">
-          <a href="#" class="menu-link">
-            <i>🔗</i>
-            <span>Domain Mapping</span>
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="#" class="menu-link">
+          <a href="seo.html" class="menu-link">
             <i>🔍</i>
             <span>SEO Settings</span>
           </a>
         </li>
         <li class="menu-item">
-          <a href="#" class="menu-link">
+          <a href="publishing.html" class="menu-link">
             <i>🚀</i>
             <span>Publishing</span>
           </a>
         </li>
-        <li class="menu-item">
-          <a href="#" class="menu-link" onclick="handleLogout()">
+        <li class="menu-item" style="margin-top: auto;">
+          <a href="#" class="menu-link" onclick="handleSignOutAction()">
             <i>🚪</i>
             <span>Sign Out</span>
           </a>
@@ -447,10 +296,10 @@
       </ul>
       
       <div class="sidebar-footer">
-        <div class="user-avatar" style="background: var(--gradient-primary);">JO</div>
+        <div class="user-avatar" id="sidebar-avatar">--</div>
         <div class="user-info">
-          <span class="user-name">John</span>
-          <span class="user-role">Campus Creator</span>
+          <span class="user-name" id="sidebar-username">Loading...</span>
+          <span class="user-role">Campus Admin</span>
         </div>
       </div>
     </aside>
@@ -459,289 +308,203 @@
     <main class="alima-main-content page-fade-scale">
       
       <!-- Top header bar -->
-      <div>
-        <h2 style="font-size: 2rem; letter-spacing: -0.5px;">Choose Your Theme</h2>
-        <p style="color: var(--text-muted); margin-top: 4px;">Pick a beautiful starting point. Customize colors, fonts, and layouts later.</p>
-        
-        <!-- Animated filter category tabs -->
-        <div class="filter-tabs-container">
-          <button class="filter-tab active" onclick="filterCategory('all', this)">All Themes</button>
-          <button class="filter-tab" onclick="filterCategory('education', this)">Education</button>
-          <button class="filter-tab" onclick="filterCategory('portfolio', this)">Portfolio</button>
-          <button class="filter-tab" onclick="filterCategory('business', this)">Business</button>
-          <button class="filter-tab" onclick="filterCategory('blog', this)">Blog</button>
-          <div class="filter-underline" id="filter-underline"></div>
+      <header style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color-light); padding-bottom: 16px;">
+        <div>
+          <h2 style="font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px;">Theme Library</h2>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">Select and configure templates for your virtual campuses.</p>
         </div>
+        
+        <div class="alima-input-group" style="width: auto; flex-direction: row; align-items: center; gap: 12px;">
+          <label class="alima-input-label" style="white-space: nowrap; margin-bottom: 0;">Customize Site:</label>
+          <select id="site-selector" class="alima-input" style="width: 200px; padding: 8px 12px; font-size: 0.85rem;" onchange="loadSiteTheme(this.value)"></select>
+        </div>
+      </header>
+
+      <!-- Category Filter Tabs -->
+      <div class="filter-tabs">
+        <button class="filter-tab active" onclick="filterCategory('all', this)">All Templates</button>
+        <button class="filter-tab" onclick="filterCategory('education', this)">Education</button>
+        <button class="filter-tab" onclick="filterCategory('portfolio', this)">Portfolio</button>
+        <button class="filter-tab" onclick="filterCategory('business', this)">Business</button>
+        <button class="filter-tab" onclick="filterCategory('blog', this)">Blog</button>
       </div>
 
       <!-- Themes Grid list -->
-      <section class="themes-grid" id="themes-grid">
-        
-        <!-- Theme 1: AcademiaX -->
-        <div class="theme-card stagger-card" data-category="education" style="animation-delay: 0.08s;">
-          <div class="theme-thumb" style="background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #d97706 100%);">
-            <div class="theme-thumb-pattern"></div>
-            <div class="theme-preview-box" style="background: rgba(30, 58, 138, 0.85); border-color: rgba(217, 119, 6, 0.4);">
-              <div style="height: 10px; width: 60%; background: #d97706; border-radius: 2px; margin-bottom: 6px;"></div>
-              <div style="height: 6px; width: 90%; background: white; opacity: 0.3; border-radius: 1px; margin-bottom: 4px;"></div>
-              <div style="height: 6px; width: 80%; background: white; opacity: 0.3; border-radius: 1px;"></div>
-            </div>
-          </div>
+      <section class="themes-grid" id="themes-grid-container">
+        <!-- 6 Theme cards dynamically filtered -->
+        <div class="theme-card" data-category="education" id="theme-AcademiaX">
+          <div class="theme-thumbnail" style="background: linear-gradient(135deg, #1e3a8a 0%, #d97706 100%);">AcademiaX</div>
           <div class="theme-details">
-            <div class="theme-meta">
-              <span class="theme-name">AcademiaX</span>
-              <span class="alima-badge badge-scheduled" style="font-size: 0.65rem;">Education</span>
-            </div>
-            <p style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.5;">Distinguished grid style suitable for departments, research bodies, and university systems.</p>
-            <div class="theme-card-actions">
-              <button class="alima-btn btn-ghost btn-sm" style="flex:1; border: 1.5px solid var(--border-color-light);" onclick="triggerPreview('AcademiaX')">Preview</button>
-              <button class="alima-btn btn-primary btn-sm" style="flex:1.2;" onclick="openCustomizer('AcademiaX', '#1e3a8a', '#d97706', '#1e40af', 'education')">Use This Theme</button>
+            <h4 style="font-size: 1.05rem; font-weight: 700;">AcademiaX</h4>
+            <p style="color: var(--text-muted); font-size: 0.825rem; line-height: 1.4;">Classy academic departmental layout featuring grid boards and amber borders.</p>
+            <div style="display:flex; gap:8px; margin-top:auto;">
+              <button class="alima-btn btn-ghost btn-sm" style="flex:1; border: 1.5px solid var(--border-color-light);" onclick="openDrawer('AcademiaX')">Customize</button>
+              <button class="alima-btn btn-primary btn-sm" style="flex:1.2;" onclick="useThemeTemplate('AcademiaX', '#1e3a8a', '#d97706')">Use Theme</button>
             </div>
           </div>
         </div>
 
-        <!-- Theme 2: Folio -->
-        <div class="theme-card stagger-card" data-category="portfolio" style="animation-delay: 0.16s;">
-          <div class="theme-thumb" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 50%, #1f2937 100%);">
-            <div class="theme-thumb-pattern"></div>
-            <div class="theme-preview-box" style="background: rgba(254, 243, 199, 0.9); border-color: rgba(31, 41, 55, 0.1);">
-              <div style="height: 10px; width: 40%; background: #1f2937; border-radius: 2px; margin-bottom: 6px;"></div>
-              <div style="height: 6px; width: 90%; background: #1f2937; opacity: 0.4; border-radius: 1px; margin-bottom: 4px;"></div>
-              <div style="height: 6px; width: 75%; background: #1f2937; opacity: 0.4; border-radius: 1px;"></div>
-            </div>
-          </div>
+        <div class="theme-card" data-category="portfolio" id="theme-Folio">
+          <div class="theme-thumbnail" style="background: linear-gradient(135deg, #fef3c7 0%, #1f2937 100%);">Folio</div>
           <div class="theme-details">
-            <div class="theme-meta">
-              <span class="theme-name">Folio</span>
-              <span class="alima-badge badge-scheduled" style="font-size: 0.65rem;">Portfolio</span>
-            </div>
-            <p style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.5;">Elegant and minimalist cream-charcoal layout highlighting achievements, logs, and visual art.</p>
-            <div class="theme-card-actions">
-              <button class="alima-btn btn-ghost btn-sm" style="flex:1; border: 1.5px solid var(--border-color-light);" onclick="triggerPreview('Folio')">Preview</button>
-              <button class="alima-btn btn-primary btn-sm" style="flex:1.2;" onclick="openCustomizer('Folio', '#fef3c7', '#1f2937', '#fde68a', 'portfolio')">Use This Theme</button>
+            <h4 style="font-size: 1.05rem; font-weight: 700;">Folio</h4>
+            <p style="color: var(--text-muted); font-size: 0.825rem; line-height: 1.4;">Minimalist scholar CV portfolio using charcoal displays and cream cards.</p>
+            <div style="display:flex; gap:8px; margin-top:auto;">
+              <button class="alima-btn btn-ghost btn-sm" style="flex:1; border: 1.5px solid var(--border-color-light);" onclick="openDrawer('Folio')">Customize</button>
+              <button class="alima-btn btn-primary btn-sm" style="flex:1.2;" onclick="useThemeTemplate('Folio', '#fef3c7', '#1f2937')">Use Theme</button>
             </div>
           </div>
         </div>
 
-        <!-- Theme 3: LaunchPad -->
-        <div class="theme-card stagger-card" data-category="business" style="animation-delay: 0.24s;">
-          <div class="theme-thumb" style="background: linear-gradient(135deg, #4c1d95 0%, #7c3aed 50%, #0891b2 100%);">
-            <div class="theme-thumb-pattern"></div>
-            <div class="theme-preview-box" style="background: rgba(76, 29, 149, 0.85); border-color: rgba(8, 145, 178, 0.4);">
-              <div style="height: 10px; width: 50%; background: #0891b2; border-radius: 2px; margin-bottom: 6px;"></div>
-              <div style="height: 6px; width: 85%; background: white; opacity: 0.3; border-radius: 1px; margin-bottom: 4px;"></div>
-              <div style="height: 6px; width: 70%; background: white; opacity: 0.3; border-radius: 1px;"></div>
-            </div>
-          </div>
+        <div class="theme-card" data-category="business" id="theme-LaunchPad">
+          <div class="theme-thumbnail" style="background: linear-gradient(135deg, #4c1d95 0%, #0891b2 100%);">LaunchPad</div>
           <div class="theme-details">
-            <div class="theme-meta">
-              <span class="theme-name">LaunchPad</span>
-              <span class="alima-badge badge-scheduled" style="font-size: 0.65rem;">Business</span>
-            </div>
-            <p style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.5;">Dynamic SaaS layout featuring bold cards, glowing buttons, and dark glass structures.</p>
-            <div class="theme-card-actions">
-              <button class="alima-btn btn-ghost btn-sm" style="flex:1; border: 1.5px solid var(--border-color-light);" onclick="triggerPreview('LaunchPad')">Preview</button>
-              <button class="alima-btn btn-primary btn-sm" style="flex:1.2;" onclick="openCustomizer('LaunchPad', '#4c1d95', '#0891b2', '#7c3aed', 'business')">Use This Theme</button>
+            <h4 style="font-size: 1.05rem; font-weight: 700;">LaunchPad</h4>
+            <p style="color: var(--text-muted); font-size: 0.825rem; line-height: 1.4;">Futuristic enterprise structure featuring neon glow and dark buttons.</p>
+            <div style="display:flex; gap:8px; margin-top:auto;">
+              <button class="alima-btn btn-ghost btn-sm" style="flex:1; border: 1.5px solid var(--border-color-light);" onclick="openDrawer('LaunchPad')">Customize</button>
+              <button class="alima-btn btn-primary btn-sm" style="flex:1.2;" onclick="useThemeTemplate('LaunchPad', '#4c1d95', '#0891b2')">Use Theme</button>
             </div>
           </div>
         </div>
 
-        <!-- Theme 4: InkFlow -->
-        <div class="theme-card stagger-card" data-category="blog" style="animation-delay: 0.32s;">
-          <div class="theme-thumb" style="background: linear-gradient(135deg, #fafaf9 0%, #f5f5f4 50%, #ea580c 100%);">
-            <div class="theme-thumb-pattern"></div>
-            <div class="theme-preview-box" style="background: rgba(250, 250, 249, 0.9); border-color: rgba(234, 88, 12, 0.2);">
-              <div style="height: 10px; width: 65%; background: #ea580c; border-radius: 2px; margin-bottom: 6px;"></div>
-              <div style="height: 6px; width: 80%; background: #1c1917; opacity: 0.5; border-radius: 1px; margin-bottom: 4px;"></div>
-              <div style="height: 6px; width: 90%; background: #1c1917; opacity: 0.5; border-radius: 1px;"></div>
-            </div>
-          </div>
+        <div class="theme-card" data-category="blog" id="theme-InkFlow">
+          <div class="theme-thumbnail" style="background: linear-gradient(135deg, #fafaf9 0%, #ea580c 100%);">InkFlow</div>
           <div class="theme-details">
-            <div class="theme-meta">
-              <span class="theme-name">InkFlow</span>
-              <span class="alima-badge badge-scheduled" style="font-size: 0.65rem;">Blog</span>
-            </div>
-            <p style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.5;">Typography-first editorial layout ideal for campus announcements and student articles.</p>
-            <div class="theme-card-actions">
-              <button class="alima-btn btn-ghost btn-sm" style="flex:1; border: 1.5px solid var(--border-color-light);" onclick="triggerPreview('InkFlow')">Preview</button>
-              <button class="alima-btn btn-primary btn-sm" style="flex:1.2;" onclick="openCustomizer('InkFlow', '#fafaf9', '#ea580c', '#f5f5f4', 'blog')">Use This Theme</button>
+            <h4 style="font-size: 1.05rem; font-weight: 700;">InkFlow</h4>
+            <p style="color: var(--text-muted); font-size: 0.825rem; line-height: 1.4;">Editorial layout prioritizing typography and department blogs.</p>
+            <div style="display:flex; gap:8px; margin-top:auto;">
+              <button class="alima-btn btn-ghost btn-sm" style="flex:1; border: 1.5px solid var(--border-color-light);" onclick="openDrawer('InkFlow')">Customize</button>
+              <button class="alima-btn btn-primary btn-sm" style="flex:1.2;" onclick="useThemeTemplate('InkFlow', '#fafaf9', '#ea580c')">Use Theme</button>
             </div>
           </div>
         </div>
 
-        <!-- Theme 5: CampusHub -->
-        <div class="theme-card stagger-card" data-category="education" style="animation-delay: 0.4s;">
-          <div class="theme-thumb" style="background: linear-gradient(135deg, #064e3b 0%, #047857 50%, #f9fafb 100%);">
-            <div class="theme-thumb-pattern"></div>
-            <div class="theme-preview-box" style="background: rgba(6, 78, 59, 0.85); border-color: rgba(249, 250, 251, 0.2);">
-              <div style="height: 10px; width: 45%; background: #047857; border-radius: 2px; margin-bottom: 6px;"></div>
-              <div style="height: 6px; width: 90%; background: white; opacity: 0.3; border-radius: 1px; margin-bottom: 4px;"></div>
-              <div style="height: 6px; width: 70%; background: white; opacity: 0.3; border-radius: 1px;"></div>
-            </div>
-          </div>
+        <div class="theme-card" data-category="education" id="theme-CampusHub">
+          <div class="theme-thumbnail" style="background: linear-gradient(135deg, #064e3b 0%, #047857 100%);">CampusHub</div>
           <div class="theme-details">
-            <div class="theme-meta">
-              <span class="theme-name">CampusHub</span>
-              <span class="alima-badge badge-scheduled" style="font-size: 0.65rem;">Education</span>
-            </div>
-            <p style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.5;">Organic forest green theme focusing on student admissions, directories, and registrations.</p>
-            <div class="theme-card-actions">
-              <button class="alima-btn btn-ghost btn-sm" style="flex:1; border: 1.5px solid var(--border-color-light);" onclick="triggerPreview('CampusHub')">Preview</button>
-              <button class="alima-btn btn-primary btn-sm" style="flex:1.2;" onclick="openCustomizer('CampusHub', '#064e3b', '#f9fafb', '#047857', 'education')">Use This Theme</button>
+            <h4 style="font-size: 1.05rem; font-weight: 700;">CampusHub</h4>
+            <p style="color: var(--text-muted); font-size: 0.825rem; line-height: 1.4;">Forest green layout highlighting classroom calendars and activities lists.</p>
+            <div style="display:flex; gap:8px; margin-top:auto;">
+              <button class="alima-btn btn-ghost btn-sm" style="flex:1; border: 1.5px solid var(--border-color-light);" onclick="openDrawer('CampusHub')">Customize</button>
+              <button class="alima-btn btn-primary btn-sm" style="flex:1.2;" onclick="useThemeTemplate('CampusHub', '#064e3b', '#047857')">Use Theme</button>
             </div>
           </div>
         </div>
 
-        <!-- Theme 6: NovaBiz -->
-        <div class="theme-card stagger-card" data-category="business" style="animation-delay: 0.48s;">
-          <div class="theme-thumb" style="background: linear-gradient(135deg, #020617 0%, #0f172a 50%, #2563eb 100%);">
-            <div class="theme-thumb-pattern"></div>
-            <div class="theme-preview-box" style="background: rgba(2, 6, 23, 0.85); border-color: rgba(37, 99, 235, 0.4);">
-              <div style="height: 10px; width: 55%; background: #2563eb; border-radius: 2px; margin-bottom: 6px;"></div>
-              <div style="height: 6px; width: 85%; background: white; opacity: 0.25; border-radius: 1px; margin-bottom: 4px;"></div>
-              <div style="height: 6px; width: 80%; background: white; opacity: 0.25; border-radius: 1px;"></div>
-            </div>
-          </div>
+        <div class="theme-card" data-category="business" id="theme-NovaBiz">
+          <div class="theme-thumbnail" style="background: linear-gradient(135deg, #020617 0%, #2563eb 100%);">NovaBiz</div>
           <div class="theme-details">
-            <div class="theme-meta">
-              <span class="theme-name">NovaBiz</span>
-              <span class="alima-badge badge-scheduled" style="font-size: 0.65rem;">Business</span>
-            </div>
-            <p style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.5;">Sleek corporate Midnight layout featuring clean grids, high contrast, and structured grids.</p>
-            <div class="theme-card-actions">
-              <button class="alima-btn btn-ghost btn-sm" style="flex:1; border: 1.5px solid var(--border-color-light);" onclick="triggerPreview('NovaBiz')">Preview</button>
-              <button class="alima-btn btn-primary btn-sm" style="flex:1.2;" onclick="openCustomizer('NovaBiz', '#020617', '#2563eb', '#0f172a', 'business')">Use This Theme</button>
+            <h4 style="font-size: 1.05rem; font-weight: 700;">NovaBiz</h4>
+            <p style="color: var(--text-muted); font-size: 0.825rem; line-height: 1.4;">Midnight tech interface with high-contrast layouts and sharp nodes.</p>
+            <div style="display:flex; gap:8px; margin-top:auto;">
+              <button class="alima-btn btn-ghost btn-sm" style="flex:1; border: 1.5px solid var(--border-color-light);" onclick="openDrawer('NovaBiz')">Customize</button>
+              <button class="alima-btn btn-primary btn-sm" style="flex:1.2;" onclick="useThemeTemplate('NovaBiz', '#020617', '#2563eb')">Use Theme</button>
             </div>
           </div>
         </div>
-
       </section>
 
     </main>
 
   </div>
 
-  <!-- Customizer Drawer Overlay -->
-  <div class="customizer-drawer-overlay" id="customizer-overlay">
-    <div class="customizer-drawer">
-      
+  <!-- Customizer Drawer Panel -->
+  <div class="customizer-drawer-overlay" id="customizer-overlay" onclick="closeDrawer()">
+    <div class="customizer-drawer" onclick="event.stopPropagation()">
       <div class="drawer-header">
-        <h3 id="customizer-theme-title" style="font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700;">Theme Customizer</h3>
-        <button class="modal-close" style="font-size: 1.8rem;" onclick="closeCustomizer()">&times;</button>
+        <h3 id="customizer-title" style="font-family: var(--font-heading); font-size: 1.2rem; font-weight: 700;">Customize Theme</h3>
+        <button class="modal-close" style="font-size: 1.8rem;" onclick="closeDrawer()">&times;</button>
       </div>
 
       <div class="drawer-body">
         
-        <!-- Swatches Segment -->
-        <div class="color-swatch-list">
-          <h4 class="prop-label">Color Scheme</h4>
+        <!-- Color segment pickers -->
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <h4 class="alima-input-label" style="text-transform:uppercase; font-size:0.75rem;">Color Scheme</h4>
           
-          <div class="color-swatch-item">
-            <span class="swatch-label">Primary Swatch</span>
-            <div class="picker-box">
-              <span class="hex-text" id="hex-primary">#7c3aed</span>
-              <input type="color" id="picker-primary" class="prop-control" style="width: 40px; height: 32px; padding: 2px; cursor: pointer;" oninput="syncHex('primary', this.value)">
-            </div>
+          <div class="picker-row">
+            <span style="font-size:0.85rem; font-weight:600;">Primary Swatch</span>
+            <input type="color" id="pick-primary" value="#7c3aed" class="alima-input" style="width:48px; height:36px; padding:2px; cursor:pointer;">
           </div>
-
-          <div class="color-swatch-item">
-            <span class="swatch-label">Secondary Color</span>
-            <div class="picker-box">
-              <span class="hex-text" id="hex-secondary">#06b6d4</span>
-              <input type="color" id="picker-secondary" class="prop-control" style="width: 40px; height: 32px; padding: 2px; cursor: pointer;" oninput="syncHex('secondary', this.value)">
-            </div>
-          </div>
-
-          <div class="color-swatch-item">
-            <span class="swatch-label">Accent Highlight</span>
-            <div class="picker-box">
-              <span class="hex-text" id="hex-accent">#1a1a2e</span>
-              <input type="color" id="picker-accent" class="prop-control" style="width: 40px; height: 32px; padding: 2px; cursor: pointer;" oninput="syncHex('accent', this.value)">
-            </div>
+          <div class="picker-row">
+            <span style="font-size:0.85rem; font-weight:600;">Accent Color</span>
+            <input type="color" id="pick-accent" value="#06b6d4" class="alima-input" style="width:48px; height:36px; padding:2px; cursor:pointer;">
           </div>
         </div>
 
-        <hr style="border: none; border-top: 1px solid var(--border-color-light);">
+        <hr style="border:none; border-top:1px solid var(--border-color-light);">
 
-        <!-- Typography Segment -->
-        <div>
-          <h4 class="prop-label" style="margin-bottom: 12px;">Typography Pairing</h4>
-          <div class="font-pairing-list">
-            
-            <div class="font-pairing-card selected" data-head="Plus Jakarta Sans" data-body="Inter" onclick="selectFontPairing(this, 'Plus Jakarta Sans', 'Inter')">
-              <div>
-                <div style="font-weight: 700; font-family: 'Plus Jakarta Sans'; font-size: 0.95rem;">Plus Jakarta Sans</div>
-                <div style="font-size: 0.75rem; color: var(--text-light); margin-top: 2px; font-family: 'Inter';">Body text font: Inter</div>
-              </div>
-              <span class="pairing-letters" style="font-family: 'Plus Jakarta Sans';">Aa</span>
+        <!-- Typography Segment pairings -->
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <h4 class="alima-input-label" style="text-transform:uppercase; font-size:0.75rem;">Typography pair</h4>
+          
+          <div class="font-pairing-card selected" id="pair-1" onclick="selectPairing('Plus Jakarta Sans', 'Inter', 'pair-1')">
+            <div>
+              <div style="font-weight:700; font-family:'Plus Jakarta Sans'; font-size:0.95rem;">Plus Jakarta Sans</div>
+              <div style="font-size:0.75rem; color:var(--text-muted); font-family:'Inter'; margin-top:2px;">Body font: Inter</div>
             </div>
+            <span style="font-size:1.5rem; font-family:'Plus Jakarta Sans'; font-weight:700;">Aa</span>
+          </div>
 
-            <div class="font-pairing-card" data-head="Outfit" data-body="Roboto" onclick="selectFontPairing(this, 'Outfit', 'Roboto')">
-              <div>
-                <div style="font-weight: 700; font-family: 'Outfit'; font-size: 0.95rem;">Outfit Display</div>
-                <div style="font-size: 0.75rem; color: var(--text-light); margin-top: 2px; font-family: 'Inter';">Body text font: Roboto</div>
-              </div>
-              <span class="pairing-letters" style="font-family: 'Outfit';">Aa</span>
+          <div class="font-pairing-card" id="pair-2" onclick="selectPairing('Outfit', 'Inter', 'pair-2')">
+            <div>
+              <div style="font-weight:700; font-family:'Outfit'; font-size:0.95rem;">Outfit Display</div>
+              <div style="font-size:0.75rem; color:var(--text-muted); font-family:'Inter'; margin-top:2px;">Body font: Inter</div>
             </div>
+            <span style="font-size:1.5rem; font-family:'Outfit'; font-weight:700;">Aa</span>
+          </div>
 
-            <div class="font-pairing-card" data-head="Playfair Display" data-body="Lora" onclick="selectFontPairing(this, 'Playfair Display', 'Lora')">
-              <div>
-                <div style="font-weight: 700; font-family: 'Playfair Display'; font-style: italic; font-size: 0.95rem;">Playfair Serif</div>
-                <div style="font-size: 0.75rem; color: var(--text-light); margin-top: 2px; font-family: 'Inter';">Body text font: Lora</div>
-              </div>
-              <span class="pairing-letters" style="font-family: 'Playfair Display'; font-style: italic;">Aa</span>
+          <div class="font-pairing-card" id="pair-3" onclick="selectPairing('Lora', 'Inter', 'pair-3')">
+            <div>
+              <div style="font-weight:700; font-family:'Lora'; font-size:0.95rem; font-style:italic;">Lora Serif</div>
+              <div style="font-size:0.75rem; color:var(--text-muted); font-family:'Inter'; margin-top:2px;">Body font: Inter</div>
             </div>
-
+            <span style="font-size:1.5rem; font-family:'Lora'; font-style:italic;">Aa</span>
           </div>
         </div>
 
-        <hr style="border: none; border-top: 1px solid var(--border-color-light);">
+        <hr style="border:none; border-top:1px solid var(--border-color-light);">
 
-        <!-- Layout Segment -->
-        <div>
-          <h4 class="prop-label" style="margin-bottom: 12px;">Layout Mode</h4>
+        <!-- Layout Mode -->
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <h4 class="alima-input-label" style="text-transform:uppercase; font-size:0.75rem;">Layout Mode</h4>
           <div class="layout-toggle-group">
-            <button class="layout-toggle-btn active" id="layout-wide" onclick="setLayoutMode('wide')">Wide (100%)</button>
-            <button class="layout-toggle-btn" id="layout-boxed" onclick="setLayoutMode('boxed')">Boxed Grid</button>
+            <button class="layout-toggle-btn active" id="lay-wide" onclick="setLayoutModeOption('wide')">Wide (100%)</button>
+            <button class="layout-toggle-btn" id="lay-boxed" onclick="setLayoutModeOption('boxed')">Boxed Grid</button>
           </div>
         </div>
 
       </div>
 
       <div class="drawer-footer">
-        <button class="alima-btn btn-ghost" style="flex:1;" onclick="closeCustomizer()">Cancel</button>
-        <button class="alima-btn btn-primary" style="flex:1.5;" onclick="applyThemeSelected()">Apply Theme</button>
+        <button class="alima-btn btn-ghost" style="flex:1;" onclick="closeDrawer()">Cancel</button>
+        <button class="alima-btn btn-primary" style="flex:1.5;" onclick="applyCustomThemeSettings()">Apply Theme</button>
       </div>
-
     </div>
   </div>
 
-  <!-- Shared JS utilities -->
+  <!-- Shared JS Utilities -->
   <script src="shared.js"></script>
-  
-  <!-- Firebase config import -->
+
+  <!-- Firebase configuration import -->
   <script type="module" src="firebase.js"></script>
 
   <script type="module">
     import { auth, db } from "./firebase.js";
     import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-    import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+    import { collection, query, where, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-    // Global customization states
-    let activeThemeSelection = '';
-    let selectedHeadFont = 'Plus Jakarta Sans';
-    let selectedBodyFont = 'Inter';
-    let selectedLayoutMode = 'wide';
-
-    // ---------------------------------------------------------
-    // 0. Auth state monitoring
-    // ---------------------------------------------------------
-    function showUserName(name) {
-      const sidebarName = document.querySelector('.user-name');
-      const sidebarAvatar = document.querySelector('.user-avatar');
-      if (sidebarName) sidebarName.textContent = name;
-      if (sidebarAvatar) sidebarAvatar.textContent = name.slice(0, 2).toUpperCase();
-    }
+    let activeWebsites = [];
+    let selectedWebsiteId = null;
+    let selectedThemeName = '';
+    
+    // Customizer temporary state variables
+    let tempPrimary = '#7c3aed';
+    let tempAccent = '#06b6d4';
+    let tempHeadingsFont = 'Plus Jakarta Sans';
+    let tempBodyFont = 'Inter';
+    let tempLayoutMode = 'wide';
 
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
@@ -749,263 +512,216 @@
         return;
       }
 
-      showUserName(user.displayName || user.email);
+      const name = user.displayName || user.email;
+      document.getElementById('sidebar-username').textContent = name;
+      document.getElementById('sidebar-avatar').textContent = name.slice(0, 2).toUpperCase();
 
-      // Load active theme configuration from Firestore
-      await loadThemeFromFirestore(user.uid);
+      // Populate websites selector list
+      await populateWebsitesList(user.uid);
     });
 
-    function handleLogout() {
-      signOut(auth).then(() => {
-        window.location.href = "login.html";
-      });
-    }
-    window.handleLogout = handleLogout;
-
-    // Load active theme configuration from Firestore
-    async function loadThemeFromFirestore(uid) {
+    async function populateWebsitesList(uid) {
       try {
-        const docRef = doc(db, "users", uid);
-        const userDoc = await getDoc(docRef);
+        const q = query(collection(db, "websites"), where("ownerUid", "==", uid));
+        const snap = await getDocs(q);
+        const selector = document.getElementById('site-selector');
+        selector.innerHTML = '';
+        activeWebsites = [];
 
-        if (userDoc.exists()) {
-          const data = userDoc.data();
-          if (data.theme) {
-            const theme = data.theme;
-            
-            // Apply active theme highlight in grid
-            highlightActiveThemeCard(theme.name);
-            
-            // Pre-populate customizer state variables
-            activeThemeSelection = theme.name;
-            selectedHeadFont = theme.typography ? theme.typography.headings : 'Plus Jakarta Sans';
-            selectedBodyFont = theme.typography ? theme.typography.body : 'Inter';
-            selectedLayoutMode = theme.layout || 'wide';
-            
-            // Sync customizer UI colors
-            if (theme.colors) {
-              document.getElementById('hex-primary').textContent = theme.colors.primary;
-              document.getElementById('picker-primary').value = rgbToHex(theme.colors.primary);
-              document.getElementById('hex-secondary').textContent = theme.colors.secondary;
-              document.getElementById('picker-secondary').value = rgbToHex(theme.colors.secondary);
-              document.getElementById('hex-accent').textContent = theme.colors.accent;
-              document.getElementById('picker-accent').value = rgbToHex(theme.colors.accent);
-            }
-            
-            // Sync Font Pairing Selection in customizer list
-            const fontCards = document.querySelectorAll('.font-pairing-card');
-            fontCards.forEach(card => {
-              const h = card.getAttribute('data-head');
-              const b = card.getAttribute('data-body');
-              if (h === selectedHeadFont && b === selectedBodyFont) {
-                card.classList.add('selected');
-              } else {
-                card.classList.remove('selected');
-              }
-            });
-            
-            // Sync Layout Mode
-            setLayoutMode(selectedLayoutMode);
-          }
+        if (snap.empty) {
+          selector.innerHTML = `<option value="">No Sites Found</option>`;
+          AlimaToast.show("No Sites", "Please initialize a digital campus site on the dashboard page first.", "warning");
+          return;
         }
-      } catch (error) {
-        console.error("Error loading theme from Firestore:", error);
+
+        snap.forEach(d => {
+          activeWebsites.push({ id: d.id, ...d.data() });
+          const opt = document.createElement('option');
+          opt.value = d.id;
+          opt.textContent = `${d.data().subdomain}.alima.site`;
+          selector.appendChild(opt);
+        });
+
+        // Set default loaded site
+        selectedWebsiteId = activeWebsites[0].id;
+        loadSiteTheme(selectedWebsiteId);
+
+      } catch (err) {
+        console.error("Failed to query sites:", err);
       }
     }
 
-    // Highlight active theme card in UI
-    function highlightActiveThemeCard(themeName) {
-      const cards = document.querySelectorAll('.theme-card');
-      cards.forEach(card => {
-        const nameEl = card.querySelector('.theme-name');
-        if (nameEl && nameEl.textContent.trim() === themeName) {
-          card.classList.add('active-theme');
-          const btn = card.querySelector('.alima-btn.btn-primary');
-          if (btn) btn.textContent = 'Active Theme';
-        } else {
-          card.classList.remove('active-theme');
-          const btn = card.querySelector('.alima-btn.btn-primary');
-          if (btn) btn.textContent = 'Use This Theme';
-        }
-      });
-    }
+    function loadSiteTheme(webId) {
+      if (!webId) return;
+      selectedWebsiteId = webId;
+      const web = activeWebsites.find(w => w.id === webId);
+      if (!web || !web.theme) return;
 
-    // ---------------------------------------------------------
-    // 1. Sliding Filter Underline Category logic
-    // ---------------------------------------------------------
-    function initFilterUnderline() {
-      const activeTab = document.querySelector('.filter-tab.active');
-      const underline = document.getElementById('filter-underline');
-      if (!activeTab || !underline) return;
+      selectedThemeName = web.theme.name || 'AcademiaX';
       
-      underline.style.left = activeTab.offsetLeft + 'px';
-      underline.style.width = activeTab.offsetWidth + 'px';
-    }
-    
-    // Run on init and resize
-    window.addEventListener('load', initFilterUnderline);
-    window.addEventListener('resize', initFilterUnderline);
+      // Update customizer inputs
+      tempPrimary = web.theme.primary || '#7c3aed';
+      tempAccent = web.theme.accent || '#06b6d4';
+      tempHeadingsFont = web.theme.headingsFont || 'Plus Jakarta Sans';
+      tempBodyFont = web.theme.bodyFont || 'Inter';
+      tempLayoutMode = web.theme.layoutMode || 'wide';
 
-    function filterCategory(category, buttonEl) {
-      // Manage tab highlight states
+      document.getElementById('pick-primary').value = tempPrimary;
+      document.getElementById('pick-accent').value = tempAccent;
+      
+      // Sync card highlights
+      const cards = document.querySelectorAll('.theme-card');
+      cards.forEach(c => c.classList.remove('active-theme'));
+      const activeCard = document.getElementById(`theme-${selectedThemeName}`);
+      if (activeCard) activeCard.classList.add('active-theme');
+
+      // Sync font cards
+      const pairCards = document.querySelectorAll('.font-pairing-card');
+      pairCards.forEach(pc => pc.classList.remove('selected'));
+      if (tempHeadingsFont === 'Plus Jakarta Sans') document.getElementById('pair-1').classList.add('selected');
+      else if (tempHeadingsFont === 'Outfit') document.getElementById('pair-2').classList.add('selected');
+      else if (tempHeadingsFont === 'Lora') document.getElementById('pair-3').classList.add('selected');
+
+      // Sync layout
+      setLayoutModeOption(tempLayoutMode);
+    }
+
+    async function useThemeTemplate(themeName, defaultPrimary, defaultAccent) {
+      if (!selectedWebsiteId) {
+        AlimaToast.show("Select Site", "Please select a website to apply theme.", "warning");
+        return;
+      }
+
+      try {
+        const ref = doc(db, "websites", selectedWebsiteId);
+        const updatedTheme = {
+          name: themeName,
+          primary: defaultPrimary,
+          accent: defaultAccent,
+          headingsFont: 'Plus Jakarta Sans',
+          bodyFont: 'Inter',
+          layoutMode: 'wide'
+        };
+
+        await updateDoc(ref, {
+          theme: updatedTheme,
+          updatedAt: new Date().toISOString()
+        });
+
+        // Update active list state
+        const idx = activeWebsites.findIndex(w => w.id === selectedWebsiteId);
+        if (idx !== -1) activeWebsites[idx].theme = updatedTheme;
+
+        // Re-load to apply card highlight
+        loadSiteTheme(selectedWebsiteId);
+
+        await window.logActivity(`Selected theme "${themeName}"`);
+        AlimaToast.show("Theme Applied", `Default settings for "${themeName}" saved to site database.`, "success");
+
+      } catch (err) {
+        AlimaToast.show("Apply Error", "Failed to update theme configurations.", "error");
+      }
+    }
+
+    // Customizer Drawer controls
+    function openDrawer(themeName) {
+      selectedThemeName = themeName;
+      document.getElementById('customizer-title').textContent = `Customize ${themeName}`;
+      document.getElementById('customizer-overlay').classList.add('active');
+    }
+
+    function closeDrawer() {
+      document.getElementById('customizer-overlay').classList.remove('active');
+    }
+
+    function selectPairing(headings, body, cardId) {
+      tempHeadingsFont = headings;
+      tempBodyFont = body;
+      const pairCards = document.querySelectorAll('.font-pairing-card');
+      pairCards.forEach(c => c.classList.remove('selected'));
+      document.getElementById(cardId).classList.add('selected');
+    }
+
+    function setLayoutModeOption(mode) {
+      tempLayoutMode = mode;
+      document.getElementById('lay-wide').classList.remove('active');
+      document.getElementById('lay-boxed').classList.remove('active');
+      
+      if (mode === 'wide') {
+        document.getElementById('lay-wide').classList.add('active');
+      } else {
+        document.getElementById('lay-boxed').classList.add('active');
+      }
+    }
+
+    async function applyCustomThemeSettings() {
+      if (!selectedWebsiteId) return;
+      
+      tempPrimary = document.getElementById('pick-primary').value;
+      tempAccent = document.getElementById('pick-accent').value;
+
+      try {
+        const ref = doc(db, "websites", selectedWebsiteId);
+        const updatedTheme = {
+          name: selectedThemeName,
+          primary: tempPrimary,
+          accent: tempAccent,
+          headingsFont: tempHeadingsFont,
+          bodyFont: tempBodyFont,
+          layoutMode: tempLayoutMode
+        };
+
+        await updateDoc(ref, {
+          theme: updatedTheme,
+          updatedAt: new Date().toISOString()
+        });
+
+        const idx = activeWebsites.findIndex(w => w.id === selectedWebsiteId);
+        if (idx !== -1) activeWebsites[idx].theme = updatedTheme;
+
+        loadSiteTheme(selectedWebsiteId);
+        closeDrawer();
+        
+        await window.logActivity(`Customized theme "${selectedThemeName}"`);
+        AlimaToast.show("Applied Successfully", "Custom styles applied to website settings.", "success");
+
+      } catch (err) {
+        AlimaToast.show("Apply Error", "Could not submit theme settings.", "error");
+      }
+    }
+
+    function filterCategory(category, tabBtn) {
       const tabs = document.querySelectorAll('.filter-tab');
       tabs.forEach(t => t.classList.remove('active'));
-      buttonEl.classList.add('active');
-      
-      // Animate sliding tab underline
-      const underline = document.getElementById('filter-underline');
-      underline.style.left = buttonEl.offsetLeft + 'px';
-      underline.style.width = buttonEl.offsetWidth + 'px';
+      tabBtn.classList.add('active');
 
-      // Filter Cards
       const cards = document.querySelectorAll('.theme-card');
       cards.forEach(c => {
-        const cardCat = c.getAttribute('data-category');
-        if (category === 'all' || cardCat === category) {
+        if (category === 'all' || c.getAttribute('data-category') === category) {
           c.style.display = 'flex';
-          // Re-trigger reveal animation smoothly
-          c.style.opacity = '1';
-          c.style.transform = 'translateY(0)';
         } else {
           c.style.display = 'none';
         }
       });
     }
 
-    // ---------------------------------------------------------
-    // 2. Customizer Sliding Drawer Panel logic
-    // ---------------------------------------------------------
-    function openCustomizer(themeName, colorPrimary, colorSecondary, colorAccent, category) {
-      activeThemeSelection = themeName;
-      document.getElementById('customizer-theme-title').textContent = `${themeName} Settings`;
-      
-      // Populate color swatches fields
-      document.getElementById('hex-primary').textContent = colorPrimary;
-      document.getElementById('picker-primary').value = rgbToHex(colorPrimary);
-
-      document.getElementById('hex-secondary').textContent = colorSecondary;
-      document.getElementById('picker-secondary').value = rgbToHex(colorSecondary);
-
-      document.getElementById('hex-accent').textContent = colorAccent;
-      document.getElementById('picker-accent').value = rgbToHex(colorAccent);
-
-      // Slide in drawer panel
-      document.getElementById('customizer-overlay').classList.add('active');
-    }
-
-    function closeCustomizer() {
-      document.getElementById('customizer-overlay').classList.remove('active');
-    }
-
-    // Swatch hex value updater
-    function syncHex(type, val) {
-      document.getElementById(`hex-${type}`).textContent = val.toUpperCase();
-    }
-
-    // Select active typography card
-    function selectFontPairing(card, head, body) {
-      const cards = document.querySelectorAll('.font-pairing-card');
-      cards.forEach(c => c.classList.remove('selected'));
-      card.classList.add('selected');
-      selectedHeadFont = head;
-      selectedBodyFont = body;
-    }
-
-    // Select active layout buttons
-    function setLayoutMode(mode) {
-      const wideBtn = document.getElementById('layout-wide');
-      const boxedBtn = document.getElementById('layout-boxed');
-      
-      wideBtn.classList.remove('active');
-      boxedBtn.classList.remove('active');
-      
-      if (mode === 'wide') {
-        wideBtn.classList.add('active');
-        selectedLayoutMode = 'wide';
-      } else {
-        boxedBtn.classList.add('active');
-        selectedLayoutMode = 'boxed';
+    async function handleSignOutAction() {
+      if (confirm("Are you sure you want to sign out?")) {
+        signOut(auth).then(() => {
+          window.location.href = "login.html";
+        });
       }
     }
 
-    async function applyThemeSelected() {
-      const user = auth.currentUser;
-      if (!user) {
-        if (window.AlimaToast) {
-          window.AlimaToast.show("Auth Error", "Authentication credentials lost.", "error");
-        }
-        return;
-      }
-
-      const colors = {
-        primary: document.getElementById('hex-primary').textContent,
-        secondary: document.getElementById('hex-secondary').textContent,
-        accent: document.getElementById('hex-accent').textContent
-      };
-
-      const themeData = {
-        name: activeThemeSelection,
-        colors: colors,
-        typography: {
-          headings: selectedHeadFont,
-          body: selectedBodyFont
-        },
-        layout: selectedLayoutMode,
-        updatedAt: new Date().toISOString()
-      };
-
-      try {
-        const docRef = doc(db, "users", user.uid);
-        await setDoc(docRef, { theme: themeData }, { merge: true });
-        
-        // Highlight in UI
-        highlightActiveThemeCard(activeThemeSelection);
-        
-        closeCustomizer();
-        
-        if (window.AlimaToast) {
-          window.AlimaToast.show("Theme Configured", `Successfully initialized ${activeThemeSelection} with your customized styling swatches.`, "success");
-        }
-      } catch (error) {
-        console.error("Error saving theme to Firestore:", error);
-        if (window.AlimaToast) {
-          window.AlimaToast.show("Cloud Save Error", "Could not sync your theme settings to Firebase.", "error");
-        }
-      }
-    }
-
-    function triggerPreview(themeName) {
-      if (window.AlimaToast) {
-        window.AlimaToast.show("Preview Mode", `Loading workspace viewport mockup for ${themeName}...`, "info");
-      } else {
-        alert(`Previewing: ${themeName}`);
-      }
-    }
-
-    // Helper rgb to hex
-    function rgbToHex(rgbVal) {
-      if (!rgbVal) return '#7c3aed';
-      if (rgbVal.startsWith('#')) return rgbVal;
-      // Convert basic names
-      if (rgbVal === 'white') return '#ffffff';
-      
-      let matches = rgbVal.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/) || rgbVal.match(/^rgba\((\d+),\s*(\d+),\s*(\d+),\s*.*\)$/);
-      if (!matches) return '#7c3aed';
-      
-      return "#" + ((1 << 24) + (parseInt(matches[1]) << 16) + (parseInt(matches[2]) << 8) + parseInt(matches[3])).toString(16).slice(1);
-    }
-
-    // Bind action callbacks to window for onclick triggers
-    window.initFilterUnderline = initFilterUnderline;
+    window.loadSiteTheme = loadSiteTheme;
+    window.useThemeTemplate = useThemeTemplate;
+    window.openDrawer = openDrawer;
+    window.closeDrawer = closeDrawer;
+    window.selectPairing = selectPairing;
+    window.setLayoutModeOption = setLayoutModeOption;
+    window.applyCustomThemeSettings = applyCustomThemeSettings;
     window.filterCategory = filterCategory;
-    window.openCustomizer = openCustomizer;
-    window.closeCustomizer = closeCustomizer;
-    window.syncHex = syncHex;
-    window.selectFontPairing = selectFontPairing;
-    window.setLayoutMode = setLayoutMode;
-    window.applyThemeSelected = applyThemeSelected;
-    window.triggerPreview = triggerPreview;
-    window.rgbToHex = rgbToHex;
+    window.handleSignOutAction = handleSignOutAction;
   </script>
 </body>
 </html>

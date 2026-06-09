@@ -5,25 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Alima CMS - Page Builder</title>
   <!-- Google Fonts -->
-  
-  <!-- Google Fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
   
   <!-- Shared Design System CSS -->
   <link rel="stylesheet" href="design-system.css">
   
   <style>
-    /* Builder Specific Styling */
-    :root {
-      --panel-bg: #f3f4f6;
-      --builder-selection: #7c3aed;
-      --drag-highlight: #ddd6fe;
-      --canvas-bg: #ffffff;
-      --border-color-panel: #e5e7eb;
-    }
-
     body {
-      background-color: #e5e7eb;
+      background-color: #e2e8f0;
       height: 100vh;
       overflow: hidden;
       display: flex;
@@ -34,7 +23,7 @@
     .builder-topbar {
       height: 64px;
       background: #ffffff;
-      border-bottom: 1px solid var(--border-color-panel);
+      border-bottom: 1px solid var(--border-color-light);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -63,20 +52,9 @@
       width: 220px;
     }
 
-    .page-title-input:hover {
-      border-color: var(--border-color-panel);
+    .page-title-input:hover, .page-title-input:focus {
+      border-color: var(--border-color-light);
       background: #f9fafb;
-    }
-
-    .page-title-input:focus {
-      border-color: var(--color-primary);
-      background: #ffffff;
-      box-shadow: 0 0 8px rgba(124, 58, 237, 0.15);
-    }
-
-    .topbar-actions {
-      display: flex;
-      gap: 12px;
     }
 
     /* 3-Panel Wrapper */
@@ -87,107 +65,53 @@
       width: 100%;
     }
 
-    /* Side Panels Base */
+    /* Sidebar Panels */
     .builder-panel {
-      width: 280px;
-      background: var(--panel-bg);
-      border-right: 1px solid var(--border-color-panel);
+      width: 260px;
+      background: #ffffff;
+      border-right: 1px solid var(--border-color-light);
       display: flex;
       flex-direction: column;
       overflow-y: auto;
       flex-shrink: 0;
       padding: 20px;
-      scrollbar-width: thin;
-    }
-
-    .builder-panel.left-palette {
-      width: 240px;
-      border-right: 1px solid var(--border-color-panel);
+      gap: 24px;
     }
 
     .builder-panel.right-properties {
-      width: 280px;
-      border-left: 1px solid var(--border-color-panel);
+      width: 300px;
+      border-left: 1px solid var(--border-color-light);
       border-right: none;
     }
 
     .panel-header {
       font-family: var(--font-heading);
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    /* Search input inside palette */
-    .search-wrapper {
-      position: relative;
-      margin-bottom: 20px;
-    }
-
-    .palette-search {
-      width: 100%;
-      background: #ffffff;
-      border: 1px solid var(--border-color-panel);
-      border-radius: var(--radius-standard);
-      padding: 10px 12px 10px 32px;
-      font-family: var(--font-body);
-      font-size: 0.85rem;
-      color: var(--text-main);
-      outline: none;
-      transition: all var(--transition-fast);
-    }
-
-    .palette-search:focus {
-      border-color: var(--color-primary);
-      box-shadow: 0 0 8px rgba(124, 58, 237, 0.1);
-    }
-
-    .search-icon {
-      position: absolute;
-      left: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-light);
-      font-size: 0.9rem;
-      pointer-events: none;
-    }
-
-    /* Blocks Accordion / Categorization */
-    .palette-category {
-      margin-bottom: 24px;
-    }
-
-    .category-title {
-      font-family: var(--font-heading);
-      font-size: 0.75rem;
+      font-size: 0.95rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-light);
-      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-color-light);
+      padding-bottom: 10px;
     }
 
     .block-grid {
-      display: grid;
-      grid-template-columns: 1fr;
+      display: flex;
+      flex-direction: column;
       gap: 10px;
     }
 
     .palette-block {
-      background: #ffffff;
-      border: 1px solid var(--border-color-panel);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color-light);
       border-radius: var(--radius-standard);
       padding: 12px;
       display: flex;
       align-items: center;
       gap: 12px;
       cursor: grab;
-      font-size: 0.875rem;
-      font-weight: 500;
+      font-size: 0.85rem;
+      font-weight: 600;
       color: var(--text-main);
       transition: all 0.15s ease;
       user-select: none;
@@ -195,13 +119,8 @@
 
     .palette-block:hover {
       border-color: var(--color-primary);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.08);
-    }
-
-    .palette-block:active {
-      cursor: grabbing;
-      background: var(--drag-highlight);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-standard);
     }
 
     .block-icon {
@@ -211,9 +130,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(124, 58, 237, 0.06);
+      background: rgba(124, 58, 237, 0.08);
       color: var(--color-primary);
       border-radius: 6px;
+      flex-shrink: 0;
     }
 
     /* Center Canvas Area */
@@ -221,43 +141,33 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      background: #e5e7eb;
+      background: #e2e8f0;
       overflow-y: auto;
       padding: 24px;
       align-items: center;
     }
 
-    /* Canvas Top Toolbar */
     .canvas-toolbar {
       background: #ffffff;
-      border: 1px solid var(--border-color-panel);
+      border: 1px solid var(--border-color-light);
       border-radius: var(--radius-pill);
-      padding: 6px 12px;
+      padding: 4px 8px;
       display: flex;
-      gap: 8px;
+      gap: 6px;
       margin-bottom: 24px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.05);
-      flex-shrink: 0;
+      box-shadow: var(--shadow-standard);
     }
 
     .viewport-btn {
       background: none;
       border: none;
-      color: var(--text-light);
-      padding: 6px 12px;
+      color: var(--text-muted);
+      padding: 8px 14px;
       border-radius: var(--radius-pill);
       cursor: pointer;
       font-weight: 600;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       transition: all var(--transition-fast);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .viewport-btn:hover {
-      color: var(--text-main);
-      background: #f3f4f6;
     }
 
     .viewport-btn.active {
@@ -265,1167 +175,933 @@
       background: rgba(124, 58, 237, 0.08);
     }
 
-    /* Droppable Page Center */
+    /* Canvas Grid */
     .builder-canvas {
-      width: 750px;
+      width: 780px;
       min-height: 600px;
-      background: var(--canvas-bg);
-      border-radius: 8px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      background: #ffffff;
+      border-radius: var(--radius-card);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
       padding: 40px;
-      transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      transition: width 0.3s ease;
       position: relative;
       display: flex;
       flex-direction: column;
       gap: 16px;
-      box-sizing: border-box;
     }
 
-    /* Device sizes */
-    .builder-canvas.tablet-view {
-      width: 768px !important;
-      padding: 30px;
-    }
+    .builder-canvas.tablet-view { width: 680px; }
+    .builder-canvas.mobile-view { width: 380px; padding: 20px; }
 
-    .builder-canvas.mobile-view {
-      width: 480px !important;
-      padding: 20px;
-    }
-
-    /* Empty state canvas */
-    .canvas-empty-msg {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-light);
-      text-align: center;
-      pointer-events: none;
-      padding: 40px;
-    }
-
-    .empty-icon {
-      font-size: 3rem;
-      color: rgba(124, 58, 237, 0.2);
-      margin-bottom: 16px;
-    }
-
-    .canvas-empty-msg h4 {
-      font-family: var(--font-heading);
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-    }
-
-    /* Drop Zone hover overlay highlight */
-    .builder-canvas.drag-over {
-      border: 2px dashed var(--color-primary) !important;
-      background-color: rgba(124, 58, 237, 0.02) !important;
-    }
-
-    /* Rendered Canvas blocks */
+    /* Canvas Blocks */
     .canvas-block {
       position: relative;
-      border: 1.5px solid transparent;
-      border-radius: 6px;
-      padding: 16px;
-      transition: border-color 0.15s ease;
+      border: 2px dashed transparent;
+      border-radius: 8px;
+      padding: 12px;
       cursor: pointer;
+      transition: border-color var(--transition-fast);
     }
 
     .canvas-block:hover {
-      border-color: rgba(124, 58, 237, 0.4);
+      border-color: rgba(124, 58, 237, 0.3);
     }
 
-    /* Selected state */
-    .canvas-block.selected-block {
-      border-color: var(--builder-selection) !important;
-      box-shadow: 0 0 10px rgba(124, 58, 237, 0.12);
+    .canvas-block.selected {
+      border-color: var(--color-primary) !important;
+      background: rgba(124, 58, 237, 0.01);
     }
 
-    /* Block inline action HUD controls */
-    .block-controls-hud {
+    /* Drag handles/controls on selected block */
+    .block-controls {
       position: absolute;
-      top: -16px;
-      right: 8px;
+      top: -12px;
+      right: 12px;
       background: var(--color-primary);
-      color: white;
-      border-radius: 6px;
-      padding: 2px 4px;
+      border-radius: 4px;
       display: none;
-      gap: 2px;
+      gap: 4px;
+      padding: 2px;
       z-index: 10;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     }
 
-    .canvas-block.selected-block .block-controls-hud {
+    .canvas-block.selected .block-controls {
       display: flex;
     }
 
-    .hud-btn {
+    .block-ctrl-btn {
       background: none;
       border: none;
       color: white;
       cursor: pointer;
-      width: 24px;
-      height: 24px;
-      border-radius: 4px;
+      font-size: 0.85rem;
+      width: 20px;
+      height: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.8rem;
-      transition: background var(--transition-fast);
+      border-radius: 3px;
     }
 
-    .hud-btn:hover {
-      background: rgba(255,255,255,0.15);
+    .block-ctrl-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
     }
 
-    /* Block contents render layouts */
-    .render-heading {
-      font-family: var(--font-heading);
-      color: var(--text-main);
-      margin-bottom: 8px;
-    }
-
-    .render-paragraph {
-      font-family: var(--font-body);
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
-
-    .render-quote {
-      border-left: 3px solid var(--color-primary);
-      padding-left: 16px;
-      font-style: italic;
-      color: var(--text-muted);
-      font-family: var(--font-body);
-    }
-
-    .render-image-container {
-      width: 100%;
-      border-radius: 8px;
-      overflow: hidden;
-      background: #f3f4f6;
-      border: 1.5px solid var(--border-color-panel);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 160px;
-    }
-
-    .render-video-container {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      border-radius: 8px;
-      overflow: hidden;
-      background: #111827;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: rgba(255,255,255,0.4);
-      position: relative;
-    }
-
-    .video-play-btn {
-      width: 48px;
-      height: 48px;
-      background: rgba(255,255,255,0.1);
-      border: 2px solid white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 1.2rem;
-    }
-
-    .render-gallery-container {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-
-    .gallery-img-placeholder {
-      aspect-ratio: 1;
-      border-radius: 6px;
-      background: #f3f4f6;
-      border: 1px solid var(--border-color-panel);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-light);
-      font-size: 0.8rem;
-    }
-
-    .render-btn {
-      display: inline-block;
-      font-family: var(--font-heading);
-      padding: 10px 24px;
-      border-radius: var(--radius-pill);
-      text-decoration: none;
-      font-weight: 600;
-      text-align: center;
-    }
-
-    .render-form {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      max-width: 400px;
-    }
-
-    .render-map-placeholder {
-      height: 200px;
-      background: #e5e7eb;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-muted);
-      border: 1px solid var(--border-color-panel);
-    }
-
-    .render-divider {
-      border: none;
-      border-top: 1px solid var(--border-color-panel);
-      margin: 10px 0;
-    }
-
-    .render-spacer {
-      height: 40px;
-      background: repeating-linear-gradient(45deg, #f3f4f6, #f3f4f6 10px, #ffffff 10px, #ffffff 20px);
-      border-radius: 4px;
-      opacity: 0.5;
-    }
-
-    .render-2col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    .col-dashed {
-      border: 1px dashed var(--border-color-panel);
-      border-radius: 6px;
+    /* Blocks Render styles */
+    .preview-placeholder {
       padding: 20px;
+      background: var(--bg-surface);
       text-align: center;
-      color: var(--text-light);
-      font-size: 0.8rem;
-    }
-
-    /* Right Panel properties editor controls styling */
-    .empty-properties {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 80%;
-      color: var(--text-light);
-      text-align: center;
-    }
-
-    .prop-group {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 20px;
-    }
-
-    .prop-label {
-      font-family: var(--font-heading);
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
       color: var(--text-muted);
-    }
-
-    .prop-control {
-      width: 100%;
-      background: #ffffff;
-      border: 1px solid var(--border-color-panel);
-      border-radius: var(--radius-standard);
-      padding: 10px 12px;
-      font-family: var(--font-body);
-      font-size: 0.85rem;
-      color: var(--text-main);
-      outline: none;
-      transition: all var(--transition-fast);
-    }
-
-    .prop-control:focus {
-      border-color: var(--color-primary);
-    }
-
-    .prop-slider-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .prop-slider-val {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-main);
-      min-width: 32px;
-    }
-
-    .align-buttons {
-      display: flex;
-      gap: 4px;
-    }
-
-    .align-btn {
-      flex: 1;
-      background: white;
-      border: 1px solid var(--border-color-panel);
       border-radius: 6px;
-      padding: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all var(--transition-fast);
-    }
-
-    .align-btn.active {
-      background: var(--color-primary);
-      color: white;
-      border-color: var(--color-primary);
+      font-size: 0.85rem;
+      border: 1px dashed var(--border-color-light);
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Bar -->
+  <!-- Top bar controls -->
   <header class="builder-topbar">
     <div class="page-title-editor">
-      <a href="dashboard.html" class="alima-btn btn-ghost btn-sm" style="margin-right: 12px; border: 1px solid var(--border-color-light);">➔ Dashboard</a>
-      <span style="font-size: 1.3rem;">🧩</span>
-      <input type="text" class="page-title-input" value="Landing Page Mockup" id="page-name-field">
-      <span class="alima-badge badge-draft" style="padding: 4px 10px; font-size: 0.65rem;">Draft</span>
+      <a href="dashboard.html" class="alima-btn btn-ghost btn-sm" style="border: 1px solid var(--border-color-light);">➔ Dashboard</a>
+      <span style="font-size: 1.25rem;">🧩</span>
+      <input type="text" class="page-title-input" value="Landing Page" id="page-title-field" oninput="pushHistoryState()">
+      <span class="alima-badge badge-draft" id="status-badge">Draft</span>
     </div>
     
-    <div class="topbar-actions">
-      <button class="alima-btn btn-ghost btn-sm" onclick="triggerToast('Previewing Layout', 'Simulating site frontend render mode.', 'info')">Preview</button>
-      <button class="alima-btn btn-outline btn-sm" onclick="savePageToFirestore(false)">Save Draft</button>
-      <button class="alima-btn btn-primary btn-sm" onclick="savePageToFirestore(true)">Publish Page</button>
-      <button class="alima-btn btn-ghost btn-sm" onclick="handleLogout()" style="border: 1px solid var(--border-color-light); color: var(--color-error);">Sign Out</button>
+    <div style="display: flex; gap: 8px;">
+      <button class="alima-btn btn-ghost btn-sm" onclick="triggerUndo()">Undo</button>
+      <button class="alima-btn btn-ghost btn-sm" onclick="triggerRedo()">Redo</button>
+      <button class="alima-btn btn-outline btn-sm" onclick="savePageData(false)">Save Draft</button>
+      <button class="alima-btn btn-primary btn-sm" onclick="savePageData(true)">Publish</button>
     </div>
   </header>
 
-  <!-- Main Workspace -->
+  <!-- Workspace split panels -->
   <div class="builder-workspace">
     
-    <!-- Left Panel: Block Palette -->
-    <aside class="builder-panel left-palette">
-      <div class="panel-header">
-        <span>Palette Blocks</span>
-      </div>
-      
-      <!-- Search Input -->
-      <div class="search-wrapper">
-        <span class="search-icon">🔍</span>
-        <input type="text" class="palette-search" id="palette-search-field" placeholder="Search components..." oninput="filterPalette()">
-      </div>
-
-      <!-- Text Blocks -->
-      <div class="palette-category" id="cat-text">
-        <div class="category-title">Text Components</div>
-        <div class="block-grid">
-          <div class="palette-block" draggable="true" ondragstart="dragBlock(event, 'heading')">
-            <span class="block-icon">H</span>
-            <span>Heading Title</span>
-          </div>
-          <div class="palette-block" draggable="true" ondragstart="dragBlock(event, 'paragraph')">
-            <span class="block-icon">¶</span>
-            <span>Paragraph</span>
-          </div>
-          <div class="palette-block" draggable="true" ondragstart="dragBlock(event, 'quote')">
-            <span class="block-icon">“</span>
-            <span>Blockquote</span>
-          </div>
+    <!-- Left panel: Blocks palette -->
+    <aside class="builder-panel">
+      <div class="panel-header">Components</div>
+      <div class="block-grid">
+        <div class="palette-block" draggable="true" ondragstart="handleDragStart(event, 'heading')">
+          <span class="block-icon">H</span> Heading
         </div>
-      </div>
-
-      <!-- Media Blocks -->
-      <div class="palette-category" id="cat-media">
-        <div class="category-title">Media Elements</div>
-        <div class="block-grid">
-          <div class="palette-block" draggable="true" ondragstart="dragBlock(event, 'image')">
-            <span class="block-icon">🖼️</span>
-            <span>Image Box</span>
-          </div>
-          <div class="palette-block" draggable="true" ondragstart="dragBlock(event, 'video')">
-            <span class="block-icon">📹</span>
-            <span>Video Player</span>
-          </div>
-          <div class="palette-block" draggable="true" ondragstart="dragBlock(event, 'gallery')">
-            <span class="block-icon">🗂️</span>
-            <span>Images Gallery</span>
-          </div>
+        <div class="palette-block" draggable="true" ondragstart="handleDragStart(event, 'paragraph')">
+          <span class="block-icon">P</span> Paragraph
         </div>
-      </div>
-
-      <!-- Interactive Blocks -->
-      <div class="palette-category" id="cat-interactive">
-        <div class="category-title">Interactive Widgets</div>
-        <div class="block-grid">
-          <div class="palette-block" draggable="true" ondragstart="dragBlock(event, 'button')">
-            <span class="block-icon">🔘</span>
-            <span>CTA Button</span>
-          </div>
-          <div class="palette-block" draggable="true" ondragstart="dragBlock(event, 'form')">
-            <span class="block-icon">📋</span>
-            <span>Contact Form</span>
-          </div>
-          <div class="palette-block" draggable="true" ondragstart="dragBlock(event, 'map')">
-            <span class="block-icon">🗺️</span>
-            <span>Location Map</span>
-          </div>
+        <div class="palette-block" draggable="true" ondragstart="handleDragStart(event, 'image')">
+          <span class="block-icon">🖼️</span> Image Box
         </div>
-      </div>
-
-      <!-- Layout Blocks -->
-      <div class="palette-category" id="cat-layout">
-        <div class="category-title">Layout & Grids</div>
-        <div class="block-grid">
-          <div class="palette-block" draggable="true" ondragstart="dragBlock(event, 'divider')">
-            <span class="block-icon">➖</span>
-            <span>Divider Line</span>
-          </div>
-          <div class="palette-block" draggable="true" ondragstart="dragBlock(event, 'spacer')">
-            <span class="block-icon">⬜</span>
-            <span>Spacer Gap</span>
-          </div>
-          <div class="palette-block" draggable="true" ondragstart="dragBlock(event, '2col')">
-            <span class="block-icon">♊</span>
-            <span>2-Column Row</span>
-          </div>
+        <div class="palette-block" draggable="true" ondragstart="handleDragStart(event, 'button')">
+          <span class="block-icon">🔘</span> CTA Button
+        </div>
+        <div class="palette-block" draggable="true" ondragstart="handleDragStart(event, 'divider')">
+          <span class="block-icon">➖</span> Divider Line
+        </div>
+        <div class="palette-block" draggable="true" ondragstart="handleDragStart(event, '2col')">
+          <span class="block-icon">♊</span> 2-Column Split
+        </div>
+        <div class="palette-block" draggable="true" ondragstart="handleDragStart(event, 'gallery')">
+          <span class="block-icon">🗂️</span> Gallery Row
+        </div>
+        <div class="palette-block" draggable="true" ondragstart="handleDragStart(event, 'video')">
+          <span class="block-icon">📹</span> Video Embed
+        </div>
+        <div class="palette-block" draggable="true" ondragstart="handleDragStart(event, 'form')">
+          <span class="block-icon">📋</span> Form Block
+        </div>
+        <div class="palette-block" draggable="true" ondragstart="handleDragStart(event, 'map')">
+          <span class="block-icon">🗺️</span> Embed Map
+        </div>
+        <div class="palette-block" draggable="true" ondragstart="handleDragStart(event, 'quote')">
+          <span class="block-icon">“</span> Blockquote
+        </div>
+        <div class="palette-block" draggable="true" ondragstart="handleDragStart(event, 'html')">
+          <span class="block-icon">&lt;&gt;</span> Custom HTML
         </div>
       </div>
     </aside>
 
-    <!-- Center Canvas Area -->
+    <!-- Center panel: droppable canvas viewports -->
     <main class="builder-canvas-wrapper">
       
-      <!-- Toolbar size toggler -->
       <div class="canvas-toolbar">
-        <button class="viewport-btn active" id="btn-desktop" onclick="setCanvasViewport('desktop')">💻 Desktop</button>
-        <button class="viewport-btn" id="btn-tablet" onclick="setCanvasViewport('tablet')">📁 Tablet</button>
-        <button class="viewport-btn" id="btn-mobile" onclick="setCanvasViewport('mobile')">📱 Mobile</button>
+        <button class="viewport-btn active" id="vp-desktop" onclick="setCanvasSize('desktop')">💻 Desktop</button>
+        <button class="viewport-btn" id="vp-tablet" onclick="setCanvasSize('tablet')">📁 Tablet</button>
+        <button class="viewport-btn" id="vp-mobile" onclick="setCanvasSize('mobile')">📱 Mobile</button>
       </div>
 
-      <!-- Live Preview Droppable Canvas -->
-      <div class="builder-canvas" id="builder-canvas" 
-           ondragover="allowDropBlock(event)" 
-           ondragleave="dragLeaveBlock(event)" 
-           ondrop="dropBlock(event)">
-        
-        <!-- Empty Helper message -->
-        <div class="canvas-empty-msg" id="canvas-empty-helper">
-          <span class="empty-icon">🧩</span>
-          <h4>Drag blocks here to start building</h4>
-          <p style="font-size: 0.85rem; max-width: 280px; line-height: 1.5; color: var(--text-light);">Grab heading titles, galleries, or layouts from the left block palette and drop them in this zone.</p>
+      <div class="builder-canvas" id="canvas-dropzone" 
+           ondragover="handleDragOver(event)" 
+           ondragleave="handleDragLeave(event)"
+           ondrop="handleDrop(event)">
+        <!-- Empty state layout helper -->
+        <div class="preview-placeholder" id="canvas-empty-msg" style="padding: 60px 20px;">
+          <span style="font-size: 2rem; display: block; margin-bottom: 12px;">🧩</span>
+          <h4 style="font-weight: 700; margin-bottom: 6px;">Your page builder is empty</h4>
+          <p style="color: var(--text-muted);">Drag block elements from the left palette panel and release them in this canvas area.</p>
         </div>
-
       </div>
 
     </main>
 
-    <!-- Right Panel: Properties Editor -->
-    <aside class="builder-panel right-properties" id="properties-editor">
-      <div class="panel-header">
-        <span>Block Settings</span>
-      </div>
-      
-      <!-- Content loads dynamically depending on selection -->
-      <div class="empty-properties" id="empty-properties-helper">
-        <span style="font-size: 2rem; opacity: 0.3; margin-bottom: 12px;">⚙️</span>
-        <p style="font-size: 0.85rem; max-width: 180px; line-height: 1.5;">Select a component on the live preview canvas to adjust properties.</p>
-      </div>
-      
-      <div id="active-properties-form" style="display: none;">
-        <!-- Form injected dynamically -->
+    <!-- Right panel: block properties config Form -->
+    <aside class="builder-panel right-properties" id="properties-panel">
+      <div class="panel-header">Block Properties</div>
+      <div id="properties-content" style="display: flex; flex-direction: column; gap: 20px;">
+        <div class="preview-placeholder">Click a block element in the builder canvas to configure properties.</div>
       </div>
     </aside>
 
   </div>
 
-  <!-- Shared Design System JS -->
+  <!-- Hidden Image File Input Loader -->
+  <input type="file" id="prop-image-loader" style="display: none;" accept="image/*">
+
+  <!-- Shared JS Utilities -->
   <script src="shared.js"></script>
-  
-  <!-- Firebase config import -->
+
+  <!-- Firebase configuration import -->
   <script type="module" src="firebase.js"></script>
 
   <script type="module">
-    import { auth, db } from "./firebase.js";
-    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-    import { doc, getDoc, setDoc, collection, query, where, getDocs, addDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+    import { auth, db, storage } from "./firebase.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+    import { collection, query, where, getDocs, addDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+    import { ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-storage.js";
 
-    // Global states
-    let activeBlockId = null;
-    let dragOverElement = null;
-    let activePageId = null;
+    let websiteId = null;
+    let pageDocId = null;
+    let pageBlocks = [];
+    let selectedBlockIndex = null;
 
-    function showUserName(name) {
-      console.log("Logged in user:", name);
-    }
+    // Undo / Redo histories stacks
+    let historyState = [];
+    let historyIndex = -1;
 
-    // Monitor authentication state
+    // 1. Auth Guard and loader
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
         window.location.href = "login.html";
         return;
       }
 
-      showUserName(user.displayName || user.email);
+      // Parse websiteId parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      websiteId = urlParams.get('id');
 
-      // Load layout draft from Cloud Firestore
-      await loadPageFromFirestore(user.uid);
+      if (!websiteId) {
+        AlimaToast.show("Error", "No website ID parameter provided. Returning to dashboard.", "error");
+        setTimeout(() => window.location.href = "dashboard.html", 2000);
+        return;
+      }
+
+      // Load existing page
+      await loadPageFromFirestore();
+
+      // Start auto-save: every 30 seconds
+      setInterval(() => {
+        autoSavePage();
+      }, 30000);
     });
 
-    function handleLogout() {
-      signOut(auth).then(() => {
-        window.location.href = "login.html";
-      });
-    }
-    window.handleLogout = handleLogout;
+    async function loadPageFromFirestore() {
+      try {
+        const q = query(collection(db, "pages"), where("websiteId", "==", websiteId), where("slug", "==", "home"));
+        const snap = await getDocs(q);
 
-    // Toast helper
-    function triggerToast(title, msg, type) {
-      if (window.AlimaToast) {
-        window.AlimaToast.show(title, msg, type);
-      } else {
-        alert(`${title}: ${msg}`);
-      }
-    }
-
-    // 1. Search Block Palette Filter
-    function filterPalette() {
-      const query = document.getElementById('palette-search-field').value.toLowerCase().trim();
-      const categories = document.querySelectorAll('.palette-category');
-      
-      categories.forEach(cat => {
-        const blocks = cat.querySelectorAll('.palette-block');
-        let visibleBlocks = 0;
-        
-        blocks.forEach(b => {
-          const label = b.textContent.toLowerCase();
-          if (label.includes(query)) {
-            b.style.display = 'flex';
-            visibleBlocks++;
-          } else {
-            b.style.display = 'none';
-          }
-        });
-        
-        if (visibleBlocks > 0) {
-          cat.style.display = 'block';
+        if (snap.empty) {
+          // Initialize default home page doc
+          const newPage = {
+            websiteId: websiteId,
+            title: "Home",
+            slug: "home",
+            blocks: [],
+            status: "draft",
+            seo: { title: "Home | Alima Site", description: "Powered by Alima CMS", ogImage: "" },
+            updatedAt: new Date().toISOString()
+          };
+          const docRef = await addDoc(collection(db, "pages"), newPage);
+          pageDocId = docRef.id;
+          pageBlocks = [];
         } else {
-          cat.style.display = 'none';
+          const docData = snap.docs[0];
+          pageDocId = docData.id;
+          pageBlocks = docData.data().blocks || [];
+          document.getElementById('page-title-field').value = docData.data().title || "Home";
+          
+          const badge = document.getElementById('status-badge');
+          const status = docData.data().status || 'draft';
+          badge.className = `alima-badge badge-${status === 'published' ? 'live' : 'draft'}`;
+          badge.textContent = status;
         }
-      });
-    }
 
-    // 2. Viewport Breakpoint Resize Toggling
-    function setCanvasViewport(device) {
-      const canvasEl = document.getElementById('builder-canvas');
-      const buttons = document.querySelectorAll('.viewport-btn');
-      
-      canvasEl.className = 'builder-canvas';
-      buttons.forEach(btn => btn.classList.remove('active'));
+        renderCanvas();
+        initHistory();
 
-      if (device === 'desktop') {
-        document.getElementById('btn-desktop').classList.add('active');
-      } else if (device === 'tablet') {
-        canvasEl.classList.add('tablet-view');
-        document.getElementById('btn-tablet').classList.add('active');
-      } else if (device === 'mobile') {
-        canvasEl.classList.add('mobile-view');
-        document.getElementById('btn-mobile').classList.add('active');
+      } catch (err) {
+        console.error("Page query fail:", err);
+        AlimaToast.show("Sync Error", "Failed to retrieve page template configurations.", "error");
       }
     }
 
-    // 3. Drag & Drop Event Handling
-    function dragBlock(e, blockType) {
-      e.dataTransfer.setData("text/plain", blockType);
+    // 2. Drag & Drop systems implementation
+    function handleDragStart(event, blockType) {
+      event.dataTransfer.setData("text/plain", blockType);
     }
 
-    function allowDropBlock(e) {
-      e.preventDefault();
-      const canvasEl = document.getElementById('builder-canvas');
-      canvasEl.classList.add('drag-over');
+    function handleDragOver(event) {
+      event.preventDefault();
+      document.getElementById('canvas-dropzone').style.borderColor = 'var(--color-primary)';
+      document.getElementById('canvas-dropzone').style.background = 'rgba(124, 58, 237, 0.01)';
     }
 
-    function dragLeaveBlock(e) {
-      const canvasEl = document.getElementById('builder-canvas');
-      canvasEl.classList.remove('drag-over');
+    function handleDragLeave(event) {
+      document.getElementById('canvas-dropzone').style.borderColor = 'transparent';
+      document.getElementById('canvas-dropzone').style.background = '#ffffff';
     }
 
-    function dropBlock(e) {
-      e.preventDefault();
-      const canvasEl = document.getElementById('builder-canvas');
-      canvasEl.classList.remove('drag-over');
+    function handleDrop(event) {
+      event.preventDefault();
+      handleDragLeave(event);
       
-      const blockType = e.dataTransfer.getData("text/plain");
+      const blockType = event.dataTransfer.getData("text/plain");
       if (!blockType) return;
-      
-      const emptyHelper = document.getElementById('canvas-empty-helper');
-      if (emptyHelper) emptyHelper.style.display = 'none';
 
-      createNewBlockNode(blockType);
+      const newBlock = createBlockObject(blockType);
+      pageBlocks.push(newBlock);
+      
+      pushHistoryState();
+      renderCanvas();
+      selectBlock(pageBlocks.length - 1);
     }
 
-    // Generate block elements
-    function createNewBlockNode(type, valMap = null) {
-      const blockId = 'block-' + Math.floor(Math.random() * 1000000);
-      createNewBlockNodeFromData(type, blockId, valMap);
-    }
-
-    function createNewBlockNodeFromData(type, blockId, valMap = null) {
-      const canvasEl = document.getElementById('builder-canvas');
-      const blockNode = document.createElement('div');
-      blockNode.className = 'canvas-block';
-      blockNode.id = blockId;
-      blockNode.setAttribute('data-block-type', type);
-      
-      let initialHTML = getBlockRenderTemplate(type, blockId, valMap);
-      blockNode.innerHTML = initialHTML;
-      
-      blockNode.addEventListener('click', (e) => {
-        e.stopPropagation();
-        selectBlock(blockId);
-      });
-      
-      canvasEl.appendChild(blockNode);
-    }
-
-    // 4. Block Render HTML Mapping Templates
-    function getBlockRenderTemplate(type, id, valMap) {
-      let hudControls = `
-        <div class="block-controls-hud">
-          <button class="hud-btn" title="Move Up" onclick="moveBlock('${id}', 'up')">▲</button>
-          <button class="hud-btn" title="Move Down" onclick="moveBlock('${id}', 'down')">▼</button>
-          <button class="hud-btn" title="Duplicate Block" onclick="duplicateBlock('${id}')">📋</button>
-          <button class="hud-btn" style="background-color: var(--color-error);" title="Delete" onclick="deleteBlock('${id}')">&times;</button>
-        </div>
-      `;
-
-      let content = '';
-
+    function createBlockObject(type) {
+      const id = Date.now().toString();
       switch (type) {
         case 'heading':
-          const hText = valMap ? valMap.text : 'Double-click to edit Heading';
-          const hSize = valMap ? valMap.fontSize : '32';
-          const hWeight = valMap ? valMap.fontWeight : '700';
-          const hAlign = valMap ? valMap.textAlign : 'left';
-          const hColor = valMap ? valMap.textColor : '#111827';
-          content = `<h2 class="render-heading" style="font-size: ${hSize}px; font-weight: ${hWeight}; text-align: ${hAlign}; color: ${hColor};">${hText}</h2>`;
+          return { id, type, text: 'Click block to edit heading', fontSize: '28px', color: '#111827', align: 'left', weight: '700' };
+        case 'paragraph':
+          return { id, type, text: 'Click block to configure paragraph text editor parameters inside settings side-panel.', fontSize: '16px', color: '#6b7280', align: 'left', lineHeight: '1.6' };
+        case 'image':
+          return { id, type, url: '', alt: 'Image description content', radius: '12px' };
+        case 'button':
+          return { id, type, label: 'Click Me', url: '#', style: 'filled', color: '#7c3aed', size: 'medium' };
+        case 'divider':
+          return { id, type, color: '#cbd5e1' };
+        case '2col':
+          return { id, type, leftText: 'Left Column Content', rightText: 'Right Column Content', ratio: '50-50' };
+        case 'gallery':
+          return { id, type, urls: [] };
+        case 'video':
+          return { id, type, url: '' };
+        case 'form':
+          return { id, type, fields: ['Name', 'Email'], btnText: 'Submit Now' };
+        case 'map':
+          return { id, type, address: 'San Francisco, CA' };
+        case 'quote':
+          return { id, type, text: 'The beautiful thing about learning is that no one can take it away from you.', author: 'B.B. King', color: '#7c3aed' };
+        case 'html':
+          return { id, type, code: '<div style="padding: 10px; border-radius: 8px; background: #fee2e2; color: #b91c1c; font-weight: 600; text-align: center;">HTML Block Sandbox</div>' };
+        default:
+          return { id, type: 'unknown' };
+      }
+    }
+
+    // 3. Canvas Renders Engine
+    function renderCanvas() {
+      const canvasEl = document.getElementById('canvas-dropzone');
+      
+      // Clean everything except placeholder if empty
+      const children = Array.from(canvasEl.children);
+      children.forEach(c => {
+        if (c.id !== 'canvas-empty-msg') c.remove();
+      });
+
+      const emptyHelper = document.getElementById('canvas-empty-msg');
+      if (pageBlocks.length === 0) {
+        emptyHelper.style.display = 'block';
+        return;
+      }
+      emptyHelper.style.display = 'none';
+
+      pageBlocks.forEach((block, idx) => {
+        const blockWrapper = document.createElement('div');
+        blockWrapper.className = `canvas-block ${selectedBlockIndex === idx ? 'selected' : ''}`;
+        blockWrapper.setAttribute('onclick', `selectBlock(${idx}, event)`);
+
+        // Render preview content
+        let previewHtml = '';
+        switch (block.type) {
+          case 'heading':
+            previewHtml = `<h2 style="font-size: ${block.fontSize}; color: ${block.color}; text-align: ${block.align}; font-weight: ${block.weight}; font-family: var(--font-heading);">${block.text}</h2>`;
+            break;
+          case 'paragraph':
+            previewHtml = `<p style="font-size: ${block.fontSize}; color: ${block.color}; text-align: ${block.align}; line-height: ${block.lineHeight};">${block.text}</p>`;
+            break;
+          case 'image':
+            if (block.url) {
+              previewHtml = `<img src="${block.url}" alt="${block.alt}" style="width: 100%; max-height: 350px; object-fit: cover; border-radius: ${block.radius};">`;
+            } else {
+              previewHtml = `<div class="preview-placeholder">🖼️ Empty Image Box (Click to upload)</div>`;
+            }
+            break;
+          case 'button':
+            const btnBg = block.style === 'filled' ? block.color : 'transparent';
+            const btnBorder = block.style === 'outline' ? `2px solid ${block.color}` : 'none';
+            const btnColor = block.style === 'filled' ? '#ffffff' : block.color;
+            const pad = block.size === 'small' ? '8px 16px' : block.size === 'large' ? '16px 32px' : '12px 24px';
+            previewHtml = `<div style="text-align: center;"><a href="${block.url}" class="alima-btn" style="background: ${btnBg}; border: ${btnBorder}; color: ${btnColor}; padding: ${pad}; display: inline-flex; pointer-events: none;">${block.label}</a></div>`;
+            break;
+          case 'divider':
+            previewHtml = `<hr style="border: none; border-top: 2px solid ${block.color}; margin: 8px 0;">`;
+            break;
+          case '2col':
+            previewHtml = `
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div style="padding: 12px; background: var(--bg-surface); border-radius: 6px; font-size: 0.9rem;">${block.leftText}</div>
+                <div style="padding: 12px; background: var(--bg-surface); border-radius: 6px; font-size: 0.9rem;">${block.rightText}</div>
+              </div>
+            `;
+            break;
+          case 'gallery':
+            if (block.urls.length === 0) {
+              previewHtml = `<div class="preview-placeholder">🗂️ Empty Image Gallery (Click to configure list)</div>`;
+            } else {
+              previewHtml = `<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                ${block.urls.map(u => `<img src="${u}" style="width:100%; aspect-ratio:1; object-fit:cover; border-radius:8px;">`).join('')}
+              </div>`;
+            }
+            break;
+          case 'video':
+            if (block.url) {
+              // Convert youtube link to embed format
+              let embedUrl = block.url;
+              if (block.url.includes('youtube.com/watch?v=')) {
+                embedUrl = block.url.replace('watch?v=', 'embed/');
+              } else if (block.url.includes('youtu.be/')) {
+                embedUrl = block.url.replace('youtu.be/', 'youtube.com/embed/');
+              }
+              previewHtml = `<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px;">
+                <iframe src="${embedUrl}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0" allowfullscreen></iframe>
+              </div>`;
+            } else {
+              previewHtml = `<div class="preview-placeholder">📹 Empty Video Player URL (Click to link YouTube embed)</div>`;
+            }
+            break;
+          case 'form':
+            previewHtml = `
+              <div style="padding: 20px; border: 1px solid var(--border-color-light); border-radius: 12px;">
+                ${block.fields.map(f => `
+                  <div class="alima-input-group" style="margin-bottom: 12px;">
+                    <label class="alima-input-label">${f}</label>
+                    <input type="text" class="alima-input" placeholder="Enter ${f.toLowerCase()}..." disabled>
+                  </div>
+                `).join('')}
+                <button class="alima-btn btn-primary btn-sm" style="width: 100%; pointer-events: none;">${block.btnText}</button>
+              </div>
+            `;
+            break;
+          case 'map':
+            previewHtml = `
+              <div style="border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color-light); height: 200px; display: flex; align-items: center; justify-content: center; background: #e5e7eb;">
+                <span style="font-weight: 600; color: var(--text-muted);">🗺️ Google Map: ${block.address}</span>
+              </div>
+            `;
+            break;
+          case 'quote':
+            previewHtml = `
+              <div style="border-left: 4px solid ${block.color}; padding-left: 16px; margin: 8px 0;">
+                <p style="font-style: italic; color: var(--text-main); font-size: 1.1rem; line-height: 1.5;">"${block.text}"</p>
+                <cite style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px; display: block;">— ${block.author}</cite>
+              </div>
+            `;
+            break;
+          case 'html':
+            previewHtml = `<div>${block.code}</div>`;
+            break;
+        }
+
+        // HUD overlay elements
+        blockWrapper.innerHTML = `
+          ${previewHtml}
+          <div class="block-controls">
+            <button class="block-ctrl-btn" onclick="duplicateBlock(${idx}, event)" title="Duplicate">📋</button>
+            <button class="block-ctrl-btn" onclick="moveBlockUp(${idx}, event)" title="Move Up">▲</button>
+            <button class="block-ctrl-btn" onclick="moveBlockDown(${idx}, event)" title="Move Down">▼</button>
+            <button class="block-ctrl-btn" style="background: var(--color-error);" onclick="deleteBlock(${idx}, event)" title="Delete">&times;</button>
+          </div>
+        `;
+        
+        canvasEl.appendChild(blockWrapper);
+      });
+    }
+
+    // 4. Properties form editor builder
+    function selectBlock(idx, event) {
+      if (event) event.stopPropagation();
+      selectedBlockIndex = idx;
+      
+      // Update canvas borders selection class
+      renderCanvas();
+
+      const propertiesContainer = document.getElementById('properties-content');
+      const block = pageBlocks[idx];
+      
+      if (!block) {
+        propertiesContainer.innerHTML = `<div class="preview-placeholder">Click a block element in the builder canvas to configure properties.</div>`;
+        return;
+      }
+
+      // Generate context form elements based on block type
+      let fieldsHtml = '';
+      switch (block.type) {
+        case 'heading':
+          fieldsHtml = `
+            <div class="alima-input-group">
+              <label class="alima-input-label">Text Content</label>
+              <input type="text" class="alima-input" value="${block.text}" oninput="updateBlockProp('text', this.value)">
+            </div>
+            <div class="alima-input-group">
+              <label class="alima-input-label">Font Size</label>
+              <input type="text" class="alima-input" value="${block.fontSize}" oninput="updateBlockProp('fontSize', this.value)" placeholder="e.g. 28px">
+            </div>
+            <div class="alima-input-group">
+              <label class="alima-input-label">Font Weight</label>
+              <select class="alima-input" onchange="updateBlockProp('weight', this.value)">
+                <option value="400" ${block.weight === '400' ? 'selected' : ''}>Regular (400)</option>
+                <option value="600" ${block.weight === '600' ? 'selected' : ''}>Medium (600)</option>
+                <option value="700" ${block.weight === '700' ? 'selected' : ''}>Bold (700)</option>
+                <option value="800" ${block.weight === '800' ? 'selected' : ''}>Extra Bold (800)</option>
+              </select>
+            </div>
+            <div class="alima-input-group">
+              <label class="alima-input-label">Text Align</label>
+              <select class="alima-input" onchange="updateBlockProp('align', this.value)">
+                <option value="left" ${block.align === 'left' ? 'selected' : ''}>Left</option>
+                <option value="center" ${block.align === 'center' ? 'selected' : ''}>Center</option>
+                <option value="right" ${block.align === 'right' ? 'selected' : ''}>Right</option>
+              </select>
+            </div>
+            <div class="alima-input-group">
+              <label class="alima-input-label">Color Hex</label>
+              <input type="color" class="alima-input" value="${rgbToHex(block.color)}" oninput="updateBlockProp('color', this.value)" style="height: 40px; padding: 2px;">
+            </div>
+          `;
           break;
         case 'paragraph':
-          const pText = valMap ? valMap.text : 'This is a paragraph block representing body text copy. You can select this block and edit typography parameters directly inside the settings editor.';
-          content = `<p class="render-paragraph">${pText}</p>`;
-          break;
-        case 'quote':
-          const qText = valMap ? valMap.text : '"The best way to predict the future is to create it."';
-          content = `<blockquote class="render-quote">${qText}</blockquote>`;
+          fieldsHtml = `
+            <div class="alima-input-group">
+              <label class="alima-input-label">Text Paragraph</label>
+              <textarea class="alima-input" style="height:100px; resize:vertical;" oninput="updateBlockProp('text', this.value)">${block.text}</textarea>
+            </div>
+            <div class="alima-input-group">
+              <label class="alima-input-label">Font Size</label>
+              <input type="text" class="alima-input" value="${block.fontSize}" oninput="updateBlockProp('fontSize', this.value)">
+            </div>
+            <div class="alima-input-group">
+              <label class="alima-input-label">Line Height</label>
+              <input type="text" class="alima-input" value="${block.lineHeight}" oninput="updateBlockProp('lineHeight', this.value)">
+            </div>
+            <div class="alima-input-group">
+              <label class="alima-input-label">Align</label>
+              <select class="alima-input" onchange="updateBlockProp('align', this.value)">
+                <option value="left" ${block.align === 'left' ? 'selected' : ''}>Left</option>
+                <option value="center" ${block.align === 'center' ? 'selected' : ''}>Center</option>
+                <option value="right" ${block.align === 'right' ? 'selected' : ''}>Right</option>
+              </select>
+            </div>
+          `;
           break;
         case 'image':
-          const imgAlt = valMap ? valMap.alt : 'University Campus';
-          const imgRad = valMap ? valMap.radius : '8';
-          content = `
-            <div class="render-image-container" style="border-radius: ${imgRad}px;">
-              <span style="font-size: 2.2rem;">🖼️</span>
-              <p style="font-size: 0.8rem; color: var(--text-light); margin-left: 8px;">Image preview: <strong>${imgAlt}</strong></p>
+          fieldsHtml = `
+            <div class="alima-input-group">
+              <label class="alima-input-label">Image Source File</label>
+              <button class="alima-btn btn-outline btn-sm" onclick="triggerBlockImageUpload()">Upload Image File</button>
+              <div id="image-upload-status" style="font-size:0.8rem; color:var(--text-muted);"></div>
             </div>
-          `;
-          break;
-        case 'video':
-          content = `
-            <div class="render-video-container">
-              <div class="video-play-btn">▶</div>
-              <span style="position: absolute; bottom: 12px; left: 12px; font-size: 0.75rem;">Embedded Video Container</span>
+            <div class="alima-input-group">
+              <label class="alima-input-label">Alt description</label>
+              <input type="text" class="alima-input" value="${block.alt}" oninput="updateBlockProp('alt', this.value)">
             </div>
-          `;
-          break;
-        case 'gallery':
-          content = `
-            <div class="render-gallery-container">
-              <div class="gallery-img-placeholder">Image #1</div>
-              <div class="gallery-img-placeholder">Image #2</div>
-              <div class="gallery-img-placeholder">Image #3</div>
+            <div class="alima-input-group">
+              <label class="alima-input-label">Border Radius</label>
+              <input type="text" class="alima-input" value="${block.radius}" oninput="updateBlockProp('radius', this.value)" placeholder="e.g. 12px">
             </div>
           `;
           break;
         case 'button':
-          const bText = valMap ? valMap.text : 'Click Action Button';
-          const bLink = valMap ? valMap.link : '#';
-          const bBg = valMap ? valMap.bgColor : '#7c3aed';
-          const bStyle = valMap ? valMap.btnStyle : 'filled';
-          
-          let btnStyleCSS = '';
-          if (bStyle === 'filled') {
-            btnStyleCSS = `background: ${bBg}; color: white; border: none;`;
-          } else {
-            btnStyleCSS = `background: transparent; color: ${bBg}; border: 2px solid ${bBg};`;
-          }
-          
-          content = `<a href="${bLink}" class="render-btn" style="${btnStyleCSS}">${bText}</a>`;
-          break;
-        case 'form':
-          content = `
-            <div class="render-form">
-              <input type="text" class="prop-control" placeholder="Your Name" style="background:#f9fafb; font-size: 0.85rem;" disabled>
-              <input type="email" class="prop-control" placeholder="Institutional Email" style="background:#f9fafb; font-size: 0.85rem;" disabled>
-              <button class="alima-btn btn-primary btn-sm" style="width: fit-content; pointer-events: none;" type="button">Submit registration</button>
+          fieldsHtml = `
+            <div class="alima-input-group">
+              <label class="alima-input-label">Button Label</label>
+              <input type="text" class="alima-input" value="${block.label}" oninput="updateBlockProp('label', this.value)">
             </div>
-          `;
-          break;
-        case 'map':
-          content = `
-            <div class="render-map-placeholder">
-              <span>🗺️ Embedded Map view coordinates</span>
+            <div class="alima-input-group">
+              <label class="alima-input-label">Redirect Link URL</label>
+              <input type="text" class="alima-input" value="${block.url}" oninput="updateBlockProp('url', this.value)">
+            </div>
+            <div class="alima-input-group">
+              <label class="alima-input-label">Button Style</label>
+              <select class="alima-input" onchange="updateBlockProp('style', this.value)">
+                <option value="filled" ${block.style === 'filled' ? 'selected' : ''}>Filled</option>
+                <option value="outline" ${block.style === 'outline' ? 'selected' : ''}>Outline</option>
+              </select>
+            </div>
+            <div class="alima-input-group">
+              <label class="alima-input-label">Color theme</label>
+              <input type="color" class="alima-input" value="${rgbToHex(block.color)}" oninput="updateBlockProp('color', this.value)" style="height: 40px; padding: 2px;">
             </div>
           `;
           break;
         case 'divider':
-          content = `<hr class="render-divider">`;
-          break;
-        case 'spacer':
-          content = `<div class="render-spacer"></div>`;
+          fieldsHtml = `
+            <div class="alima-input-group">
+              <label class="alima-input-label">Line Color</label>
+              <input type="color" class="alima-input" value="${rgbToHex(block.color)}" oninput="updateBlockProp('color', this.value)" style="height: 40px; padding: 2px;">
+            </div>
+          `;
           break;
         case '2col':
-          content = `
-            <div class="render-2col">
-              <div class="col-dashed">Column #1</div>
-              <div class="col-dashed">Column #2</div>
+          fieldsHtml = `
+            <div class="alima-input-group">
+              <label class="alima-input-label">Left Column Content</label>
+              <input type="text" class="alima-input" value="${block.leftText}" oninput="updateBlockProp('leftText', this.value)">
+            </div>
+            <div class="alima-input-group">
+              <label class="alima-input-label">Right Column Content</label>
+              <input type="text" class="alima-input" value="${block.rightText}" oninput="updateBlockProp('rightText', this.value)">
+            </div>
+          `;
+          break;
+        case 'gallery':
+          fieldsHtml = `
+            <div class="alima-input-group">
+              <label class="alima-input-label">Add Gallery Image</label>
+              <button class="alima-btn btn-outline btn-sm" onclick="triggerBlockImageUpload(true)">Upload Gallery Item</button>
+              <div id="gallery-upload-status" style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;"></div>
+            </div>
+            <div class="alima-input-group">
+              <label class="alima-input-label">Image URLs list</label>
+              <div style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">
+                ${block.urls.map((u, i) => `<div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Url ${i+1}</span><button onclick="removeGalleryImg(${i})" style="border:none; color:red; background:none; cursor:pointer;">Remove</button></div>`).join('')}
+              </div>
+            </div>
+          `;
+          break;
+        case 'video':
+          fieldsHtml = `
+            <div class="alima-input-group">
+              <label class="alima-input-label">YouTube video URL</label>
+              <input type="text" class="alima-input" value="${block.url}" oninput="updateBlockProp('url', this.value)" placeholder="https://www.youtube.com/watch?v=...">
+            </div>
+          `;
+          break;
+        case 'form':
+          fieldsHtml = `
+            <div class="alima-input-group">
+              <label class="alima-input-label">Form Inputs Fields</label>
+              <div style="display:flex; gap:6px; margin-bottom:8px;">
+                <input type="text" id="new-form-field-name" class="alima-input" placeholder="Field name e.g. Phone" style="padding: 6px 12px; font-size: 0.85rem;">
+                <button type="button" class="alima-btn btn-primary btn-sm" onclick="addFormFieldItem()">Add</button>
+              </div>
+              <div style="font-size:0.8rem; color:var(--text-muted);">
+                ${block.fields.map((f, i) => `<div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>${f}</span><button onclick="removeFormFieldItem(${i})" style="border:none; color:red; background:none; cursor:pointer;">Remove</button></div>`).join('')}
+              </div>
+            </div>
+            <div class="alima-input-group">
+              <label class="alima-input-label">Submit Button Text</label>
+              <input type="text" class="alima-input" value="${block.btnText}" oninput="updateBlockProp('btnText', this.value)">
+            </div>
+          `;
+          break;
+        case 'map':
+          fieldsHtml = `
+            <div class="alima-input-group">
+              <label class="alima-input-label">Google Maps Address</label>
+              <input type="text" class="alima-input" value="${block.address}" oninput="updateBlockProp('address', this.value)">
+            </div>
+          `;
+          break;
+        case 'quote':
+          fieldsHtml = `
+            <div class="alima-input-group">
+              <label class="alima-input-label">Quote Quote</label>
+              <textarea class="alima-input" style="height:80px;" oninput="updateBlockProp('text', this.value)">${block.text}</textarea>
+            </div>
+            <div class="alima-input-group">
+              <label class="alima-input-label">Author</label>
+              <input type="text" class="alima-input" value="${block.author}" oninput="updateBlockProp('author', this.value)">
+            </div>
+            <div class="alima-input-group">
+              <label class="alima-input-label">Accent Color</label>
+              <input type="color" class="alima-input" value="${rgbToHex(block.color)}" oninput="updateBlockProp('color', this.value)" style="height: 40px; padding: 2px;">
+            </div>
+          `;
+          break;
+        case 'html':
+          fieldsHtml = `
+            <div class="alima-input-group">
+              <label class="alima-input-label">Raw HTML Code</label>
+              <textarea class="alima-input" style="height:150px; font-family:monospace; font-size:0.8rem; resize:vertical;" oninput="updateBlockProp('code', this.value)">${block.code}</textarea>
             </div>
           `;
           break;
       }
 
-      return hudControls + `<div class="block-content-hook">${content}</div>`;
-    }
-
-    // 5. Block Selection & Sidebar Form Renderer
-    function selectBlock(id) {
-      const blocks = document.querySelectorAll('.canvas-block');
-      blocks.forEach(b => b.classList.remove('selected-block'));
-
-      const selectedNode = document.getElementById(id);
-      if (!selectedNode) return;
-
-      selectedNode.classList.add('selected-block');
-      activeBlockId = id;
-
-      loadPropertiesForm(selectedNode.getAttribute('data-block-type'), id);
-    }
-
-    function loadPropertiesForm(type, id) {
-      const emptyHelper = document.getElementById('empty-properties-helper');
-      const formWrapper = document.getElementById('active-properties-form');
-      
-      emptyHelper.style.display = 'none';
-      formWrapper.style.display = 'block';
-
-      const blockEl = document.getElementById(id);
-      let html = '';
-
-      if (type === 'heading') {
-        const textNode = blockEl.querySelector('.render-heading');
-        const textVal = textNode.textContent;
-        const sizeVal = parseInt(window.getComputedStyle(textNode).fontSize);
-        const weightVal = window.getComputedStyle(textNode).fontWeight;
-        const alignVal = window.getComputedStyle(textNode).textAlign;
-        const colorVal = rgbToHex(window.getComputedStyle(textNode).color);
-
-        html = `
-          <div class="prop-group">
-            <label class="prop-label">Heading Text</label>
-            <input type="text" class="prop-control" value="${textVal}" oninput="updateHeadingProperty('${id}', 'text', this.value)">
-          </div>
-
-          <div class="prop-group">
-            <label class="prop-label">Font Size</label>
-            <div class="prop-slider-row">
-              <input type="range" min="16" max="72" value="${sizeVal}" style="flex:1;" oninput="updateHeadingProperty('${id}', 'fontSize', this.value)">
-              <span class="prop-slider-val">${sizeVal}px</span>
-            </div>
-          </div>
-
-          <div class="prop-group">
-            <label class="prop-label">Font Weight</label>
-            <select class="prop-control" onchange="updateHeadingProperty('${id}', 'fontWeight', this.value)">
-              <option value="400" ${weightVal === '400' ? 'selected' : ''}>Regular</option>
-              <option value="600" ${weightVal === '600' ? 'selected' : ''}>Semi Bold</option>
-              <option value="700" ${weightVal === '700' || weightVal === 'bold' ? 'selected' : ''}>Bold</option>
-              <option value="800" ${weightVal === '800' ? 'selected' : ''}>Extra Bold</option>
-            </select>
-          </div>
-
-          <div class="prop-group">
-            <label class="prop-label">Text Alignment</label>
-            <div class="align-buttons">
-              <button class="align-btn ${alignVal === 'left' ? 'active' : ''}" onclick="updateHeadingProperty('${id}', 'textAlign', 'left'); window.setAlignActive(this)">Left</button>
-              <button class="align-btn ${alignVal === 'center' ? 'active' : ''}" onclick="updateHeadingProperty('${id}', 'textAlign', 'center'); window.setAlignActive(this)">Center</button>
-              <button class="align-btn ${alignVal === 'right' ? 'active' : ''}" onclick="updateHeadingProperty('${id}', 'textAlign', 'right'); window.setAlignActive(this)">Right</button>
-            </div>
-          </div>
-
-          <div class="prop-group">
-            <label class="prop-label">Text Color</label>
-            <input type="color" class="prop-control" value="${colorVal}" style="height:40px; padding: 2px;" oninput="updateHeadingProperty('${id}', 'textColor', this.value)">
-          </div>
-        `;
-      } 
-      else if (type === 'image') {
-        const textAlt = blockEl.querySelector('p strong') ? blockEl.querySelector('p strong').textContent : 'University Campus';
-        const imgRad = blockEl.querySelector('.render-image-container') ? parseInt(window.getComputedStyle(blockEl.querySelector('.render-image-container')).borderRadius) : 8;
-
-        html = `
-          <div class="prop-group">
-            <label class="prop-label">Image Source File</label>
-            <button class="alima-btn btn-outline btn-sm" type="button" style="width: 100%;" onclick="triggerToast('Media Upload', 'Selecting file from Alima Media library.', 'info')">Upload Alt Image</button>
-          </div>
-
-          <div class="prop-group">
-            <label class="prop-label">Alt Text</label>
-            <input type="text" class="prop-control" value="${textAlt}" oninput="updateImageProperty('${id}', 'alt', this.value)">
-          </div>
-
-          <div class="prop-group">
-            <label class="prop-label">Border Radius</label>
-            <div class="prop-slider-row">
-              <input type="range" min="0" max="40" value="${imgRad}" style="flex:1;" oninput="updateImageProperty('${id}', 'radius', this.value)">
-              <span class="prop-slider-val">${imgRad}px</span>
-            </div>
-          </div>
-        `;
-      } 
-      else if (type === 'button') {
-        const btnLinkEl = blockEl.querySelector('.render-btn');
-        const textVal = btnLinkEl ? btnLinkEl.textContent : 'Click Action Button';
-        const urlVal = btnLinkEl ? btnLinkEl.getAttribute('href') : '#';
-        const bgVal = btnLinkEl ? rgbToHex(window.getComputedStyle(btnLinkEl).backgroundColor || window.getComputedStyle(btnLinkEl).borderColor) : '#7c3aed';
-        
-        let styleVal = 'filled';
-        if (btnLinkEl && btnLinkEl.style.backgroundColor === 'transparent') {
-          styleVal = 'outline';
-        }
-
-        html = `
-          <div class="prop-group">
-            <label class="prop-label">Button Label</label>
-            <input type="text" class="prop-control" value="${textVal}" oninput="updateButtonProperty('${id}', 'text', this.value)">
-          </div>
-
-          <div class="prop-group">
-            <label class="prop-label">Redirect Link</label>
-            <input type="text" class="prop-control" value="${urlVal}" oninput="updateButtonProperty('${id}', 'link', this.value)">
-          </div>
-
-          <div class="prop-group">
-            <label class="prop-label">Brand Color</label>
-            <input type="color" class="prop-control" value="${bgVal}" style="height:40px; padding: 2px;" oninput="updateButtonProperty('${id}', 'bgColor', this.value)">
-          </div>
-
-          <div class="prop-group">
-            <label class="prop-label">Button Style</label>
-            <select class="prop-control" onchange="updateButtonProperty('${id}', 'btnStyle', this.value)">
-              <option value="filled" ${styleVal === 'filled' ? 'selected' : ''}>Filled Solid</option>
-              <option value="outline" ${styleVal === 'outline' ? 'selected' : ''}>Ghost Outline</option>
-            </select>
-          </div>
-        `;
-      } 
-      else {
-        html = `
-          <div style="text-align: center; color: var(--text-light); padding-top: 40px;">
-            <span style="font-size: 1.5rem;">⚙️</span>
-            <p style="font-size: 0.8rem; margin-top: 8px;">No custom variables editable for this block type.</p>
-          </div>
-        `;
-      }
-
-      formWrapper.innerHTML = html;
-    }
-
-    function setAlignActive(btn) {
-      const row = btn.parentElement.querySelectorAll('.align-btn');
-      row.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-    }
-
-    // 6. Block Property Updates
-    function updateHeadingProperty(id, prop, value) {
-      const blockEl = document.getElementById(id);
-      const heading = blockEl.querySelector('.render-heading');
-      if (!heading) return;
-
-      if (prop === 'text') {
-        heading.textContent = value;
-      } else if (prop === 'fontSize') {
-        heading.style.fontSize = value + 'px';
-        const sliderLabel = document.getElementById('properties-editor').querySelector('.prop-slider-val');
-        if (sliderLabel) sliderLabel.textContent = value + 'px';
-      } else if (prop === 'fontWeight') {
-        heading.style.fontWeight = value;
-      } else if (prop === 'textAlign') {
-        heading.style.textAlign = value;
-      } else if (prop === 'textColor') {
-        heading.style.color = value;
-      }
-    }
-
-    function updateImageProperty(id, prop, value) {
-      const blockEl = document.getElementById(id);
-      const imgContainer = blockEl.querySelector('.render-image-container');
-      const label = blockEl.querySelector('p strong');
-
-      if (prop === 'alt') {
-        if (label) label.textContent = value;
-      } else if (prop === 'radius') {
-        if (imgContainer) imgContainer.style.borderRadius = value + 'px';
-        const sliderLabel = document.getElementById('properties-editor').querySelector('.prop-slider-val');
-        if (sliderLabel) sliderLabel.textContent = value + 'px';
-      }
-    }
-
-    function updateButtonProperty(id, prop, value) {
-      const blockEl = document.getElementById(id);
-      const btnLink = blockEl.querySelector('.render-btn');
-      if (!btnLink) return;
-
-      let label = btnLink.textContent;
-      let url = btnLink.getAttribute('href');
-      let color = btnLink.style.backgroundColor || btnLink.style.borderColor || '#7c3aed';
-      let isOutline = btnLink.style.backgroundColor === 'transparent';
-
-      if (prop === 'text') label = value;
-      if (prop === 'link') url = value;
-      if (prop === 'bgColor') color = value;
-      if (prop === 'btnStyle') isOutline = (value === 'outline');
-
-      btnLink.textContent = label;
-      btnLink.setAttribute('href', url);
-      
-      if (!isOutline) {
-        btnLink.style.background = color;
-        btnLink.style.color = 'white';
-        btnLink.style.border = 'none';
-      } else {
-        btnLink.style.background = 'transparent';
-        btnLink.style.color = color;
-        btnLink.style.border = `2px solid ${color}`;
-      }
+      propertiesContainer.innerHTML = fieldsHtml;
     }
 
     function rgbToHex(rgb) {
-      if (!rgb) return '#7c3aed';
-      if (rgb.startsWith('#')) return rgb;
+      if (!rgb || rgb.startsWith('#')) return rgb || '#000000';
+      const match = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+      if (!match) return '#000000';
+      return "#" + ((1 << 24) + (parseInt(match[1]) << 16) + (parseInt(match[2]) << 8) + parseInt(match[3])).toString(16).slice(1);
+    }
+
+    function updateBlockProp(property, value) {
+      if (selectedBlockIndex === null) return;
+      pageBlocks[selectedBlockIndex][property] = value;
+      renderCanvas();
+    }
+
+    function triggerBlockImageUpload(isGallery = false) {
+      const fileInput = document.getElementById('prop-image-loader');
       
-      let matches = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/) || rgb.match(/^rgba\((\d+),\s*(\d+),\s*(\d+),\s*.*\)$/);
-      if (!matches) return '#7c3aed';
-      
-      return "#" + ((1 << 24) + (parseInt(matches[1]) << 16) + (parseInt(matches[2]) << 8) + parseInt(matches[3])).toString(16).slice(1);
-    }
-
-    // 7. HUD Inline Controls
-    function deleteBlock(id) {
-      const block = document.getElementById(id);
-      if (block) {
-        block.remove();
-        if (document.getElementById('builder-canvas').querySelectorAll('.canvas-block').length === 0) {
-          document.getElementById('canvas-empty-helper').style.display = 'flex';
-        }
-        document.getElementById('active-properties-form').style.display = 'none';
-        document.getElementById('empty-properties-helper').style.display = 'flex';
-        activeBlockId = null;
-      }
-    }
-
-    function duplicateBlock(id) {
-      const sourceBlock = document.getElementById(id);
-      if (!sourceBlock) return;
-
-      const type = sourceBlock.getAttribute('data-block-type');
-      let values = {};
-      if (type === 'heading') {
-        const h = sourceBlock.querySelector('.render-heading');
-        values = { text: h.textContent, fontSize: parseInt(h.style.fontSize) || 32, fontWeight: h.style.fontWeight, textAlign: h.style.textAlign, textColor: rgbToHex(h.style.color) };
-      } else if (type === 'image') {
-        values = { alt: sourceBlock.querySelector('p strong').textContent, radius: parseInt(sourceBlock.querySelector('.render-image-container').style.borderRadius) || 8 };
-      } else if (type === 'button') {
-        const b = sourceBlock.querySelector('.render-btn');
-        values = { text: b.textContent, link: b.getAttribute('href'), bgColor: rgbToHex(b.style.backgroundColor || b.style.borderColor), btnStyle: b.style.backgroundColor === 'transparent' ? 'outline' : 'filled' };
-      }
-      createNewBlockNode(type, values);
-    }
-
-    function moveBlock(id, direction) {
-      const block = document.getElementById(id);
-      if (!block) return;
-      const parent = block.parentNode;
-      if (direction === 'up') {
-        const prev = block.previousElementSibling;
-        if (prev && prev.id !== 'canvas-empty-helper') parent.insertBefore(block, prev);
-      } else {
-        const next = block.nextElementSibling;
-        if (next) parent.insertBefore(next, block);
-      }
-    }
-
-    // 8. Firebase Firestore Database Load / Save sync
-    async function loadPageFromFirestore(uid) {
-      const urlParams = new URLSearchParams(window.location.search);
-      const websiteId = urlParams.get('websiteId');
-      
-      if (!websiteId) {
-        triggerToast("Access Denied", "No website selected to edit.", "error");
-        setTimeout(() => {
-          window.location.href = "dashboard.html";
-        }, 2000);
-        return;
-      }
-
-      try {
-        const pagesRef = collection(db, "pages");
-        const q = query(pagesRef, where("websiteId", "==", websiteId));
-        const querySnapshot = await getDocs(q);
-
-        if (!querySnapshot.empty) {
-          const pageDoc = querySnapshot.docs[0];
-          activePageId = pageDoc.id;
-          const data = pageDoc.data();
-          
-          document.getElementById('page-name-field').value = data.title;
-          
-          // Clear current canvas blocks
-          const canvasEl = document.getElementById('builder-canvas');
-          const currentBlocks = canvasEl.querySelectorAll('.canvas-block');
-          currentBlocks.forEach(b => b.remove());
-
-          if (data.blocks && data.blocks.length > 0) {
-            document.getElementById('canvas-empty-helper').style.display = 'none';
-            data.blocks.forEach(b => createNewBlockNodeFromData(b.type, b.id, b.values));
-          } else {
-            document.getElementById('canvas-empty-helper').style.display = 'flex';
-          }
-
-          // Update page status badge
-          const statusBadge = document.querySelector('.page-title-editor .alima-badge');
-          if (statusBadge) {
-            const statusVal = data.status || 'draft';
-            statusBadge.className = `alima-badge badge-${statusVal}`;
-            statusBadge.textContent = statusVal.toUpperCase();
-          }
-        } else {
-          // If none exists, create a default page document
-          const newPage = {
-            websiteId: websiteId,
-            title: "Landing Page Mockup",
-            slug: "home",
-            blocks: [],
-            status: "draft",
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          };
-          const docRef = await addDoc(collection(db, "pages"), newPage);
-          activePageId = docRef.id;
-          
-          document.getElementById('page-name-field').value = newPage.title;
-          document.getElementById('canvas-empty-helper').style.display = 'flex';
-          
-          const statusBadge = document.querySelector('.page-title-editor .alima-badge');
-          if (statusBadge) {
-            statusBadge.className = `alima-badge badge-${newPage.status}`;
-            statusBadge.textContent = newPage.status.toUpperCase();
-          }
-        }
-      } catch (err) {
-        console.error(err);
-        triggerToast("Database Error", "Could not load page builder data.", "error");
-      }
-    }
-
-    async function savePageToFirestore(isPublish = false) {
-      const user = auth.currentUser;
-      if (!user) { triggerToast("Save Error", "Authentication credentials lost.", "error"); return; }
-      if (!activePageId) { triggerToast("Save Error", "No active page session loaded.", "error"); return; }
-
-      const pageBlocks = [];
-      document.querySelectorAll('.canvas-block').forEach(b => {
-        const type = b.getAttribute('data-block-type');
-        let values = {};
-        if (type === 'heading') {
-          const h = b.querySelector('.render-heading');
-          values = { text: h.textContent, fontSize: parseInt(h.style.fontSize) || 32, fontWeight: h.style.fontWeight, textAlign: h.style.textAlign, textColor: rgbToHex(h.style.color) };
-        } else if (type === 'image') {
-          values = { alt: b.querySelector('p strong').textContent, radius: parseInt(b.querySelector('.render-image-container').style.borderRadius) || 8 };
-        } else if (type === 'button') {
-          const btn = b.querySelector('.render-btn');
-          values = { text: btn.textContent, link: btn.getAttribute('href'), bgColor: rgbToHex(btn.style.backgroundColor || btn.style.borderColor), btnStyle: btn.style.backgroundColor === 'transparent' ? 'outline' : 'filled' };
-        }
-        pageBlocks.push({ id: b.id, type, values });
-      });
-
-      try {
-        const statusVal = isPublish ? "live" : "draft";
-        const pageRef = doc(db, "pages", activePageId);
+      // Clean and bind listener
+      fileInput.onchange = () => {
+        const file = fileInput.files[0];
+        if (!file) return;
         
-        await updateDoc(pageRef, {
-          title: document.getElementById('page-name-field').value.trim(),
+        const statusEl = document.getElementById(isGallery ? 'gallery-upload-status' : 'image-upload-status');
+        statusEl.textContent = 'Uploading...';
+        
+        const storageRef = ref(storage, `users/${auth.currentUser.uid}/media/${Date.now()}_${file.name}`);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
+        uploadTask.on('state_changed', 
+          (snapshot) => {
+            const p = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+            statusEl.textContent = `Uploading ${p}%`;
+          },
+          (err) => {
+            statusEl.textContent = 'Upload failed.';
+            AlimaToast.show("Upload Error", "Failed to upload image asset.", "error");
+          },
+          async () => {
+            const url = await getDownloadURL(uploadTask.snapshot.ref);
+            statusEl.textContent = 'Upload complete.';
+            
+            if (isGallery) {
+              pageBlocks[selectedBlockIndex].urls.push(url);
+            } else {
+              pageBlocks[selectedBlockIndex].url = url;
+            }
+            
+            pushHistoryState();
+            renderCanvas();
+            selectBlock(selectedBlockIndex); // Re-render form list
+          }
+        );
+      };
+      
+      fileInput.click();
+    }
+
+    function removeGalleryImg(idx) {
+      if (selectedBlockIndex === null) return;
+      pageBlocks[selectedBlockIndex].urls.splice(idx, 1);
+      pushHistoryState();
+      renderCanvas();
+      selectBlock(selectedBlockIndex);
+    }
+
+    function addFormFieldItem() {
+      const input = document.getElementById('new-form-field-name');
+      const val = input.value.trim();
+      if (!val) return;
+      
+      pageBlocks[selectedBlockIndex].fields.push(val);
+      input.value = '';
+      
+      pushHistoryState();
+      renderCanvas();
+      selectBlock(selectedBlockIndex);
+    }
+
+    function removeFormFieldItem(idx) {
+      if (selectedBlockIndex === null) return;
+      pageBlocks[selectedBlockIndex].fields.splice(idx, 1);
+      pushHistoryState();
+      renderCanvas();
+      selectBlock(selectedBlockIndex);
+    }
+
+    // 5. Block Operations (Duplicate, Move Up/Down, Delete)
+    function duplicateBlock(idx, event) {
+      event.stopPropagation();
+      const clone = JSON.parse(JSON.stringify(pageBlocks[idx]));
+      clone.id = Date.now().toString();
+      pageBlocks.splice(idx + 1, 0, clone);
+      
+      pushHistoryState();
+      renderCanvas();
+      selectBlock(idx + 1);
+      AlimaToast.show("Duplicate Block", "Component cloned successfully.", "success");
+    }
+
+    function deleteBlock(idx, event) {
+      event.stopPropagation();
+      pageBlocks.splice(idx, 1);
+      selectedBlockIndex = null;
+      
+      pushHistoryState();
+      renderCanvas();
+      selectBlock(null);
+      AlimaToast.show("Delete Block", "Component removed from canvas.", "success");
+    }
+
+    function moveBlockUp(idx, event) {
+      event.stopPropagation();
+      if (idx === 0) return;
+      const temp = pageBlocks[idx];
+      pageBlocks[idx] = pageBlocks[idx - 1];
+      pageBlocks[idx - 1] = temp;
+      
+      pushHistoryState();
+      renderCanvas();
+      selectBlock(idx - 1);
+    }
+
+    function moveBlockDown(idx, event) {
+      event.stopPropagation();
+      if (idx === pageBlocks.length - 1) return;
+      const temp = pageBlocks[idx];
+      pageBlocks[idx] = pageBlocks[idx + 1];
+      pageBlocks[idx + 1] = temp;
+      
+      pushHistoryState();
+      renderCanvas();
+      selectBlock(idx + 1);
+    }
+
+    // 6. Viewport size settings
+    function setCanvasSize(size) {
+      const canvasEl = document.getElementById('canvas-dropzone');
+      const btns = document.querySelectorAll('.viewport-btn');
+      btns.forEach(b => b.classList.remove('active'));
+
+      canvasEl.className = 'builder-canvas';
+      if (size === 'desktop') {
+        document.getElementById('vp-desktop').classList.add('active');
+      } else if (size === 'tablet') {
+        document.getElementById('vp-tablet').classList.add('active');
+        canvasEl.classList.add('tablet-view');
+      } else {
+        document.getElementById('vp-mobile').classList.add('active');
+        canvasEl.classList.add('mobile-view');
+      }
+    }
+
+    // 7. Save and Publish
+    async function savePageData(isPublish = false) {
+      if (!pageDocId) return;
+      
+      const title = document.getElementById('page-title-field').value.trim();
+      const status = isPublish ? 'published' : 'draft';
+      
+      try {
+        const docRef = doc(db, "pages", pageDocId);
+        await updateDoc(docRef, {
+          title: title,
+          status: status,
           blocks: pageBlocks,
-          status: statusVal,
           updatedAt: new Date().toISOString()
         });
 
-        // Update badge
-        const statusBadge = document.querySelector('.page-title-editor .alima-badge');
-        if (statusBadge) {
-          statusBadge.className = `alima-badge badge-${statusVal}`;
-          statusBadge.textContent = statusVal.toUpperCase();
-        }
+        const badge = document.getElementById('status-badge');
+        badge.className = `alima-badge badge-${status === 'published' ? 'live' : 'draft'}`;
+        badge.textContent = status;
 
-        triggerToast(isPublish ? "Page Published" : "Draft Saved", "Sync success.", "success");
+        await window.logActivity(`${isPublish ? 'Published' : 'Saved draft of'} page "${title}"`);
+        AlimaToast.show("Workspace Saved", isPublish ? "Your page content is now live!" : "Layout draft saved to database.", "success");
       } catch (err) {
-        console.error(err);
-        triggerToast("Cloud Save Error", "Could not sync workspace.", "error");
+        console.error("Save error:", err);
+        AlimaToast.show("Save Failed", "Could not submit page modifications.", "error");
       }
     }
 
-    document.addEventListener('click', (e) => {
-      const insideCanvas = document.getElementById('builder-canvas').contains(e.target);
-      const insideProperties = document.getElementById('properties-editor').contains(e.target);
-      const insideTopbar = document.querySelector('.builder-topbar').contains(e.target);
-      
-      if (!insideCanvas && !insideProperties && !insideTopbar) {
-        document.querySelectorAll('.canvas-block').forEach(b => b.classList.remove('selected-block'));
-        document.getElementById('active-properties-form').style.display = 'none';
-        document.getElementById('empty-properties-helper').style.display = 'flex';
-        activeBlockId = null;
+    async function autoSavePage() {
+      if (!pageDocId) return;
+      const title = document.getElementById('page-title-field').value.trim();
+      try {
+        const docRef = doc(db, "pages", pageDocId);
+        await updateDoc(docRef, {
+          title: title,
+          blocks: pageBlocks,
+          updatedAt: new Date().toISOString()
+        });
+        console.log("Auto-save completed successfully.");
+      } catch (err) {
+        console.warn("Auto-save background check failed:", err);
       }
-    });
+    }
 
-    window.filterPalette = filterPalette;
-    window.setCanvasViewport = setCanvasViewport;
-    window.dragBlock = dragBlock;
-    window.allowDropBlock = allowDropBlock;
-    window.dragLeaveBlock = dragLeaveBlock;
-    window.dropBlock = dropBlock;
-    window.createNewBlockNode = createNewBlockNode;
-    window.updateHeadingProperty = updateHeadingProperty;
-    window.updateImageProperty = updateImageProperty;
-    window.updateButtonProperty = updateButtonProperty;
-    window.setAlignActive = setAlignActive;
-    window.deleteBlock = deleteBlock;
+    // 8. Undo / Redo history state tracker
+    function initHistory() {
+      historyState = [JSON.parse(JSON.stringify(pageBlocks))];
+      historyIndex = 0;
+    }
+
+    function pushHistoryState() {
+      if (historyIndex < historyState.length - 1) {
+        historyState = historyState.slice(0, historyIndex + 1);
+      }
+      historyState.push(JSON.parse(JSON.stringify(pageBlocks)));
+      historyIndex = historyState.length - 1;
+    }
+
+    function triggerUndo() {
+      if (historyIndex > 0) {
+        historyIndex--;
+        pageBlocks = JSON.parse(JSON.stringify(historyState[historyIndex]));
+        renderCanvas();
+        if (selectedBlockIndex !== null) selectBlock(null);
+        AlimaToast.show("Undo", "Restored previous action step.", "info");
+      }
+    }
+
+    function triggerRedo() {
+      if (historyIndex < historyState.length - 1) {
+        historyIndex++;
+        pageBlocks = JSON.parse(JSON.stringify(historyState[historyIndex]));
+        renderCanvas();
+        if (selectedBlockIndex !== null) selectBlock(null);
+        AlimaToast.show("Redo", "Reapplied modified action step.", "info");
+      }
+    }
+
+    // Export selectors and actions to window scope
+    window.handleDragStart = handleDragStart;
+    window.handleDragOver = handleDragOver;
+    window.handleDragLeave = handleDragLeave;
+    window.handleDrop = handleDrop;
+    window.selectBlock = selectBlock;
+    window.updateBlockProp = updateBlockProp;
+    window.triggerBlockImageUpload = triggerBlockImageUpload;
+    window.removeGalleryImg = removeGalleryImg;
+    window.addFormFieldItem = addFormFieldItem;
+    window.removeFormFieldItem = removeFormFieldItem;
     window.duplicateBlock = duplicateBlock;
-    window.moveBlock = moveBlock;
-    window.savePageToFirestore = savePageToFirestore;
-    window.triggerToast = triggerToast;
+    window.deleteBlock = deleteBlock;
+    window.moveBlockUp = moveBlockUp;
+    window.moveBlockDown = moveBlockDown;
+    window.setCanvasSize = setCanvasSize;
+    window.savePageData = savePageData;
+    window.triggerUndo = triggerUndo;
+    window.triggerRedo = triggerRedo;
+    window.pushHistoryState = pushHistoryState;
   </script>
 </body>
 </html>

@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alima CMS - Form Builder</title>
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+  
+  <!-- Shared Design System CSS -->
+  <link rel="stylesheet" href="design-system.css">
+  
+  <style>
+    body {
+      background-color: #f8f9fc;
+      color: #111827;
+    }
+
+    /* Tabs Filter Categories */
+    .view-tabs {
+      display: flex;
+      gap: 24px;
+      border-bottom: 1px solid var(--border-color-light);
+      margin-top: 12px;
+      margin-bottom: 24px;
+    }
+
+    .view-tab {
+      background: none;
+      border: none;
+      font-family: var(--font-heading);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      padding: 10px 4px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all var(--transition-normal);
+    }
+
+    .view-tab.active {
+      color: var(--color-primary);
+      border-bottom-color: var(--color-primary);
+    }
+
+    /* Builder Layout Grid */
+    .builder-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 1024px) {
+      .builder-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Form Fields Config List */
+    .fields-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .field-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color-light);
+      border-radius: var(--radius-card);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      box-shadow: var(--shadow-standard);
+      transition: all var(--transition-normal);
+    }
+
+    .field-card:hover {
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(124, 58, 237, 0.2);
+    }
+
+    .field-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color-light);
+      padding-bottom: 8px;
+    }
+
+    .field-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      background: rgba(6, 182, 212, 0.1);
+      color: var(--color-accent);
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      letter-spacing: 0.5px;
+    }
+
+    .field-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .action-icon-btn {
+      background: transparent;
+      border: 1px solid var(--border-color-light);
+      color: var(--text-muted);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      transition: all var(--transition-fast);
+    }
+
+    .action-icon-btn:hover {
+      background: var(--bg-surface);
+      color: var(--color-primary);
+      border-color: var(--color-primary);
+    }
+
+    .action-icon-btn.delete:hover {
+      color: var(--color-error);
+      border-color: var(--color-error);
+      background: rgba(239, 68, 68, 0.05);
+    }
+
+    /* Live Preview Card */
+    .preview-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color-light);
+      border-radius: var(--radius-card);
+      padding: 32px;
+      box-shadow: var(--shadow-hover);
+      position: sticky;
+      top: 32px;
+    }
+
+    .preview-form-title {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--color-primary);
+      padding-bottom: 8px;
+      display: inline-block;
+    }
+
+    /* Submissions Hub Styles */
+    .submissions-table-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color-light);
+      border-radius: var(--radius-card);
+      padding: 24px;
+      box-shadow: var(--shadow-standard);
+      overflow: hidden;
+    }
+
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      margin-top: 16px;
+      border-radius: var(--radius-standard);
+      border: 1px solid var(--border-color-light);
+    }
+
+    .submissions-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    .submissions-table th {
+      background-color: var(--bg-surface);
+      color: var(--text-main);
+      font-family: var(--font-heading);
+      font-weight: 700;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border-color-light);
+      white-space: nowrap;
+    }
+
+    .submissions-table td {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border-color-light);
+      color: var(--text-main);
+    }
+
+    .submissions-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .submissions-table tr:hover td {
+      background-color: rgba(124, 58, 237, 0.02);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 48px;
+      background: #ffffff;
+      border: 1px dashed var(--border-color-light);
+      border-radius: var(--radius-card);
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Sidebar navigation -->
+    <aside class="alima-sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon">A</div>
+        <span class="brand-text">Alima CMS</span>
+        <button class="sidebar-toggle">❮</button>
+      </div>
+      
+      <ul class="sidebar-menu">
+        <li class="menu-item">
+          <a href="dashboard.html" class="menu-link">
+            <i>🏠</i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="dashboard.html#websites-section" class="menu-link">
+            <i>🌐</i>
+            <span>My Websites</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="dashboard.html#websites-section" class="menu-link" onclick="AlimaToast.show('Content Manager', 'To edit content, click \'Edit Site\' on any of your websites.', 'info', 4000)">
+            <i>📄</i>
+            <span>Content</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="builder.html" class="menu-link">
+            <i>🧩</i>
+            <span>Page Builder</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="themes.html" class="menu-link">
+            <i>🎨</i>
+            <span>Themes</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="media.html" class="menu-link">
+            <i>🖼</i>
+            <span>Media Library</span>
+          </a>
+        </li>
+        <li class="menu-item active">
+          <a href="forms.html" class="menu-link">
+            <i>📋</i>
+            <span>Forms</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="seo.html" class="menu-link">
+            <i>🔍</i>
+            <span>SEO Settings</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="publishing.html" class="menu-link">
+            <i>🚀</i>
+            <span>Publishing</span>
+          </a>
+        </li>
+        <li class="menu-item" style="margin-top: auto;">
+          <a href="#" class="menu-link" onclick="handleSignOutAction()">
+            <i>🚪</i>
+            <span>Sign Out</span>
+          </a>
+        </li>
+      </ul>
+      
+      <div class="sidebar-footer">
+        <div class="user-avatar" id="sidebar-avatar">--</div>
+        <div class="user-info">
+          <span class="user-name" id="sidebar-username">Loading...</span>
+          <span class="user-role">Campus Admin</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="alima-main-content page-fade-scale">
+      
+      <!-- Top header bar -->
+      <header style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color-light); padding-bottom: 16px; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <h2 style="font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px;">Form Builder & Submissions</h2>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">Construct interactive site forms and collect dynamic submissions.</p>
+        </div>
+        
+        <!-- Site Select Dropdown -->
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 0.9rem; font-weight: 700; color: var(--text-muted);">Website:</span>
+          <select id="site-selector" class="alima-input" style="width: 220px; cursor: pointer; height: 44px; padding: 0 16px;" onchange="loadSiteForms(this.value)">
+            <option value="">Loading sites...</option>
+          </select>
+        </div>
+      </header>
+
+      <!-- View Tab Switcher -->
+      <div class="view-tabs">
+        <button class="view-tab active" id="tab-builder" onclick="switchTab('builder')">Form Workspace</button>
+        <button class="view-tab" id="tab-submissions" onclick="switchTab('submissions')">Submissions Grid</button>
+      </div>
+
+      <!-- TAB 1: FORM BUILDER WORKSPACE -->
+      <section id="section-builder" class="builder-layout">
+        
+        <!-- Left: Fields List Configurator -->
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          <div class="alima-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color-light); padding-bottom: 16px; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <select id="form-selector" class="alima-input" style="width: 200px; height: 40px; padding: 0 12px; font-size: 0.9rem; cursor: pointer;" onchange="loadSelectedFormConfig(this.value)">
+                  <option value="">-- Select Form --</option>
+                </select>
+                <button class="alima-btn btn-primary btn-sm" onclick="openCreateFormModal()">+ Create Form</button>
+              </div>
+              
+              <button class="alima-btn btn-outline btn-sm" id="btn-save-form" onclick="saveFormConfig()">Save Configuration</button>
+            </div>
+
+            <!-- Form parameters -->
+            <div class="alima-input-group" style="margin-bottom: 16px;">
+              <label class="alima-input-label">Form Display Name</label>
+              <input type="text" id="form-name-input" class="alima-input" placeholder="e.g. Campus Contact Inquiry" oninput="updateFormPreviewTitle(this.value)">
+            </div>
+
+            <h3 style="font-size: 1.15rem; font-weight: 700; margin-top: 24px;">Configure Form Fields</h3>
+            
+            <div class="fields-list" id="fields-list-container">
+              <!-- Dynamic Fields Config Elements -->
+              <div class="empty-state" style="padding: 24px;">
+                <span>📋</span>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 8px;">Select or create a form to start configuring fields.</p>
+              </div>
+            </div>
+
+            <!-- Add Fields Picker -->
+            <div style="display: flex; align-items: center; gap: 12px; margin-top: 24px; border-top: 1px solid var(--border-color-light); padding-top: 20px;">
+              <select id="add-field-type" class="alima-input" style="width: 180px; height: 40px; padding: 0 12px; font-size: 0.9rem; cursor: pointer;">
+                <option value="text">Text Input</option>
+                <option value="email">Email Input</option>
+                <option value="phone">Phone Input</option>
+                <option value="textarea">Text Area</option>
+                <option value="select">Dropdown Select</option>
+                <option value="checkbox">Checkbox</option>
+              </select>
+              <button class="alima-btn btn-primary btn-sm" onclick="addNewFieldConfig()">+ Add Field</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Interactive Live Preview -->
+        <div>
+          <div class="preview-card" id="form-preview-card">
+            <h3 class="preview-form-title" id="preview-form-title">Live Form Preview</h3>
+            
+            <form id="interactive-preview-form" onsubmit="submitPreviewFormTest(event)">
+              <div style="display: flex; flex-direction: column; gap: 16px;" id="preview-fields-container">
+                <div style="text-align: center; color: var(--text-muted); font-size: 0.9rem; padding: 32px 0;">
+                  No fields configured yet. Add fields from the configurator.
+                </div>
+              </div>
+              
+              <div style="margin-top: 24px; border-top: 1px solid var(--border-color-light); padding-top: 16px;">
+                <button type="submit" class="alima-btn btn-primary" style="width: 100%;">Submit Inquiry</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- TAB 2: VIEW SUBMISSIONS GRID -->
+      <section id="section-submissions" style="display: none;">
+        <div class="submissions-table-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; border-bottom: 1px solid var(--border-color-light); padding-bottom: 16px; margin-bottom: 8px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span style="font-size: 0.9rem; font-weight: 700; color: var(--text-muted);">Filter Form:</span>
+              <select id="submission-form-filter" class="alima-input" style="width: 200px; height: 40px; padding: 0 12px; font-size: 0.9rem; cursor: pointer;" onchange="loadSubmissionsTable(this.value)">
+                <option value="">Select Form</option>
+              </select>
+            </div>
+
+            <div style="display: flex; gap: 8px;">
+              <button class="alima-btn btn-outline btn-sm" onclick="exportSubmissionsCSV()">Export to CSV</button>
+              <button class="alima-btn btn-ghost btn-sm" style="color: var(--color-error); border: 1.5px solid var(--border-color-light);" onclick="clearAllSubmissionsForForm()">Clear All</button>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="submissions-table">
+              <thead id="submissions-table-thead">
+                <tr>
+                  <th>Submitted At</th>
+                  <th>Status</th>
+                  <th>Payload</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="submissions-table-tbody">
+                <tr>
+                  <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 32px;">Please select a website and form to view data rows.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Create Form Modal -->
+  <div class="alima-modal-overlay" id="create-form-modal">
+    <div class="alima-modal">
+      <div class="modal-header">
+        <h3 style="font-size: 1.4rem; font-weight: 700;">Create New Site Form</h3>
+        <button class="modal-close" onclick="closeCreateFormModal()">&times;</button>
+      </div>
+      <form id="create-form-element" onsubmit="submitNewForm(event)">
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          
+          <div class="alima-input-group">
+            <label class="alima-input-label">Form Name</label>
+            <input type="text" id="new-form-name" class="alima-input" placeholder="e.g. Scholarship Application" required>
+          </div>
+
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="alima-btn btn-ghost" onclick="closeCreateFormModal()">Cancel</button>
+          <button type="submit" class="alima-btn btn-primary">Create Form</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Shared JS Utilities -->
+  <script src="shared.js"></script>
+
+  <!-- Firebase configuration import -->
+  <script type="module" src="firebase.js"></script>
+
+  <script type="module">
+    import { auth, db } from "./firebase.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+    import { collection, query, where, getDocs, addDoc, deleteDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+    let websites = [];
+    let selectedWebsiteId = "";
+    
+    let forms = [];
+    let selectedFormId = "";
+    let formFields = []; // Loaded active form fields list: { id, label, type, required, options }
+    let submissions = []; // Loaded active submissions list
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      const name = user.displayName || user.email;
+      document.getElementById('sidebar-username').textContent = name;
+      document.getElementById('sidebar-avatar').textContent = name.slice(0, 2).toUpperCase();
+
+      // Retrieve Websites list
+      await loadWebsitesList(user.uid);
+    });
+
+    // 1. Websites loader
+    async function loadWebsitesList(uid) {
+      try {
+        const q = query(collection(db, "websites"), where("ownerUid", "==", uid));
+        const snap = await getDocs(q);
+        const selector = document.getElementById('site-selector');
+        selector.innerHTML = '';
+        websites = [];
+
+        if (snap.empty) {
+          selector.innerHTML = `<option value="">No Websites Found</option>`;
+          document.getElementById('fields-list-container').innerHTML = `
+            <div class="empty-state">
+              <span style="font-size: 3rem;">🌐</span>
+              <h4 style="font-weight: 700; margin-top: 12px;">No digital campus sites created yet</h4>
+              <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 8px;">Create a website on the dashboard to build form integrations.</p>
+            </div>
+          `;
+          return;
+        }
+
+        snap.forEach(d => {
+          websites.push({ id: d.id, ...d.data() });
+          const opt = document.createElement('option');
+          opt.value = d.id;
+          opt.textContent = `${d.data().subdomain}.alima.site`;
+          selector.appendChild(opt);
+        });
+
+        // Load forms for first website
+        selectedWebsiteId = websites[0].id;
+        selector.value = selectedWebsiteId;
+        await loadSiteForms(selectedWebsiteId);
+
+      } catch (err) {
+        console.error("Failed to load websites list:", err);
+      }
+    }
+
+    // 2. Forms loader for selected website
+    async function loadSiteForms(webId) {
+      if (!webId) return;
+      selectedWebsiteId = webId;
+      
+      try {
+        const q = query(collection(db, "forms"), where("websiteId", "==", webId));
+        const snap = await getDocs(q);
+        
+        forms = [];
+        const selector = document.getElementById('form-selector');
+        const submissionSelector = document.getElementById('submission-form-filter');
+        
+        selector.innerHTML = '<option value="">-- Select Form --</option>';
+        submissionSelector.innerHTML = '<option value="">-- Select Form --</option>';
+        
+        snap.forEach(d => {
+          forms.push({ id: d.id, ...d.data() });
+          const opt = document.createElement('option');
+          opt.value = d.id;
+          opt.textContent = d.data().name;
+          selector.appendChild(opt.cloneNode(true));
+          submissionSelector.appendChild(opt.cloneNode(true));
+        });
+
+        if (forms.length > 0) {
+          selectedFormId = forms[0].id;
+          selector.value = selectedFormId;
+          submissionSelector.value = selectedFormId;
+          await loadSelectedFormConfig(selectedFormId);
+        } else {
+          selectedFormId = "";
+          formFields = [];
+          document.getElementById('form-name-input').value = "";
+          renderFieldConfigs();
+          renderLivePreview();
+        }
+
+        // Fetch submissions table matching active choice
+        await loadSubmissionsTable(selectedFormId);
+
+      } catch (err) {
+        console.error("Failed to load site forms:", err);
+      }
+    }
+
+    // 3. Load single form configs
+    async function loadSelectedFormConfig(formId) {
+      if (!formId) {
+        selectedFormId = "";
+        formFields = [];
+        document.getElementById('form-name-input').value = "";
+        renderFieldConfigs();
+        renderLivePreview();
+        return;
+      }
+
+      selectedFormId = formId;
+      const f = forms.find(item => item.id === formId);
+      if (!f) return;
+
+      document.getElementById('form-name-input').value = f.name;
+      document.getElementById('form-selector').value = formId;
+      document.getElementById('submission-form-filter').value = formId;
+
+      formFields = f.fields || [];
+      renderFieldConfigs();
+      renderLivePreview();
+      
+      // Load submissions sync
+      await loadSubmissionsTable(formId);
+    }
+
+    // Render configurator field cards
+    function renderFieldConfigs() {
+      const container = document.getElementById('fields-list-container');
+      container.innerHTML = '';
+
+      if (formFields.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state" style="padding: 24px;">
+            <span>📋</span>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 8px;">No fields configured. Choose field type and click "+ Add Field".</p>
+          </div>
+        `;
+        return;
+      }
+
+      formFields.forEach((field, index) => {
+        const card = document.createElement('div');
+        card.className = 'field-card';
+        card.id = `field-config-${index}`;
+
+        // Options row input visible only for select dropdown
+        const showOptionsInput = field.type === 'select';
+
+        card.innerHTML = `
+          <div class="field-header">
+            <span class="field-badge">${field.type} Field</span>
+            <div class="field-actions">
+              <button class="action-icon-btn" onclick="moveField(${index}, -1)" title="Move Up">▲</button>
+              <button class="action-icon-btn" onclick="moveField(${index}, 1)" title="Move Down">▼</button>
+              <button class="action-icon-btn delete" onclick="deleteFieldConfig(${index})" title="Delete field">🗑️</button>
+            </div>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: flex-end;">
+            <div class="alima-input-group">
+              <label class="alima-input-label">Field Label</label>
+              <input type="text" class="alima-input" value="${escapeHtml(field.label)}" placeholder="e.g. Email Address" oninput="updateFieldLabel(${index}, this.value)">
+            </div>
+            
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; color: var(--text-muted); margin-bottom: 12px;">
+              <input type="checkbox" ${field.required ? 'checked' : ''} onchange="updateFieldRequired(${index}, this.checked)" style="accent-color: var(--color-primary); width: 16px; height: 16px;">
+              Required
+            </label>
+          </div>
+
+          ${showOptionsInput ? `
+            <div class="alima-input-group" style="margin-top: 4px;">
+              <label class="alima-input-label">Select Options (comma-separated)</label>
+              <input type="text" class="alima-input" value="${escapeHtml(field.options ? field.options.join(', ') : '')}" placeholder="e.g. Choice A, Choice B, Choice C" oninput="updateFieldOptions(${index}, this.value)">
+            </div>
+          ` : ''}
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    // Render dynamic form preview
+    function renderLivePreview() {
+      const container = document.getElementById('preview-fields-container');
+      const activeForm = forms.find(item => item.id === selectedFormId);
+      const titleEl = document.getElementById('preview-form-title');
+
+      titleEl.textContent = activeForm ? activeForm.name : 'Form Preview';
+      container.innerHTML = '';
+
+      if (formFields.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; color: var(--text-muted); font-size: 0.9rem; padding: 48px 0;">
+            <span style="font-size: 2.5rem; display: block; margin-bottom: 12px;">👁️</span>
+            No fields configured. Renders in real-time as fields are added.
+          </div>
+        `;
+        return;
+      }
+
+      formFields.forEach((field, index) => {
+        const group = document.createElement('div');
+        group.className = 'alima-input-group';
+
+        const reqStar = field.required ? '<span style="color: var(--color-error); margin-left: 2px;">*</span>' : '';
+        const label = `<label class="alima-input-label">${escapeHtml(field.label)}${reqStar}</label>`;
+        
+        let inputHtml = '';
+        const reqAttr = field.required ? 'required' : '';
+
+        if (field.type === 'textarea') {
+          inputHtml = `<textarea class="alima-input" ${reqAttr} rows="4" placeholder="Enter details..." style="resize: vertical;"></textarea>`;
+        } else if (field.type === 'select') {
+          const opts = field.options || [];
+          let optsHtml = opts.map(opt => `<option value="${escapeHtml(opt.trim())}">${escapeHtml(opt.trim())}</option>`).join('');
+          inputHtml = `
+            <select class="alima-input" style="cursor: pointer;" ${reqAttr}>
+              <option value="">-- Choose Option --</option>
+              ${optsHtml}
+            </select>
+          `;
+        } else if (field.type === 'checkbox') {
+          inputHtml = `
+            <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+              <input type="checkbox" id="preview-check-${index}" style="accent-color: var(--color-primary); width: 18px; height: 18px; cursor: pointer;" ${reqAttr}>
+              <label for="preview-check-${index}" style="font-size: 0.9rem; cursor: pointer; color: var(--text-main);">${escapeHtml(field.label)}</label>
+            </div>
+          `;
+        } else {
+          // text, email, phone
+          inputHtml = `<input type="${field.type}" class="alima-input" ${reqAttr} placeholder="Enter ${escapeHtml(field.label.toLowerCase())}...">`;
+        }
+
+        // Checkbox has label combined inside input wrapper
+        if (field.type === 'checkbox') {
+          group.innerHTML = inputHtml;
+        } else {
+          group.innerHTML = label + inputHtml;
+        }
+
+        container.appendChild(group);
+      });
+    }
+
+    // Config Action Helpers
+    function addNewFieldConfig() {
+      if (!selectedFormId) {
+        AlimaToast.show("Select Form", "Please select or create a form first before configuring fields.", "warning");
+        return;
+      }
+
+      const type = document.getElementById('add-field-type').value;
+      const defaultLabels = {
+        text: 'Text Input Field',
+        email: 'Email Address',
+        phone: 'Phone Number',
+        textarea: 'Message / Notes',
+        select: 'Dropdown Selection',
+        checkbox: 'Terms Agreement'
+      };
+
+      const newField = {
+        label: defaultLabels[type] || 'New Field',
+        type: type,
+        required: false,
+        options: type === 'select' ? ['Option 1', 'Option 2', 'Option 3'] : []
+      };
+
+      formFields.push(newField);
+      renderFieldConfigs();
+      renderLivePreview();
+    }
+
+    function deleteFieldConfig(idx) {
+      formFields.splice(idx, 1);
+      renderFieldConfigs();
+      renderLivePreview();
+    }
+
+    function updateFieldLabel(idx, label) {
+      formFields[idx].label = label;
+      renderLivePreview();
+    }
+
+    function updateFieldRequired(idx, val) {
+      formFields[idx].required = val;
+      renderLivePreview();
+    }
+
+    function updateFieldOptions(idx, val) {
+      const arr = val.split(',').map(s => s.trim()).filter(s => s.length > 0);
+      formFields[idx].options = arr;
+      renderLivePreview();
+    }
+
+    function moveField(idx, dir) {
+      const targetIdx = idx + dir;
+      if (targetIdx < 0 || targetIdx >= formFields.length) return;
+
+      const temp = formFields[idx];
+      formFields[idx] = formFields[targetIdx];
+      formFields[targetIdx] = temp;
+
+      renderFieldConfigs();
+      renderLivePreview();
+    }
+
+    function updateFormPreviewTitle(val) {
+      const titleEl = document.getElementById('preview-form-title');
+      titleEl.textContent = val.trim() || 'Form Preview';
+    }
+
+    // Save configuration
+    async function saveFormConfig() {
+      if (!selectedFormId) {
+        AlimaToast.show("Select Form", "Please select a form first to persist updates.", "warning");
+        return;
+      }
+
+      const title = document.getElementById('form-name-input').value.trim();
+      if (!title) {
+        AlimaToast.show("Validation Error", "Form display name cannot be blank.", "error");
+        return;
+      }
+
+      try {
+        const ref = doc(db, "forms", selectedFormId);
+        await updateDoc(ref, {
+          name: title,
+          fields: formFields,
+          updatedAt: new Date().toISOString()
+        });
+
+        // Update local arrays
+        const idx = forms.findIndex(f => f.id === selectedFormId);
+        if (idx !== -1) {
+          forms[idx].name = title;
+          forms[idx].fields = formFields;
+        }
+
+        // Reload selectors
+        const selector = document.getElementById('form-selector');
+        const subSelector = document.getElementById('submission-form-filter');
+        const cachedVal = selectedFormId;
+
+        selector.innerHTML = '<option value="">-- Select Form --</option>';
+        subSelector.innerHTML = '<option value="">-- Select Form --</option>';
+
+        forms.forEach(d => {
+          const opt = document.createElement('option');
+          opt.value = d.id;
+          opt.textContent = d.name;
+          selector.appendChild(opt.cloneNode(true));
+          subSelector.appendChild(opt.cloneNode(true));
+        });
+
+        selector.value = cachedVal;
+        subSelector.value = cachedVal;
+
+        await window.logActivity(`Saved form layout "${title}"`);
+        AlimaToast.show("Saved Successfully", `Form "${title}" configuration updated.`, "success");
+
+      } catch (err) {
+        AlimaToast.show("Save Failed", "Could not submit form definitions to Firestore.", "error");
+      }
+    }
+
+    // Modal forms triggers
+    function openCreateFormModal() {
+      document.getElementById('create-form-modal').classList.add('active');
+      document.getElementById('new-form-name').value = '';
+    }
+
+    function closeCreateFormModal() {
+      document.getElementById('create-form-modal').classList.remove('active');
+    }
+
+    async function submitNewForm(e) {
+      e.preventDefault();
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const name = document.getElementById('new-form-name').value.trim();
+      if (!name) return;
+
+      try {
+        const newDoc = {
+          ownerUid: user.uid,
+          websiteId: selectedWebsiteId,
+          name: name,
+          fields: [
+            { label: 'Name', type: 'text', required: true, options: [] },
+            { label: 'Email', type: 'email', required: true, options: [] },
+            { label: 'Message', type: 'textarea', required: false, options: [] }
+          ],
+          createdAt: new Date().toISOString()
+        };
+
+        const docRef = await addDoc(collection(db, "forms"), newDoc);
+        closeCreateFormModal();
+
+        await window.logActivity(`Created form "${name}"`);
+        AlimaToast.show("Form Created", `Form "${name}" initialized.`, "success");
+
+        // Reload forms selector list
+        await loadSiteForms(selectedWebsiteId);
+        await loadSelectedFormConfig(docRef.id);
+
+      } catch (err) {
+        AlimaToast.show("Form Creation Failed", "Failed to insert record.", "error");
+      }
+    }
+
+    // Test form submissions in preview
+    async function submitPreviewFormTest(e) {
+      e.preventDefault();
+      if (!selectedFormId) return;
+
+      const payload = {};
+      const inputsContainer = document.getElementById('preview-fields-container');
+      const groups = inputsContainer.querySelectorAll('.alima-input-group');
+      
+      let validationPassed = true;
+
+      formFields.forEach((field, index) => {
+        const group = groups[index];
+        let val = '';
+
+        if (field.type === 'textarea') {
+          val = group.querySelector('textarea').value.trim();
+        } else if (field.type === 'select') {
+          val = group.querySelector('select').value;
+        } else if (field.type === 'checkbox') {
+          val = group.querySelector('input[type="checkbox"]').checked;
+        } else {
+          val = group.querySelector('input').value.trim();
+        }
+
+        if (field.required && !val) {
+          validationPassed = false;
+        }
+
+        payload[field.label] = val;
+      });
+
+      if (!validationPassed) {
+        AlimaToast.show("Validation Check", "Please fill in all required preview inputs.", "warning");
+        return;
+      }
+
+      // Submit test record to Firebase
+      try {
+        const newSub = {
+          formId: selectedFormId,
+          data: payload,
+          submittedAt: new Date().toISOString()
+        };
+
+        await addDoc(collection(db, "submissions"), newSub);
+        await window.logActivity(`Submitted form data for "${forms.find(f => f.id === selectedFormId).name}"`);
+        
+        AlimaToast.show("Submission Sent", "Preview form response captured successfully!", "success");
+
+        // Reset inputs
+        document.getElementById('interactive-preview-form').reset();
+        
+        // Reload submissions table in background
+        await loadSubmissionsTable(selectedFormId);
+
+      } catch (err) {
+        AlimaToast.show("Submit Failed", "Response collection failed.", "error");
+      }
+    }
+
+    // 4. Submissions Loader and Table Population
+    async function loadSubmissionsTable(formId) {
+      const thead = document.getElementById('submissions-table-thead');
+      const tbody = document.getElementById('submissions-table-tbody');
+      
+      thead.innerHTML = '';
+      tbody.innerHTML = '';
+
+      if (!formId) {
+        thead.innerHTML = `<tr><th>Submitted At</th><th>Payload</th><th>Actions</th></tr>`;
+        tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--text-muted); padding: 32px;">No active form selected. Select a form to view submission metrics.</td></tr>`;
+        submissions = [];
+        return;
+      }
+
+      try {
+        const q = query(collection(db, "submissions"), where("formId", "==", formId));
+        const snap = await getDocs(q);
+        submissions = [];
+
+        snap.forEach(d => {
+          submissions.push({ id: d.id, ...d.data() });
+        });
+
+        // Sort descending by date
+        submissions.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+
+        // Get fields of the active form to map headers
+        const currentForm = forms.find(f => f.id === formId);
+        if (!currentForm) return;
+
+        const headers = currentForm.fields || [];
+
+        // Build header row
+        const trHead = document.createElement('tr');
+        trHead.innerHTML = `<th>Submitted At</th>`;
+        headers.forEach(h => {
+          const th = document.createElement('th');
+          th.textContent = h.label;
+          trHead.appendChild(th);
+        });
+        const thActions = document.createElement('th');
+        thActions.textContent = 'Actions';
+        trHead.appendChild(thActions);
+        thead.appendChild(trHead);
+
+        // Build content rows
+        if (submissions.length === 0) {
+          const colspan = headers.length + 2;
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="${colspan}" style="text-align: center; color: var(--text-muted); padding: 32px;">
+                No submissions recorded yet for this form. Perform a preview test submission!
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        submissions.forEach(sub => {
+          const tr = document.createElement('tr');
+          tr.id = `submission-${sub.id}`;
+          
+          const time = new Date(sub.submittedAt).toLocaleString();
+          tr.innerHTML = `<td>${time}</td>`;
+
+          headers.forEach(h => {
+            const td = document.createElement('td');
+            const val = sub.data[h.label];
+            
+            if (val === true || val === 'true') {
+              td.innerHTML = `<span style="color: var(--color-success); font-weight:700;">✓ Checked</span>`;
+            } else if (val === false || val === 'false') {
+              td.innerHTML = `<span style="color: var(--text-muted);">Unchecked</span>`;
+            } else {
+              td.textContent = val !== undefined && val !== null ? val : '-';
+            }
+            tr.appendChild(td);
+          });
+
+          // Actions td
+          const tdAct = document.createElement('td');
+          tdAct.innerHTML = `
+            <button class="action-icon-btn delete" onclick="deleteSubmission('${sub.id}')" title="Delete submission">🗑️</button>
+          `;
+          tr.appendChild(tdAct);
+          tbody.appendChild(tr);
+        });
+
+      } catch (err) {
+        console.error("Failed to query submissions:", err);
+      }
+    }
+
+    // Delete submission row
+    async function deleteSubmission(id) {
+      if (!confirm("Remove this form response permanently?")) return;
+
+      try {
+        const tr = document.getElementById(`submission-${id}`);
+        if (tr) {
+          tr.style.opacity = '0';
+          tr.style.transform = 'scale(0.95)';
+          setTimeout(() => tr.remove(), 250);
+        }
+
+        await deleteDoc(doc(db, "submissions", id));
+        AlimaToast.show("Record Cleared", "Response removed successfully.", "success");
+
+      } catch (err) {
+        AlimaToast.show("Deletion Failed", "Could not remove response.", "error");
+      }
+    }
+
+    // Clear all submissions for form
+    async function clearAllSubmissionsForForm() {
+      if (!selectedFormId) return;
+      if (!confirm("Are you sure you want to delete ALL submissions for this form? This cannot be undone.")) return;
+
+      try {
+        const batchPromises = submissions.map(sub => deleteDoc(doc(db, "submissions", sub.id)));
+        await Promise.all(batchPromises);
+        
+        AlimaToast.show("Form Reset", "All response payloads cleared from records.", "success");
+        await loadSubmissionsTable(selectedFormId);
+      } catch (err) {
+        AlimaToast.show("Clear Failed", "Could not truncate submissions.", "error");
+      }
+    }
+
+    // Export submissions to CSV file
+    function exportSubmissionsCSV() {
+      if (submissions.length === 0) {
+        AlimaToast.show("Empty Data", "No submissions to export.", "warning");
+        return;
+      }
+
+      const activeForm = forms.find(f => f.id === selectedFormId);
+      if (!activeForm) return;
+
+      const fields = activeForm.fields || [];
+      
+      // Build headers
+      const csvHeaders = ['Submitted At', ...fields.map(f => f.label)];
+      
+      // Build rows
+      const csvRows = submissions.map(sub => {
+        const time = new Date(sub.submittedAt).toLocaleString().replace(/"/g, '""');
+        const values = fields.map(f => {
+          let val = sub.data[f.label];
+          if (val === undefined || val === null) val = '';
+          return `"${val.toString().replace(/"/g, '""')}"`;
+        });
+        return `"${time}",${values.join(',')}`;
+      });
+
+      const csvContent = "data:text/csv;charset=utf-8," 
+        + csvHeaders.map(h => `"${h.replace(/"/g, '""')}"`).join(',') 
+        + "\n" 
+        + csvRows.join("\n");
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `${activeForm.name.toLowerCase().replace(/[^a-z0-9]/g, '_')}_submissions.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      AlimaToast.show("CSV Exported", "Report saved successfully to downloads.", "success");
+    }
+
+    // Helper sanitization
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Tab Switcher logic
+    function switchTab(tab) {
+      document.getElementById('tab-builder').classList.remove('active');
+      document.getElementById('tab-submissions').classList.remove('active');
+      document.getElementById('section-builder').style.display = 'none';
+      document.getElementById('section-submissions').style.display = 'none';
+
+      if (tab === 'builder') {
+        document.getElementById('tab-builder').classList.add('active');
+        document.getElementById('section-builder').style.display = 'grid';
+      } else {
+        document.getElementById('tab-submissions').classList.add('active');
+        document.getElementById('section-submissions').style.display = 'block';
+        loadSubmissionsTable(selectedFormId);
+      }
+    }
+
+    // Bind modules to window triggers
+    window.loadSiteForms = loadSiteForms;
+    window.loadSelectedFormConfig = loadSelectedFormConfig;
+    window.openCreateFormModal = openCreateFormModal;
+    window.closeCreateFormModal = closeCreateFormModal;
+    window.submitNewForm = submitNewForm;
+    
+    window.addNewFieldConfig = addNewFieldConfig;
+    window.deleteFieldConfig = deleteFieldConfig;
+    window.updateFieldLabel = updateFieldLabel;
+    window.updateFieldRequired = updateFieldRequired;
+    window.updateFieldOptions = updateFieldOptions;
+    window.moveField = moveField;
+    window.updateFormPreviewTitle = updateFormPreviewTitle;
+    
+    window.saveFormConfig = saveFormConfig;
+    window.submitPreviewFormTest = submitPreviewFormTest;
+    
+    window.loadSubmissionsTable = loadSubmissionsTable;
+    window.deleteSubmission = deleteSubmission;
+    window.clearAllSubmissionsForForm = clearAllSubmissionsForForm;
+    window.exportSubmissionsCSV = exportSubmissionsCSV;
+    window.switchTab = switchTab;
+
+    async function handleSignOutAction() {
+      if (confirm("Are you sure you want to sign out?")) {
+        signOut(auth).then(() => {
+          window.location.href = "login.html";
+        });
+      }
+    }
+    window.handleSignOutAction = handleSignOutAction;
+
+  </script>
+</body>
+</html>
