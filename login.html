@@ -151,13 +151,12 @@
     }
 
     .auth-banner {
-      background: url('login_banner.png') no-repeat center center;
-      background-size: cover;
       position: relative;
       display: flex;
       align-items: flex-end;
       padding: 40px;
       border-left: 1px solid rgba(255, 255, 255, 0.08);
+      overflow: hidden;
     }
 
     .banner-overlay {
@@ -182,7 +181,7 @@
       }
     }
 
-    @media (max-width: 840px) {
+    @media (max-width: 768px) {
       .auth-wrapper {
         max-width: 460px;
       }
@@ -713,6 +712,7 @@
       
       <!-- Right side: Premium Visual Banner -->
       <div class="auth-banner">
+        <img src="login_banner.png" alt="Branding Banner" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;">
         <div class="banner-overlay"></div>
         <div class="banner-content">
           <h2 style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 800; margin-bottom: 12px; background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Build Your Digital Campus</h2>
