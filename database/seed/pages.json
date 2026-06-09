@@ -1,0 +1,21 @@
+[
+  {
+    "id": "page_home_001",
+    "websiteId": "site_test_001",
+    "title": "Home",
+    "slug": "home",
+    "status": "published",
+    "sections": [
+      {
+        "id": "hero_sec",
+        "type": "hero",
+        "content": {
+          "title": "Welcome to Computer Science",
+          "subtitle": "Inspiring innovation and technical leadership."
+        }
+      }
+    ],
+    "createdAt": "2026-06-09T10:00:00.000Z",
+    "updatedAt": "2026-06-09T10:00:00.000Z"
+  }
+]

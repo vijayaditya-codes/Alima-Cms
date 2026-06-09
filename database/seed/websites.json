@@ -1,0 +1,19 @@
+[
+  {
+    "id": "site_test_001",
+    "ownerUid": "user_admin_test",
+    "name": "Department of Computer Science",
+    "subdomain": "cs-dept",
+    "template": "education",
+    "status": "live",
+    "createdAt": "2026-06-09T10:00:00.000Z",
+    "updatedAt": "2026-06-09T14:30:00.000Z",
+    "theme": {
+      "primary": "#7c3aed",
+      "accent": "#06b6d4",
+      "headingsFont": "Plus Jakarta Sans",
+      "bodyFont": "Inter",
+      "layoutMode": "wide"
+    }
+  }
+]
