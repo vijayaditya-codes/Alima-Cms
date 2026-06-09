@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <!-- Inline Head Theme Script to prevent flash -->
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('alima-theme') || 'dark';
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alima CMS - Plugins Manager</title>
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+  
+  <!-- Shared Design System CSS -->
+  <link rel="stylesheet" href="design-system.css">
+  
+  <style>
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      transition: background-color var(--transition-normal), color var(--transition-normal);
+    }
+
+    /* Plugins Grid */
+    .plugins-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .plugin-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color-light);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      box-shadow: var(--shadow-standard);
+      transition: all var(--transition-normal);
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      position: relative;
+    }
+
+    .plugin-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--color-primary);
+    }
+
+    .plugin-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .plugin-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .plugin-icon {
+      font-size: 2.2rem;
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(124, 58, 237, 0.08);
+      color: var(--color-primary);
+      border-radius: var(--radius-standard);
+      flex-shrink: 0;
+    }
+
+    .plugin-title {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .plugin-desc {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 20px;
+      flex-grow: 1;
+    }
+
+    .plugin-settings {
+      border-top: 1px solid var(--border-color-light);
+      padding-top: 16px;
+      margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      opacity: 0.5;
+      pointer-events: none;
+      transition: opacity var(--transition-normal);
+    }
+
+    .plugin-card.enabled .plugin-settings {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* Switch styling */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: var(--border-color-light);
+      transition: .2s;
+      border-radius: 24px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .2s;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    input:checked + .slider { background-color: var(--color-success); }
+    input:checked + .slider:before { transform: translateX(20px); }
+
+    /* Shimmer while saving */
+    .save-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 10, 26, 0.4);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .save-overlay.active {
+      display: flex;
+    }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-left-color: var(--color-primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Sidebar navigation -->
+    <aside class="alima-sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon">A</div>
+        <span class="brand-text">Alima CMS</span>
+        <button class="sidebar-toggle">❮</button>
+      </div>
+      
+      <ul class="sidebar-menu">
+        <li class="menu-item">
+          <a href="dashboard.html" class="menu-link">
+            <i>🏠</i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="dashboard.html#websites-section" class="menu-link">
+            <i>🌐</i>
+            <span>My Websites</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="dashboard.html#websites-section" class="menu-link" onclick="AlimaToast.show('Content Manager', 'To edit content, click \'Edit Site\' on any of your websites.', 'info', 4000)">
+            <i>📄</i>
+            <span>Content</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="builder.html" class="menu-link">
+            <i>🧩</i>
+            <span>Page Builder</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="themes.html" class="menu-link">
+            <i>🎨</i>
+            <span>Themes</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="media.html" class="menu-link">
+            <i>🖼</i>
+            <span>Media Library</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="forms.html" class="menu-link">
+            <i>📋</i>
+            <span>Forms</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="seo.html" class="menu-link">
+            <i>🔍</i>
+            <span>SEO Settings</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="publishing.html" class="menu-link">
+            <i>🚀</i>
+            <span>Publishing</span>
+          </a>
+        </li>
+        <li class="menu-item active">
+          <a href="plugins.html" class="menu-link">
+            <i>🔌</i>
+            <span>Plugins</span>
+          </a>
+        </li>
+        <li class="menu-item" style="margin-top: auto;">
+          <a href="#" class="menu-link" onclick="handleSignOutAction()">
+            <i>🚪</i>
+            <span>Sign Out</span>
+          </a>
+        </li>
+      </ul>
+      
+      <div class="sidebar-footer">
+        <div class="user-avatar" id="sidebar-avatar">--</div>
+        <div class="user-info">
+          <span class="user-name" id="sidebar-username">Loading...</span>
+          <span class="user-role">Campus Admin</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="alima-main-content page-fade-scale">
+      
+      <!-- Top header bar -->
+      <header style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color-light); padding-bottom: 16px;">
+        <div>
+          <h2 style="font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px;">Plugins Manager</h2>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">Enable, disable, and configure custom modules for your digital campus sites.</p>
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <!-- Theme Toggle Button -->
+          <button class="theme-toggle-btn" id="theme-toggle" style="width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--border-color-light); background: var(--bg-card); color: var(--text-main); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease;">
+            <!-- Moon Icon (Default for dark theme) -->
+            <svg id="moon-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            <!-- Sun Icon -->
+            <svg id="sun-icon" style="display:none;" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </button>
+
+          <div class="alima-input-group" style="width: auto; flex-direction: row; align-items: center; gap: 12px;">
+            <label class="alima-input-label" style="white-space: nowrap; margin-bottom: 0;">Active Site:</label>
+            <select id="site-selector" class="alima-input" style="width: 200px; padding: 8px 12px; font-size: 0.85rem;" onchange="loadSitePlugins(this.value)"></select>
+          </div>
+
+          <button class="alima-btn btn-primary" onclick="savePluginsConfiguration()">Save Configurations</button>
+        </div>
+      </header>
+
+      <!-- Plugins Catalog Grid -->
+      <section class="plugins-grid">
+        
+        <!-- Google Analytics Card -->
+        <div class="plugin-card" id="plugin-card-analytics">
+          <div class="plugin-card-header">
+            <div class="plugin-info">
+              <span class="plugin-icon">📊</span>
+              <div>
+                <h4 class="plugin-title">Google Analytics</h4>
+                <span style="font-size: 0.75rem; color: var(--color-primary); font-weight: 600;">INTEGRATION</span>
+              </div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="plugin-analytics-enabled" onchange="toggleCardEnabledClass('analytics', this.checked)">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <p class="plugin-desc">Track website traffic, visitors behavior, and interactions by appending Google Analytics script to the header of your website.</p>
+          <div class="plugin-settings">
+            <div class="alima-input-group">
+              <label class="alima-input-label">Tracking ID / Measurement ID</label>
+              <input type="text" id="plugin-analytics-id" class="alima-input" placeholder="e.g. G-XXXXXXXXXX">
+            </div>
+          </div>
+        </div>
+
+        <!-- Disqus Comments Card -->
+        <div class="plugin-card" id="plugin-card-disqus">
+          <div class="plugin-card-header">
+            <div class="plugin-info">
+              <span class="plugin-icon">💬</span>
+              <div>
+                <h4 class="plugin-title">Disqus Comments</h4>
+                <span style="font-size: 0.75rem; color: var(--color-primary); font-weight: 600;">COMMUNITY</span>
+              </div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="plugin-disqus-enabled" onchange="toggleCardEnabledClass('disqus', this.checked)">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <p class="plugin-desc">Add a fully interactive, threaded commenting section beneath sections/pages so that students and visitors can leave feedback.</p>
+          <div class="plugin-settings">
+            <div class="alima-input-group">
+              <label class="alima-input-label">Disqus Shortname</label>
+              <input type="text" id="plugin-disqus-shortname" class="alima-input" placeholder="e.g. alima-site-comments">
+            </div>
+          </div>
+        </div>
+
+        <!-- WhatsApp Floating Chat Card -->
+        <div class="plugin-card" id="plugin-card-whatsapp">
+          <div class="plugin-card-header">
+            <div class="plugin-info">
+              <span class="plugin-icon">📞</span>
+              <div>
+                <h4 class="plugin-title">WhatsApp Chat Widget</h4>
+                <span style="font-size: 0.75rem; color: var(--color-primary); font-weight: 600;">ENGAGEMENT</span>
+              </div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="plugin-whatsapp-enabled" onchange="toggleCardEnabledClass('whatsapp', this.checked)">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <p class="plugin-desc">Embed a floating green chat bubble in the bottom right corner of the website to let users text your support number directly.</p>
+          <div class="plugin-settings">
+            <div class="alima-input-group">
+              <label class="alima-input-label">WhatsApp Phone Number</label>
+              <input type="text" id="plugin-whatsapp-phone" class="alima-input" placeholder="e.g. +15550199">
+            </div>
+            <div class="alima-input-group">
+              <label class="alima-input-label">Welcome / Pre-filled Message</label>
+              <input type="text" id="plugin-whatsapp-message" class="alima-input" placeholder="Hi! How can we help you today?">
+            </div>
+          </div>
+        </div>
+
+        <!-- Newsletter Capture Modal Card -->
+        <div class="plugin-card" id="plugin-card-newsletter">
+          <div class="plugin-card-header">
+            <div class="plugin-info">
+              <span class="plugin-icon">✉️</span>
+              <div>
+                <h4 class="plugin-title">Newsletter Lead Capture</h4>
+                <span style="font-size: 0.75rem; color: var(--color-primary); font-weight: 600;">MARKETING</span>
+              </div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="plugin-newsletter-enabled" onchange="toggleCardEnabledClass('newsletter', this.checked)">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <p class="plugin-desc">Display a high-converting email newsletter trigger modal at the bottom corner of your page builder preview layout.</p>
+          <div class="plugin-settings">
+            <div class="alima-input-group">
+              <label class="alima-input-label">Mailing List Title</label>
+              <input type="text" id="plugin-newsletter-title" class="alima-input" placeholder="e.g. Subscribe to our Newsletter">
+            </div>
+            <div class="alima-input-group">
+              <label class="alima-input-label">Success Message</label>
+              <input type="text" id="plugin-newsletter-success" class="alima-input" placeholder="e.g. Thank you for subscribing!">
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Save Overlay Shimmer Spinner -->
+  <div class="save-overlay" id="save-overlay">
+    <div style="text-align: center; color: white; display: flex; flex-direction: column; align-items: center; gap: 16px;">
+      <div class="spinner"></div>
+      <span style="font-weight: 600; letter-spacing: 0.5px;">Saving plugins configuration to Firestore...</span>
+    </div>
+  </div>
+
+  <!-- Shared JS Utilities -->
+  <script src="shared.js"></script>
+
+  <!-- Firebase configuration import -->
+  <script type="module" src="firebase.js"></script>
+
+  <script type="module">
+    import { auth, db } from "./firebase.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+    import { collection, query, where, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+    let activeWebsites = [];
+    let selectedWebsiteId = null;
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      const name = user.displayName || user.email;
+      document.getElementById('sidebar-username').textContent = name;
+      document.getElementById('sidebar-avatar').textContent = name.slice(0, 2).toUpperCase();
+
+      // Populate websites list
+      await populateWebsitesList(user.uid);
+    });
+
+    async function populateWebsitesList(uid) {
+      try {
+        const q = query(collection(db, "websites"), where("ownerUid", "==", uid));
+        const snap = await getDocs(q);
+        const selector = document.getElementById('site-selector');
+        selector.innerHTML = '';
+        activeWebsites = [];
+
+        if (snap.empty) {
+          selector.innerHTML = `<option value="">No Sites Found</option>`;
+          AlimaToast.show("No Sites", "Please initialize a digital campus site on the dashboard page first.", "warning");
+          return;
+        }
+
+        snap.forEach(d => {
+          activeWebsites.push({ id: d.id, ...d.data() });
+          const opt = document.createElement('option');
+          opt.value = d.id;
+          opt.textContent = `${d.data().subdomain}.alima.site`;
+          selector.appendChild(opt);
+        });
+
+        // Load first site plugins
+        selectedWebsiteId = activeWebsites[0].id;
+        loadSitePlugins(selectedWebsiteId);
+
+      } catch (err) {
+        console.error("Failed to query user websites:", err);
+      }
+    }
+
+    function toggleCardEnabledClass(pluginKey, isChecked) {
+      const card = document.getElementById(`plugin-card-${pluginKey}`);
+      if (card) {
+        if (isChecked) {
+          card.classList.add('enabled');
+        } else {
+          card.classList.remove('enabled');
+        }
+      }
+    }
+    window.toggleCardEnabledClass = toggleCardEnabledClass;
+
+    function loadSitePlugins(webId) {
+      if (!webId) return;
+      selectedWebsiteId = webId;
+      const web = activeWebsites.find(w => w.id === webId);
+      if (!web) return;
+
+      const p = web.plugins || {};
+
+      // Analytics
+      const analyticsEnabled = !!(p.analytics && p.analytics.enabled);
+      document.getElementById('plugin-analytics-enabled').checked = analyticsEnabled;
+      document.getElementById('plugin-analytics-id').value = (p.analytics && p.analytics.trackingId) || '';
+      toggleCardEnabledClass('analytics', analyticsEnabled);
+
+      // Disqus
+      const disqusEnabled = !!(p.disqus && p.disqus.enabled);
+      document.getElementById('plugin-disqus-enabled').checked = disqusEnabled;
+      document.getElementById('plugin-disqus-shortname').value = (p.disqus && p.disqus.shortname) || '';
+      toggleCardEnabledClass('disqus', disqusEnabled);
+
+      // WhatsApp
+      const whatsappEnabled = !!(p.whatsapp && p.whatsapp.enabled);
+      document.getElementById('plugin-whatsapp-enabled').checked = whatsappEnabled;
+      document.getElementById('plugin-whatsapp-phone').value = (p.whatsapp && p.whatsapp.phone) || '';
+      document.getElementById('plugin-whatsapp-message').value = (p.whatsapp && p.whatsapp.message) || 'Hi, how can we help you today?';
+      toggleCardEnabledClass('whatsapp', whatsappEnabled);
+
+      // Newsletter
+      const newsletterEnabled = !!(p.newsletter && p.newsletter.enabled);
+      document.getElementById('plugin-newsletter-enabled').checked = newsletterEnabled;
+      document.getElementById('plugin-newsletter-title').value = (p.newsletter && p.newsletter.title) || 'Subscribe to our Newsletter';
+      document.getElementById('plugin-newsletter-success').value = (p.newsletter && p.newsletter.successMsg) || 'Thank you for subscribing!';
+      toggleCardEnabledClass('newsletter', newsletterEnabled);
+    }
+    window.loadSitePlugins = loadSitePlugins;
+
+    async function savePluginsConfiguration() {
+      if (!selectedWebsiteId) {
+        AlimaToast.show("Select Site", "Please select a website to customize plugins.", "warning");
+        return;
+      }
+
+      const overlay = document.getElementById('save-overlay');
+      overlay.classList.add('active');
+
+      const config = {
+        analytics: {
+          enabled: document.getElementById('plugin-analytics-enabled').checked,
+          trackingId: document.getElementById('plugin-analytics-id').value.trim()
+        },
+        disqus: {
+          enabled: document.getElementById('plugin-disqus-enabled').checked,
+          shortname: document.getElementById('plugin-disqus-shortname').value.trim()
+        },
+        whatsapp: {
+          enabled: document.getElementById('plugin-whatsapp-enabled').checked,
+          phone: document.getElementById('plugin-whatsapp-phone').value.trim(),
+          message: document.getElementById('plugin-whatsapp-message').value.trim()
+        },
+        newsletter: {
+          enabled: document.getElementById('plugin-newsletter-enabled').checked,
+          title: document.getElementById('plugin-newsletter-title').value.trim(),
+          successMsg: document.getElementById('plugin-newsletter-success').value.trim()
+        }
+      };
+
+      try {
+        const ref = doc(db, "websites", selectedWebsiteId);
+        await updateDoc(ref, {
+          plugins: config,
+          updatedAt: new Date().toISOString()
+        });
+
+        // Update local state list
+        const idx = activeWebsites.findIndex(w => w.id === selectedWebsiteId);
+        if (idx !== -1) {
+          activeWebsites[idx].plugins = config;
+        }
+
+        await window.logActivity(`Configured plugins on website`);
+        setTimeout(() => {
+          overlay.classList.remove('active');
+          AlimaToast.show("Plugins Saved", "Configurations successfully saved to Cloud Firestore.", "success");
+        }, 600);
+
+      } catch (err) {
+        console.error("Save plugins error:", err);
+        overlay.classList.remove('active');
+        AlimaToast.show("Sync Error", "Could not save plugins configurations.", "error");
+      }
+    }
+    window.savePluginsConfiguration = savePluginsConfiguration;
+
+    async function handleSignOutAction() {
+      if (confirm("Are you sure you want to sign out?")) {
+        signOut(auth).then(() => {
+          window.location.href = "login.html";
+        });
+      }
+    }
+    window.handleSignOutAction = handleSignOutAction;
+  </script>
+</body>
+</html>

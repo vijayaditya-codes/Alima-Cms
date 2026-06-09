@@ -383,13 +383,14 @@
   <script type="module">
     import { auth, db, storage } from "./firebase.js";
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-    import { collection, query, where, getDocs, addDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+    import { collection, query, where, getDocs, addDoc, updateDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
     import { ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-storage.js";
 
     let websiteId = null;
     let pageDocId = null;
     let pageBlocks = [];
     let selectedBlockIndex = null;
+    let websitePlugins = {};
 
     // Undo / Redo histories stacks
     let historyState = [];
@@ -415,11 +416,27 @@
       // Load existing page
       await loadPageFromFirestore();
 
+      // Load website settings (plugins)
+      await loadWebsiteData();
+
       // Start auto-save: every 30 seconds
       setInterval(() => {
         autoSavePage();
       }, 30000);
     });
+
+    async function loadWebsiteData() {
+      try {
+        const docRef = doc(db, "websites", websiteId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          websitePlugins = docSnap.data().plugins || {};
+          renderCanvas();
+        }
+      } catch (err) {
+        console.error("Failed to fetch website settings:", err);
+      }
+    }
 
     async function loadPageFromFirestore() {
       try {
@@ -531,126 +548,262 @@
       // Clean everything except placeholder if empty
       const children = Array.from(canvasEl.children);
       children.forEach(c => {
-        if (c.id !== 'canvas-empty-msg') c.remove();
+        if (c.id !== 'canvas-empty-msg' && !c.classList.contains('plugin-preview-widget')) c.remove();
       });
 
       const emptyHelper = document.getElementById('canvas-empty-msg');
       if (pageBlocks.length === 0) {
         emptyHelper.style.display = 'block';
-        return;
-      }
-      emptyHelper.style.display = 'none';
+      } else {
+        emptyHelper.style.display = 'none';
 
-      pageBlocks.forEach((block, idx) => {
-        const blockWrapper = document.createElement('div');
-        blockWrapper.className = `canvas-block ${selectedBlockIndex === idx ? 'selected' : ''}`;
-        blockWrapper.setAttribute('onclick', `selectBlock(${idx}, event)`);
+        pageBlocks.forEach((block, idx) => {
+          const blockWrapper = document.createElement('div');
+          blockWrapper.className = `canvas-block ${selectedBlockIndex === idx ? 'selected' : ''}`;
+          blockWrapper.setAttribute('onclick', `selectBlock(${idx}, event)`);
 
-        // Render preview content
-        let previewHtml = '';
-        switch (block.type) {
-          case 'heading':
-            previewHtml = `<h2 style="font-size: ${block.fontSize}; color: ${block.color}; text-align: ${block.align}; font-weight: ${block.weight}; font-family: var(--font-heading);">${block.text}</h2>`;
-            break;
-          case 'paragraph':
-            previewHtml = `<p style="font-size: ${block.fontSize}; color: ${block.color}; text-align: ${block.align}; line-height: ${block.lineHeight};">${block.text}</p>`;
-            break;
-          case 'image':
-            if (block.url) {
-              previewHtml = `<img src="${block.url}" alt="${block.alt}" style="width: 100%; max-height: 350px; object-fit: cover; border-radius: ${block.radius};">`;
-            } else {
-              previewHtml = `<div class="preview-placeholder">🖼️ Empty Image Box (Click to upload)</div>`;
-            }
-            break;
-          case 'button':
-            const btnBg = block.style === 'filled' ? block.color : 'transparent';
-            const btnBorder = block.style === 'outline' ? `2px solid ${block.color}` : 'none';
-            const btnColor = block.style === 'filled' ? '#ffffff' : block.color;
-            const pad = block.size === 'small' ? '8px 16px' : block.size === 'large' ? '16px 32px' : '12px 24px';
-            previewHtml = `<div style="text-align: center;"><a href="${block.url}" class="alima-btn" style="background: ${btnBg}; border: ${btnBorder}; color: ${btnColor}; padding: ${pad}; display: inline-flex; pointer-events: none;">${block.label}</a></div>`;
-            break;
-          case 'divider':
-            previewHtml = `<hr style="border: none; border-top: 2px solid ${block.color}; margin: 8px 0;">`;
-            break;
-          case '2col':
-            previewHtml = `
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div style="padding: 12px; background: var(--bg-surface); border-radius: 6px; font-size: 0.9rem;">${block.leftText}</div>
-                <div style="padding: 12px; background: var(--bg-surface); border-radius: 6px; font-size: 0.9rem;">${block.rightText}</div>
-              </div>
-            `;
-            break;
-          case 'gallery':
-            if (block.urls.length === 0) {
-              previewHtml = `<div class="preview-placeholder">🗂️ Empty Image Gallery (Click to configure list)</div>`;
-            } else {
-              previewHtml = `<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
-                ${block.urls.map(u => `<img src="${u}" style="width:100%; aspect-ratio:1; object-fit:cover; border-radius:8px;">`).join('')}
-              </div>`;
-            }
-            break;
-          case 'video':
-            if (block.url) {
-              // Convert youtube link to embed format
-              let embedUrl = block.url;
-              if (block.url.includes('youtube.com/watch?v=')) {
-                embedUrl = block.url.replace('watch?v=', 'embed/');
-              } else if (block.url.includes('youtu.be/')) {
-                embedUrl = block.url.replace('youtu.be/', 'youtube.com/embed/');
+          // Render preview content
+          let previewHtml = '';
+          switch (block.type) {
+            case 'heading':
+              previewHtml = `<h2 style="font-size: ${block.fontSize}; color: ${block.color}; text-align: ${block.align}; font-weight: ${block.weight}; font-family: var(--font-heading);">${block.text}</h2>`;
+              break;
+            case 'paragraph':
+              previewHtml = `<p style="font-size: ${block.fontSize}; color: ${block.color}; text-align: ${block.align}; line-height: ${block.lineHeight};">${block.text}</p>`;
+              break;
+            case 'image':
+              if (block.url) {
+                previewHtml = `<img src="${block.url}" alt="${block.alt}" style="width: 100%; max-height: 350px; object-fit: cover; border-radius: ${block.radius};">`;
+              } else {
+                previewHtml = `<div class="preview-placeholder">🖼️ Empty Image Box (Click to upload)</div>`;
               }
-              previewHtml = `<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px;">
-                <iframe src="${embedUrl}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0" allowfullscreen></iframe>
-              </div>`;
-            } else {
-              previewHtml = `<div class="preview-placeholder">📹 Empty Video Player URL (Click to link YouTube embed)</div>`;
-            }
-            break;
-          case 'form':
-            previewHtml = `
-              <div style="padding: 20px; border: 1px solid var(--border-color-light); border-radius: 12px;">
-                ${block.fields.map(f => `
-                  <div class="alima-input-group" style="margin-bottom: 12px;">
-                    <label class="alima-input-label">${f}</label>
-                    <input type="text" class="alima-input" placeholder="Enter ${f.toLowerCase()}..." disabled>
-                  </div>
-                `).join('')}
-                <button class="alima-btn btn-primary btn-sm" style="width: 100%; pointer-events: none;">${block.btnText}</button>
-              </div>
-            `;
-            break;
-          case 'map':
-            previewHtml = `
-              <div style="border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color-light); height: 200px; display: flex; align-items: center; justify-content: center; background: #e5e7eb;">
-                <span style="font-weight: 600; color: var(--text-muted);">🗺️ Google Map: ${block.address}</span>
-              </div>
-            `;
-            break;
-          case 'quote':
-            previewHtml = `
-              <div style="border-left: 4px solid ${block.color}; padding-left: 16px; margin: 8px 0;">
-                <p style="font-style: italic; color: var(--text-main); font-size: 1.1rem; line-height: 1.5;">"${block.text}"</p>
-                <cite style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px; display: block;">— ${block.author}</cite>
-              </div>
-            `;
-            break;
-          case 'html':
-            previewHtml = `<div>${block.code}</div>`;
-            break;
-        }
+              break;
+            case 'button':
+              const btnBg = block.style === 'filled' ? block.color : 'transparent';
+              const btnBorder = block.style === 'outline' ? `2px solid ${block.color}` : 'none';
+              const btnColor = block.style === 'filled' ? '#ffffff' : block.color;
+              const pad = block.size === 'small' ? '8px 16px' : block.size === 'large' ? '16px 32px' : '12px 24px';
+              previewHtml = `<div style="text-align: center;"><a href="${block.url}" class="alima-btn" style="background: ${btnBg}; border: ${btnBorder}; color: ${btnColor}; padding: ${pad}; display: inline-flex; pointer-events: none;">${block.label}</a></div>`;
+              break;
+            case 'divider':
+              previewHtml = `<hr style="border: none; border-top: 2px solid ${block.color}; margin: 8px 0;">`;
+              break;
+            case '2col':
+              previewHtml = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                  <div style="padding: 12px; background: var(--bg-surface); border-radius: 6px; font-size: 0.9rem;">${block.leftText}</div>
+                  <div style="padding: 12px; background: var(--bg-surface); border-radius: 6px; font-size: 0.9rem;">${block.rightText}</div>
+                </div>
+              `;
+              break;
+            case 'gallery':
+              if (block.urls.length === 0) {
+                previewHtml = `<div class="preview-placeholder">🗂️ Empty Image Gallery (Click to configure list)</div>`;
+              } else {
+                previewHtml = `<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                  ${block.urls.map(u => `<img src="${u}" style="width:100%; aspect-ratio:1; object-fit:cover; border-radius:8px;">`).join('')}
+                </div>`;
+              }
+              break;
+            case 'video':
+              if (block.url) {
+                // Convert youtube link to embed format
+                let embedUrl = block.url;
+                if (block.url.includes('youtube.com/watch?v=')) {
+                  embedUrl = block.url.replace('watch?v=', 'embed/');
+                } else if (block.url.includes('youtu.be/')) {
+                  embedUrl = block.url.replace('youtu.be/', 'youtube.com/embed/');
+                }
+                previewHtml = `<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px;">
+                  <iframe src="${embedUrl}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0" allowfullscreen></iframe>
+                </div>`;
+              } else {
+                previewHtml = `<div class="preview-placeholder">📹 Empty Video Player URL (Click to link YouTube embed)</div>`;
+              }
+              break;
+            case 'form':
+              previewHtml = `
+                <div style="padding: 20px; border: 1px solid var(--border-color-light); border-radius: 12px;">
+                  ${block.fields.map(f => `
+                    <div class="alima-input-group" style="margin-bottom: 12px;">
+                      <label class="alima-input-label">${f}</label>
+                      <input type="text" class="alima-input" placeholder="Enter ${f.toLowerCase()}..." disabled>
+                    </div>
+                  `).join('')}
+                  <button class="alima-btn btn-primary btn-sm" style="width: 100%; pointer-events: none;">${block.btnText}</button>
+                </div>
+              `;
+              break;
+            case 'map':
+              previewHtml = `
+                <div style="border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color-light); height: 200px; display: flex; align-items: center; justify-content: center; background: #e5e7eb;">
+                  <span style="font-weight: 600; color: var(--text-muted);">🗺️ Google Map: ${block.address}</span>
+                </div>
+              `;
+              break;
+            case 'quote':
+              previewHtml = `
+                <div style="border-left: 4px solid ${block.color}; padding-left: 16px; margin: 8px 0;">
+                  <p style="font-style: italic; color: var(--text-main); font-size: 1.1rem; line-height: 1.5;">"${block.text}"</p>
+                  <cite style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px; display: block;">— ${block.author}</cite>
+                </div>
+              `;
+              break;
+            case 'html':
+              previewHtml = `<div>${block.code}</div>`;
+              break;
+          }
 
-        // HUD overlay elements
-        blockWrapper.innerHTML = `
-          ${previewHtml}
-          <div class="block-controls">
-            <button class="block-ctrl-btn" onclick="duplicateBlock(${idx}, event)" title="Duplicate">📋</button>
-            <button class="block-ctrl-btn" onclick="moveBlockUp(${idx}, event)" title="Move Up">▲</button>
-            <button class="block-ctrl-btn" onclick="moveBlockDown(${idx}, event)" title="Move Down">▼</button>
-            <button class="block-ctrl-btn" style="background: var(--color-error);" onclick="deleteBlock(${idx}, event)" title="Delete">&times;</button>
+          // HUD overlay elements
+          blockWrapper.innerHTML = `
+            ${previewHtml}
+            <div class="block-controls">
+              <button class="block-ctrl-btn" onclick="duplicateBlock(${idx}, event)" title="Duplicate">📋</button>
+              <button class="block-ctrl-btn" onclick="moveBlockUp(${idx}, event)" title="Move Up">▲</button>
+              <button class="block-ctrl-btn" onclick="moveBlockDown(${idx}, event)" title="Move Down">▼</button>
+              <button class="block-ctrl-btn" style="background: var(--color-error);" onclick="deleteBlock(${idx}, event)" title="Delete">&times;</button>
+            </div>
+          `;
+          
+          canvasEl.appendChild(blockWrapper);
+        });
+      }
+
+      // Render Active Plugin widgets
+      renderPluginWidgets();
+    }
+
+    function renderPluginWidgets() {
+      const canvasEl = document.getElementById('canvas-dropzone');
+      if (!canvasEl) return;
+
+      // Clean existing preview widgets first to avoid duplicates
+      const existingWidgets = canvasEl.querySelectorAll('.plugin-preview-widget');
+      existingWidgets.forEach(w => w.remove());
+
+      if (!websitePlugins) return;
+
+      // 1. Google Analytics Badge (Visual Indicator)
+      if (websitePlugins.analytics && websitePlugins.analytics.enabled) {
+        const gaBadge = document.createElement('div');
+        gaBadge.className = 'plugin-preview-widget plugin-ga-badge';
+        gaBadge.style.cssText = `
+          position: absolute;
+          top: 12px;
+          right: 12px;
+          background: rgba(124, 58, 237, 0.1);
+          border: 1px solid var(--color-primary);
+          color: var(--color-primary);
+          font-size: 0.75rem;
+          font-weight: 700;
+          padding: 4px 10px;
+          border-radius: var(--radius-pill);
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          pointer-events: none;
+          z-index: 100;
+        `;
+        gaBadge.innerHTML = `📊 GA Active: ${websitePlugins.analytics.trackingId || 'G-XXXXXX'}`;
+        canvasEl.appendChild(gaBadge);
+      }
+
+      // 2. Disqus Comments Widget
+      if (websitePlugins.disqus && websitePlugins.disqus.enabled) {
+        const disqusShortname = websitePlugins.disqus.shortname || 'alima-comments';
+        const disqusWidget = document.createElement('div');
+        disqusWidget.className = 'plugin-preview-widget';
+        disqusWidget.style.cssText = `
+          margin-top: 32px;
+          border-top: 1px solid var(--border-color-light);
+          padding-top: 24px;
+          width: 100%;
+        `;
+        disqusWidget.innerHTML = `
+          <h4 style="font-size: 1rem; font-weight: 700; color: var(--text-main); margin-bottom: 12px; font-family: var(--font-heading); display: flex; align-items: center; gap: 8px;">💬 Disqus Comment Board</h4>
+          <div style="background: var(--bg-surface); padding: 24px; border-radius: var(--radius-standard); border: 1px dashed var(--border-color-light); text-align: center;">
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">
+              Live commentators can participate in threaded discussions using Disqus community shortname:
+            </div>
+            <code style="background: var(--bg-card); padding: 4px 10px; border-radius: 4px; font-weight: 600; color: var(--color-primary); font-size: 0.85rem;">${disqusShortname}</code>
           </div>
         `;
-        
-        canvasEl.appendChild(blockWrapper);
-      });
+        canvasEl.appendChild(disqusWidget);
+      }
+
+      // 3. Floating WhatsApp Button Widget
+      if (websitePlugins.whatsapp && websitePlugins.whatsapp.enabled) {
+        const phone = websitePlugins.whatsapp.phone || '+1234567890';
+        const message = websitePlugins.whatsapp.message || 'Hi, how can we help you today?';
+        const whatsappWidget = document.createElement('div');
+        whatsappWidget.className = 'plugin-preview-widget';
+        whatsappWidget.style.cssText = `
+          position: absolute;
+          bottom: 24px;
+          right: 24px;
+          z-index: 200;
+          width: 56px;
+          height: 56px;
+          background: #25d366;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+          cursor: pointer;
+          transition: transform 0.2s;
+        `;
+        whatsappWidget.setAttribute('title', `WhatsApp Support: ${phone}`);
+        whatsappWidget.innerHTML = `
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+          </svg>
+        `;
+        whatsappWidget.addEventListener('click', (e) => {
+          e.stopPropagation();
+          AlimaToast.show('WhatsApp Clicked', `Would redirect live user to WhatsApp chat with "${phone}" sending: "${message}"`, 'success');
+        });
+        canvasEl.appendChild(whatsappWidget);
+      }
+
+      // 4. Newsletter Lead Capture Widget
+      if (websitePlugins.newsletter && websitePlugins.newsletter.enabled) {
+        const title = websitePlugins.newsletter.title || 'Subscribe to our Newsletter';
+        const successMsg = websitePlugins.newsletter.successMsg || 'Thank you for subscribing!';
+        const newsletterWidget = document.createElement('div');
+        newsletterWidget.className = 'plugin-preview-widget';
+        newsletterWidget.style.cssText = `
+          background: var(--bg-card);
+          border: 1.5px solid var(--color-primary);
+          border-radius: var(--radius-standard);
+          padding: 20px;
+          box-shadow: var(--shadow-standard);
+          width: 100%;
+          max-width: 440px;
+          margin: 32px auto 0 auto;
+        `;
+        newsletterWidget.innerHTML = `
+          <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 6px; font-family: var(--font-heading); display: flex; align-items: center; gap: 8px;">✉️ ${title}</h4>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px;">Leave your email to subscribe to updates and newsletters on this digital campus.</p>
+          <div style="display: flex; gap: 8px;">
+            <input type="email" id="widget-newsletter-email" class="alima-input" placeholder="student@university.edu" style="padding: 8px 12px; font-size: 0.85rem;">
+            <button class="alima-btn btn-primary btn-sm" id="widget-newsletter-btn" style="white-space: nowrap;">Subscribe</button>
+          </div>
+        `;
+        newsletterWidget.querySelector('#widget-newsletter-btn').addEventListener('click', (e) => {
+          e.stopPropagation();
+          const emailInput = document.getElementById('widget-newsletter-email');
+          if (emailInput && emailInput.value.trim()) {
+            AlimaToast.show('Newsletter Capture', successMsg, 'success');
+            emailInput.value = '';
+          } else {
+            AlimaToast.show('Validation Error', 'Please input a valid email address.', 'warning');
+          }
+        });
+        // Make sure clicks on the input do not select the block
+        newsletterWidget.addEventListener('click', (e) => e.stopPropagation());
+        canvasEl.appendChild(newsletterWidget);
+      }
     }
 
     // 4. Properties form editor builder
