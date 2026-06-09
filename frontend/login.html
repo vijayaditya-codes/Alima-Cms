@@ -401,6 +401,135 @@
         text-align: center;
       }
     }
+    
+    /* Reset Password Modal Styles */
+    .alima-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 10, 26, 0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      padding: 20px;
+    }
+    .alima-modal-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+    .alima-modal {
+      background: #0f0f23;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 460px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      transform: translateY(20px);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      overflow: hidden;
+    }
+    .alima-modal-overlay.active .alima-modal {
+      transform: translateY(0);
+    }
+    .modal-header {
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .modal-header h3 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin: 0;
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      color: #94a3b8;
+      cursor: pointer;
+      line-height: 1;
+      transition: color var(--transition-normal);
+    }
+    .modal-close:hover {
+      color: #ffffff;
+    }
+    .modal-body {
+      padding: 24px;
+      text-align: left;
+    }
+    .modal-body p {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+    .modal-btn {
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      transition: opacity var(--transition-normal), transform var(--transition-normal);
+      margin-top: 16px;
+    }
+    .modal-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+    .modal-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+    .modal-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 12px 14px;
+      color: #ffffff;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
+    }
+    .modal-input:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.15);
+    }
+    .reset-success-view {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      text-align: center;
+      padding: 12px 0;
+    }
+    .reset-success-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--color-success);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+    }
   </style>
 </head>
 <body>
@@ -480,7 +609,7 @@
               <div class="alima-input-group">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                   <label class="alima-input-label">Password</label>
-                  <a href="#" class="forgot-link" style="color: var(--color-primary); font-size: 0.8rem; text-decoration: none;" onclick="triggerPasswordReset(event)">Forgot password?</a>
+                  <a href="#" class="forgot-link" style="color: var(--color-primary); font-size: 0.8rem; text-decoration: none;" onclick="openResetModal(event)">Forgot password?</a>
                 </div>
                 <div class="password-wrapper">
                   <input type="password" id="login-pwd" class="alima-input-dark" placeholder="••••••••" required>
@@ -801,9 +930,66 @@
         await sendPasswordResetEmail(auth, email);
         AlimaToast.show("Reset Link Sent", "Check your campus email inbox for instructions.", "success");
       } catch (err) {
-        AlimaToast.show("Reset Error", "Failed to dispatch password reset request.", "error");
+        AlimaToast.show("Reset Error", err.message || "Failed to dispatch password reset request.", "error");
       }
     }
+
+    function openResetModal(e) {
+      if (e) e.preventDefault();
+      const currentEmail = document.getElementById('login-email').value.trim();
+      document.getElementById('reset-email').value = currentEmail;
+      document.getElementById('reset-modal-overlay').classList.add('active');
+    }
+    window.openResetModal = openResetModal;
+
+    function closeResetModal() {
+      document.getElementById('reset-modal-overlay').classList.remove('active');
+    }
+    window.closeResetModal = closeResetModal;
+
+    async function handlePasswordResetSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('reset-submit-btn');
+      const email = document.getElementById('reset-email').value.trim();
+      if (!email) return;
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> <span>Sending Reset Link...</span>';
+
+      try {
+        await sendPasswordResetEmail(auth, email);
+        const modalBody = document.getElementById('reset-modal-body');
+        modalBody.innerHTML = `
+          <div class="reset-success-view">
+            <div class="reset-success-icon">✓</div>
+            <h4 style="color:#ffffff; font-size:1.15rem; margin-top:8px; font-weight:800;">Reset Email Sent</h4>
+            <p style="color:#94a3b8; font-size:0.85rem; margin:0 0 16px 0;">
+              A secure password reset link has been dispatched to <strong>${email}</strong>.
+            </p>
+            <p style="color:#94a3b8; font-size:0.85rem; margin:0;">
+              Please check your spam or institutional folder if you do not receive it within 2 minutes.
+            </p>
+            <button onclick="closeResetModal()" class="modal-btn" style="margin-top:20px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:#ffffff;">
+              Close Window
+            </button>
+          </div>
+        `;
+      } catch (err) {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Send Reset Link</span>';
+        
+        let errorMsg = "Failed to dispatch password reset request.";
+        if (err.code === "auth/user-not-found") {
+          errorMsg = "No campus account exists with this email address.";
+        } else if (err.code === "auth/invalid-email") {
+          errorMsg = "Please enter a valid email format.";
+        } else if (err.message) {
+          errorMsg = err.message;
+        }
+        AlimaToast.show("Reset Error", errorMsg, "error");
+      }
+    }
+    window.handlePasswordResetSubmit = handlePasswordResetSubmit;
 
     function shakeCard(card) {
       card.classList.remove('shake-error');
@@ -833,5 +1019,27 @@
     window.handleGoogleSignIn = handleGoogleSignIn;
     window.triggerPasswordReset = triggerPasswordReset;
   </script>
+
+  <!-- Reset Password Modal -->
+  <div class="alima-modal-overlay" id="reset-modal-overlay" onclick="closeResetModal()">
+    <div class="alima-modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Reset Campus Password</h3>
+        <button class="modal-close" onclick="closeResetModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="reset-modal-body">
+        <p>Enter your academic email address below and we will dispatch a password reset link to your inbox.</p>
+        <form id="reset-password-form" onsubmit="handlePasswordResetSubmit(event)">
+          <div class="alima-input-group" style="text-align:left; gap:8px;">
+            <label class="support-input-label" style="font-size:0.8rem; font-weight:600; color:#94a3b8; display:block; margin-bottom:4px;">Campus Email Address</label>
+            <input type="email" id="reset-email" class="modal-input" required placeholder="you@university.edu">
+          </div>
+          <button type="submit" id="reset-submit-btn" class="modal-btn">
+            <span>Send Reset Link</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
