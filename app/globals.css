@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #7c3aed;
+  --color-accent: #06b6d4;
+  --color-success: #10b981;
+  --color-dark-bg: #0a0a1a;
+  --color-card-dark: #0d0d1f;
+  --color-surface-dark: #12122a;
+  
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-heading: var(--font-plus-jakarta-sans), system-ui, sans-serif;
+}
+
+:root {
+  --background: #f8f9fc;
+  --foreground: #111827;
+  --card: #ffffff;
+  --border: #e5e7eb;
+}
+
+.dark {
+  --background: #0a0a1a;
+  --foreground: #f9fafb;
+  --card: #0d0d1f;
+  --border: rgba(255, 255, 255, 0.08);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  transition: background-color 0.2s ease, color 0.2s ease;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+/* Shimmer animations */
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.dark .shimmer {
+  background: linear-gradient(90deg, #1e1e38 25%, #2a2a4e 50%, #1e1e38 75%);
+  background-size: 200% 100%;
+}
