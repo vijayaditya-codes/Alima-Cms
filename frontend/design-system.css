@@ -272,7 +272,79 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   align-items: center;
   gap: 12px;
-  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transition: background-color var(--transition-fast);
+  overflow: visible;
+}
+
+.sidebar-footer:hover {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.profile-dropdown {
+  position: absolute;
+  bottom: 74px;
+  left: 12px;
+  right: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--radius-standard);
+  box-shadow: var(--shadow-toast);
+  padding: 8px;
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 1000;
+  animation: popUp var(--transition-fast) forwards;
+}
+
+@keyframes popUp {
+  from { transform: translateY(10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.profile-dropdown.active {
+  display: flex;
+}
+
+.profile-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  color: var(--text-main);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: background-color var(--transition-fast);
+  cursor: pointer;
+}
+
+.profile-dropdown-item:hover {
+  background-color: var(--bg-surface);
+}
+
+.profile-dropdown-item i {
+  font-style: normal;
+  font-size: 1.1rem;
+}
+
+.profile-chevron {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--text-on-dark-muted);
+  transition: transform var(--transition-normal);
+}
+
+.sidebar-footer.dropdown-open .profile-chevron {
+  transform: rotate(180deg);
+}
+
+.profile-user-symbol {
+  font-size: 0.8rem;
+  color: var(--text-on-dark-muted);
 }
 
 .user-avatar {
