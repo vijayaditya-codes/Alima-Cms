@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alima CMS - Media Library</title>
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+  
+  <!-- Shared Design System CSS -->
+  <link rel="stylesheet" href="design-system.css">
+  
+  <style>
+    /* Premium visual styles for upload drop zone & media card items */
+    .upload-container {
+      background: var(--bg-card);
+      border: 2px dashed var(--border-color-light);
+      border-radius: var(--radius-card);
+      padding: 40px;
+      text-align: center;
+      transition: all var(--transition-normal);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .upload-container:hover, .upload-container.dragover {
+      border-color: var(--color-primary);
+      background: rgba(124, 58, 237, 0.02);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .upload-icon {
+      font-size: 3rem;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    /* Progress bar styles */
+    .progress-wrapper {
+      width: 100%;
+      max-width: 400px;
+      margin-top: 12px;
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      background: var(--gradient-primary);
+      border-radius: var(--radius-pill);
+      transition: width 0.2s ease;
+    }
+
+    .progress-text {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* Media Grid layout */
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .media-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color-light);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      box-shadow: var(--shadow-standard);
+      transition: all var(--transition-normal);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .media-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    /* Premium card visual overlay border */
+    .media-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: var(--radius-card);
+      padding: 1.5px;
+      background: var(--gradient-card-border);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      opacity: 0;
+      transition: opacity var(--transition-normal);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .media-card:hover::before {
+      opacity: 1;
+    }
+
+    .media-preview-container {
+      height: 160px;
+      background: var(--gradient-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      border-bottom: 1px solid var(--border-color-light);
+    }
+
+    .media-preview-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .media-preview-icon {
+      font-size: 3.5rem;
+      color: var(--text-light);
+      opacity: 0.8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .media-preview-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .media-card-details {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex-grow: 1;
+    }
+
+    .media-filename {
+      font-family: var(--font-heading);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .media-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .media-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-color-light);
+    }
+
+    .media-actions a {
+      font-size: 0.85rem;
+      color: var(--color-primary);
+      text-decoration: none;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .media-actions a:hover {
+      text-decoration: underline;
+      color: var(--color-accent);
+    }
+
+    /* Delete animation styles */
+    .card-delete-animation {
+      opacity: 0 !important;
+      transform: scale(0.9) translateY(20px) !important;
+      max-height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border-width: 0 !important;
+      overflow: hidden !important;
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+
+    /* PDF red-ish custom styling for icon */
+    .pdf-icon {
+      color: #ef4444;
+    }
+
+    /* Video cyan-ish custom styling for icon */
+    .video-icon {
+      color: #06b6d4;
+    }
+
+    /* Styling play button on video card */
+    .video-play-overlay {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background: rgba(10, 10, 26, 0.65);
+      border: 2px solid white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1rem;
+      z-index: 1;
+      pointer-events: none;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body data-theme="dark">
+
+  <div class="app-container">
+    
+    <!-- Sidebar component -->
+    <aside class="alima-sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon">A</div>
+        <span class="brand-text">Alima CMS</span>
+        <button class="sidebar-toggle">❮</button>
+      </div>
+      
+      <ul class="sidebar-menu">
+        <li class="menu-item">
+          <a href="dashboard.html" class="menu-link">
+            <i>🏠</i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link">
+            <i>🌐</i>
+            <span>My Websites</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link">
+            <i>📄</i>
+            <span>Content</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="builder.html" class="menu-link">
+            <i>🧩</i>
+            <span>Page Builder</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="themes.html" class="menu-link">
+            <i>🎨</i>
+            <span>Themes</span>
+          </a>
+        </li>
+        <li class="menu-item active">
+          <a href="media.html" class="menu-link">
+            <i>🖼</i>
+            <span>Media Library</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link">
+            <i>📋</i>
+            <span>Forms</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link">
+            <i>🔗</i>
+            <span>Domain Mapping</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link">
+            <i>🔍</i>
+            <span>SEO Settings</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link">
+            <i>🚀</i>
+            <span>Publishing</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link" onclick="handleLogout()">
+            <i>🚪</i>
+            <span>Sign Out</span>
+          </a>
+        </li>
+      </ul>
+      
+      <div class="sidebar-footer">
+        <div class="user-avatar" style="background: var(--gradient-primary);">JO</div>
+        <div class="user-info">
+          <span class="user-name">John</span>
+          <span class="user-role">Campus Creator</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="alima-main-content page-fade-scale">
+      
+      <!-- Top Header Bar -->
+      <header class="top-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <div class="breadcrumb" style="display: flex; align-items: center; gap: 8px; font-size: 0.9rem;">
+          <a href="dashboard.html" style="color: var(--text-muted); text-decoration: none;">Alima</a>
+          <span class="breadcrumb-sep" style="color: var(--text-light);">/</span>
+          <span class="breadcrumb-current" style="color: var(--text-main); font-weight: 500;">Media Library</span>
+        </div>
+        
+        <div class="header-right" style="display: flex; align-items: center; gap: 20px;">
+          <div class="bell-icon" style="font-size: 1.2rem; cursor: pointer; color: var(--text-muted);">
+            🔔
+          </div>
+        </div>
+      </header>
+
+      <!-- Page Header -->
+      <section class="media-header">
+        <h2 style="font-size: 2rem; letter-spacing: -0.5px;">Media Library</h2>
+        <p style="color: var(--text-muted); margin-top: 4px;">Upload and manage assets (images, PDFs, videos) for your digital campus sites.</p>
+      </section>
+
+      <!-- Upload Section -->
+      <section class="alima-card">
+        <div class="upload-container" id="drop-zone">
+          <div class="upload-icon">📤</div>
+          <h3 style="font-size: 1.25rem; font-weight: 700;">Drag & Drop files here, or click to upload</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Supports Image (PNG, JPG, SVG, GIF, WebP), PDF, and Video (MP4, WebM)</p>
+          <input type="file" id="file-input" style="display: none;" accept="image/*,application/pdf,video/*" multiple>
+          
+          <!-- Animated purple progress bar -->
+          <div class="progress-wrapper" id="progress-wrapper">
+            <div class="progress-bar-container">
+              <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; width: 100%;">
+              <span class="progress-text" id="progress-status">Uploading file...</span>
+              <span class="progress-text" id="progress-percent">0%</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Media List Section -->
+      <section style="display: flex; flex-direction: column; gap: 16px;">
+        <h3 style="font-size: 1.25rem; font-weight: 700;">Uploaded Files</h3>
+        
+        <div class="media-grid" id="media-grid">
+          <!-- Shimmer skeleton items loading initially -->
+          <div class="media-card shimmer-card">
+            <div class="media-preview-container">
+              <div class="shimmer-skeleton" style="width: 100%; height: 100%;"></div>
+            </div>
+            <div class="media-card-details">
+              <div class="shimmer-skeleton" style="width: 70%; height: 16px; border-radius: 4px;"></div>
+              <div class="shimmer-skeleton" style="width: 40%; height: 12px; border-radius: 4px; margin-top: 4px;"></div>
+              <div style="display: flex; justify-content: space-between; margin-top: 12px; border-top: 1px solid var(--border-color-light); padding-top: 12px;">
+                <div class="shimmer-skeleton" style="width: 30%; height: 14px; border-radius: 4px;"></div>
+                <div class="shimmer-skeleton" style="width: 15%; height: 14px; border-radius: 4px;"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="media-card shimmer-card">
+            <div class="media-preview-container">
+              <div class="shimmer-skeleton" style="width: 100%; height: 100%;"></div>
+            </div>
+            <div class="media-card-details">
+              <div class="shimmer-skeleton" style="width: 70%; height: 16px; border-radius: 4px;"></div>
+              <div class="shimmer-skeleton" style="width: 40%; height: 12px; border-radius: 4px; margin-top: 4px;"></div>
+              <div style="display: flex; justify-content: space-between; margin-top: 12px; border-top: 1px solid var(--border-color-light); padding-top: 12px;">
+                <div class="shimmer-skeleton" style="width: 30%; height: 14px; border-radius: 4px;"></div>
+                <div class="shimmer-skeleton" style="width: 15%; height: 14px; border-radius: 4px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Shared Design System JavaScript -->
+  <script src="shared.js"></script>
+  
+  <!-- Firebase config import -->
+  <script type="module" src="firebase.js"></script>
+
+  <script type="module">
+    import { auth, db, storage } from "./firebase.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+    import { collection, query, where, getDocs, addDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+    import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-storage.js";
+
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const progressWrapper = document.getElementById('progress-wrapper');
+    const progressBar = document.getElementById('progress-bar');
+    const progressStatus = document.getElementById('progress-status');
+    const progressPercent = document.getElementById('progress-percent');
+    const mediaGrid = document.getElementById('media-grid');
+
+    // 1. Auth check
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+      
+      showUserName(user.displayName || user.email);
+
+      // Load files for current user
+      await loadMediaGrid(user.uid);
+
+      // Check URL parameters for triggering file selector
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('triggerUpload') === 'true') {
+        // Clean URL to avoid repeating on refresh
+        window.history.replaceState({}, document.title, window.location.pathname);
+        fileInput.click();
+      }
+    });
+
+    function showUserName(name) {
+      const sidebarName = document.querySelector('.user-name');
+      const sidebarAvatar = document.querySelector('.user-avatar');
+      if (sidebarName) sidebarName.textContent = name;
+      if (sidebarAvatar) sidebarAvatar.textContent = name.slice(0, 2).toUpperCase();
+    }
+
+    function handleLogout() {
+      signOut(auth).then(() => {
+        window.location.href = "login.html";
+      });
+    }
+    window.handleLogout = handleLogout;
+
+    async function loadMediaGrid(uid) {
+      try {
+        const q = query(collection(db, "media"), where("ownerUid", "==", uid));
+        const querySnapshot = await getDocs(q);
+        
+        mediaGrid.innerHTML = '';
+        
+        if (querySnapshot.empty) {
+          mediaGrid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 48px; background: var(--bg-card); border: 1px dashed var(--border-color-light); border-radius: var(--radius-card); width: 100%;">
+              <span style="font-size: 3rem; display: block; margin-bottom: 16px;">🖼️</span>
+              <h4 style="font-size: 1.2rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">No media assets yet</h4>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">Drag files to the upload box above to populate your asset gallery.</p>
+            </div>
+          `;
+          return;
+        }
+
+        const docs = [];
+        querySnapshot.forEach(doc => {
+          docs.push({ id: doc.id, ...doc.data() });
+        });
+        
+        // Sort by upload date descending
+        docs.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
+
+        docs.forEach(file => {
+          renderMediaCard(file);
+        });
+      } catch (err) {
+        console.error("Load media error:", err);
+        AlimaToast.show("Error", "Could not load media items.", "error");
+      }
+    }
+
+    function formatBytes(bytes, decimals = 2) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const dm = decimals < 0 ? 0 : decimals;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    }
+
+    function formatDate(isoString) {
+      if (!isoString) return '';
+      const d = new Date(isoString);
+      return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function renderMediaCard(file, prepend = false) {
+      const card = document.createElement('div');
+      card.className = 'media-card';
+      card.id = `media-card-${file.id}`;
+      
+      let previewHtml = '';
+      const isImage = file.type.startsWith('image/');
+      const isVideo = file.type.startsWith('video/');
+      const isPdf = file.type === 'application/pdf';
+
+      if (isImage) {
+        previewHtml = `<img src="${file.url}" class="media-preview-img" alt="${file.name}" loading="lazy">`;
+      } else if (isVideo) {
+        previewHtml = `
+          <div class="video-play-overlay">▶</div>
+          <video class="media-preview-video" src="${file.url}" muted preload="metadata"></video>
+        `;
+      } else if (isPdf) {
+        previewHtml = `
+          <div class="media-preview-icon pdf-icon">
+            <span>📄</span>
+            <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">PDF Document</span>
+          </div>
+        `;
+      } else {
+        previewHtml = `
+          <div class="media-preview-icon">
+            <span>📦</span>
+            <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">File</span>
+          </div>
+        `;
+      }
+
+      card.innerHTML = `
+        <div class="media-preview-container">
+          ${previewHtml}
+        </div>
+        <div class="media-card-details">
+          <div class="media-filename" title="${file.name}">${file.name}</div>
+          <div class="media-meta-row">
+            <span>Size: ${formatBytes(file.size)}</span>
+            <span>${formatDate(file.uploadedAt)}</span>
+          </div>
+          <div class="media-actions">
+            <a href="${file.url}" target="_blank">🔗 View Original</a>
+            <button class="alima-btn btn-ghost btn-sm delete-btn-card" 
+                    style="padding: 6px 10px; font-weight: bold; border-radius: 6px;" 
+                    title="Delete Media" 
+                    onclick="deleteMediaFile('${file.id}', '${file.name}', '${file.ownerUid}', this)">🗑️ Delete</button>
+          </div>
+        </div>
+      `;
+
+      if (prepend) {
+        const emptyMsg = mediaGrid.querySelector('[style*="grid-column"]');
+        if (emptyMsg) {
+          emptyMsg.remove();
+        }
+        mediaGrid.insertBefore(card, mediaGrid.firstChild);
+      } else {
+        mediaGrid.appendChild(card);
+      }
+    }
+
+    async function deleteMediaFile(fileId, filename, ownerUid, btnElement) {
+      if (!confirm(`Are you sure you want to delete "${filename}"?`)) return;
+      
+      const card = btnElement.closest('.media-card');
+      
+      try {
+        // 1. Delete from storage
+        const fileStorageRef = ref(storage, `users/${ownerUid}/media/${filename}`);
+        await deleteObject(fileStorageRef);
+        
+        // 2. Delete from firestore
+        await deleteDoc(doc(db, "media", fileId));
+        
+        AlimaToast.show("File Deleted", `Successfully removed "${filename}"`, "success");
+        
+        // 3. Shrink & Fade animation
+        if (card) {
+          card.classList.add('card-delete-animation');
+          setTimeout(() => {
+            card.remove();
+            if (mediaGrid.children.length === 0) {
+              mediaGrid.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 48px; background: var(--bg-card); border: 1px dashed var(--border-color-light); border-radius: var(--radius-card); width: 100%;">
+                  <span style="font-size: 3rem; display: block; margin-bottom: 16px;">🖼️</span>
+                  <h4 style="font-size: 1.2rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">No media assets yet</h4>
+                  <p style="color: var(--text-muted); font-size: 0.9rem;">Drag files to the upload box above to populate your asset gallery.</p>
+                </div>
+              `;
+            }
+          }, 500);
+        }
+      } catch (err) {
+        console.error("Delete error:", err);
+        AlimaToast.show("Delete Error", "Could not remove file from library.", "error");
+      }
+    }
+    
+    async function handleUploads(files) {
+      const user = auth.currentUser;
+      if (!user) return;
+
+      progressWrapper.style.display = 'flex';
+      
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        try {
+          progressStatus.textContent = `Uploading ${file.name} (${i + 1}/${files.length})...`;
+          progressBar.style.width = '0%';
+          progressPercent.textContent = '0%';
+
+          // Storage path: users/{uid}/media/{filename}
+          const storageRef = ref(storage, `users/${user.uid}/media/${file.name}`);
+          const uploadTask = uploadBytesResumable(storageRef, file);
+
+          await new Promise((resolve, reject) => {
+            uploadTask.on('state_changed', 
+              (snapshot) => {
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                progressBar.style.width = `${progress}%`;
+                progressPercent.textContent = `${Math.round(progress)}%`;
+              }, 
+              (error) => {
+                reject(error);
+              }, 
+              async () => {
+                try {
+                  const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                  
+                  // Save metadata to Firestore: media/{fileId}
+                  const metadata = {
+                    ownerUid: user.uid,
+                    name: file.name,
+                    url: downloadURL,
+                    type: file.type,
+                    size: file.size,
+                    uploadedAt: new Date().toISOString()
+                  };
+                  
+                  const docRef = await addDoc(collection(db, "media"), metadata);
+                  
+                  // Render card immediately in grid
+                  renderMediaCard({ id: docRef.id, ...metadata }, true);
+                  
+                  resolve();
+                } catch (dbErr) {
+                  reject(dbErr);
+                }
+              }
+            );
+          });
+        } catch (err) {
+          console.error("Upload failed for file:", file.name, err);
+          AlimaToast.show("Upload Error", `Failed to upload "${file.name}"`, "error");
+        }
+      }
+
+      // Hide progress
+      progressWrapper.style.display = 'none';
+      AlimaToast.show("Success", "All files processed successfully.", "success");
+      AlimaEffects.triggerConfetti();
+    }
+
+    // Drag & drop handlers
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        handleUploads(files);
+      }
+    });
+
+    dropZone.addEventListener('click', () => {
+      fileInput.click();
+    });
+
+    fileInput.addEventListener('change', () => {
+      const files = fileInput.files;
+      if (files.length > 0) {
+        handleUploads(files);
+      }
+    });
+
+    // Bind to window for HTML triggers
+    window.deleteMediaFile = deleteMediaFile;
+  </script>
+</body>
+</html>

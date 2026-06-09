@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alima Design System Showcase</title>
+  <link rel="stylesheet" href="design-system.css">
+  <style>
+    /* Inline additions specific to the showcase presentation */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 32px;
+    }
+    
+    .section-title {
+      font-size: 1.5rem;
+      margin-bottom: 24px;
+      color: var(--text-main);
+      border-bottom: 2px solid var(--border-color-light);
+      padding-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-title span {
+      background: var(--gradient-primary);
+      color: white;
+      font-size: 0.8rem;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      font-weight: 700;
+    }
+    
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .particle-demo-container {
+      position: relative;
+      height: 180px;
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      background: var(--gradient-dark);
+      border: 1px solid var(--border-color-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-align: center;
+      box-shadow: var(--shadow-purple);
+    }
+
+    .particle-demo-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .theme-toggle-btn {
+      background: none;
+      border: 1px solid var(--border-color-light);
+      color: var(--text-main);
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      font-weight: 600;
+      transition: all var(--transition-fast);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .theme-toggle-btn:hover {
+      background: rgba(124, 58, 237, 0.05);
+      border-color: var(--color-primary);
+    }
+
+    /* Page Header */
+    .showcase-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Alima Sidebar Component -->
+    <aside class="alima-sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon">A</div>
+        <span class="brand-text">Alima CMS</span>
+        <button class="sidebar-toggle">❮</button>
+      </div>
+      
+      <ul class="sidebar-menu">
+        <li class="menu-item active">
+          <a href="#" class="menu-link">
+            <i>⚡</i>
+            <span>Design Showcase</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link">
+            <i>📂</i>
+            <span>Websites</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link">
+            <i>📝</i>
+            <span>Pages & Posts</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link">
+            <i>🎨</i>
+            <span>Theme Library</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="media.html" class="menu-link">
+            <i>🖼️</i>
+            <span>Media Files</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link">
+            <i>📋</i>
+            <span>Forms Builder</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link">
+            <i>🌐</i>
+            <span>Domain Mapping</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link">
+            <i>🔍</i>
+            <span>SEO Settings</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link" onclick="handleLogout()">
+            <i>🚪</i>
+            <span>Sign Out</span>
+          </a>
+        </li>
+      </ul>
+      
+      <div class="sidebar-footer">
+        <div class="user-avatar">AD</div>
+        <div class="user-info">
+          <span class="user-name">Alex Director</span>
+          <span class="user-role">Administrator</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="alima-main-content page-fade-scale">
+      
+      <!-- Page Header -->
+      <div class="showcase-header">
+        <div>
+          <h1 style="font-size: 2.2rem; letter-spacing: -0.5px;">Design System</h1>
+          <p style="color: var(--text-muted); margin-top: 4px;">"The Foundation of Your Digital Campus" — Component Library & Interactions</p>
+        </div>
+        
+        <!-- Light / Dark toggle -->
+        <button class="theme-toggle-btn" id="theme-toggle">
+          <span>🌙</span> Toggle Dark Mode
+        </button>
+      </div>
+
+      <!-- Section: Numerical Stats with Count-Up Animations -->
+      <section class="stagger-container">
+        
+        <div class="alima-card stagger-card">
+          <p style="color: var(--text-muted); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Active Campuses</p>
+          <h2 data-count-to="1420" data-count-prefix="" data-count-suffix="+" style="font-size: 2.5rem; background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">0</h2>
+          <div style="margin-top: 12px; display: flex; align-items: center; gap: 8px;">
+            <span class="alima-badge badge-live">Live</span>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">across 12 states</span>
+          </div>
+        </div>
+
+        <div class="alima-card stagger-card">
+          <p style="color: var(--text-muted); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Daily Unique Visits</p>
+          <h2 data-count-to="84320" data-count-suffix="" style="font-size: 2.5rem; background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">0</h2>
+          <div style="margin-top: 12px; display: flex; align-items: center; gap: 8px;">
+            <span class="alima-badge badge-scheduled">Scheduled</span>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">+14% this week</span>
+          </div>
+        </div>
+
+        <div class="alima-card stagger-card">
+          <p style="color: var(--text-muted); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">CMS Server Load</p>
+          <h2 data-count-to="99.98" data-count-suffix="%" data-count-decimals="2" style="font-size: 2.5rem; background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">0</h2>
+          <div style="margin-top: 12px; display: flex; align-items: center; gap: 8px;">
+            <span class="alima-badge badge-live">Live</span>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">SLA guaranteed</span>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Section: UI Elements & Buttons -->
+      <div class="grid-2">
+        
+        <!-- Buttons Column -->
+        <div class="alima-card">
+          <h3 class="section-title">AlimaButton <span>Variants</span></h3>
+          <div class="button-row" style="margin-bottom: 24px;">
+            <button class="alima-btn btn-primary">Primary Gradient</button>
+            <button class="alima-btn btn-outline">Outline Button</button>
+          </div>
+          <div class="button-row" style="margin-bottom: 24px;">
+            <button class="alima-btn btn-ghost">Ghost Link</button>
+            <button class="alima-btn btn-danger">Danger Action</button>
+          </div>
+          <div class="button-row">
+            <button class="alima-btn btn-primary btn-sm">Small Btn</button>
+            <button class="alima-btn btn-primary">Standard</button>
+            <button class="alima-btn btn-primary btn-lg">Large Call to Action</button>
+          </div>
+        </div>
+
+        <!-- Badges & Modals Column -->
+        <div class="alima-card">
+          <h3 class="section-title">AlimaBadge & AlimaModal <span>Status & Dialog</span></h3>
+          <p style="color: var(--text-muted); margin-bottom: 12px; font-size: 0.9rem;">Status Indicators:</p>
+          <div class="badge-row" style="margin-bottom: 24px;">
+            <span class="alima-badge badge-live">Live</span>
+            <span class="alima-badge badge-draft">Draft</span>
+            <span class="alima-badge badge-scheduled">Scheduled</span>
+          </div>
+          <hr style="border: none; border-top: 1px solid var(--border-color-light); margin: 20px 0;">
+          <p style="color: var(--text-muted); margin-bottom: 16px; font-size: 0.9rem;">Interactive Dialog Modal (Glassmorphism overlay & slide-up):</p>
+          <button class="alima-btn btn-primary" id="open-modal-btn">Open Interactive Modal</button>
+        </div>
+
+      </div>
+
+      <!-- Section: Form Inputs & Success/Toast Interactions -->
+      <div class="grid-2">
+        
+        <!-- Forms Column -->
+        <div class="alima-card dark-surface">
+          <h3 class="section-title" style="border-bottom-color: var(--border-color-dark); color: white;">AlimaInput <span>Dark Glass Form</span></h3>
+          
+          <form onsubmit="event.preventDefault();" style="display: flex; flex-direction: column; gap: 20px;">
+            <div class="alima-input-group">
+              <label class="alima-input-label" for="username">Campus Administrator Name</label>
+              <input type="text" id="username" class="alima-input" placeholder="e.g., Alex Director">
+            </div>
+
+            <div class="alima-input-group">
+              <label class="alima-input-label" for="domain">Subdomain Mapping</label>
+              <input type="text" id="domain" class="alima-input" placeholder="e.g., library.alima.site">
+            </div>
+
+            <div class="alima-input-group">
+              <label class="alima-input-label" for="light-input-demo">Alternative Light Input style (Main Content Area)</label>
+              <input type="text" id="light-input-demo" class="alima-input light-input" placeholder="Enter text in light design styling...">
+            </div>
+          </form>
+        </div>
+
+        <!-- Interactions & Effects Column -->
+        <div class="alima-card">
+          <h3 class="section-title">Visual Actions <span>Effects & Toasts</span></h3>
+          
+          <p style="color: var(--text-muted); margin-bottom: 12px; font-size: 0.9rem;">Success Micro-animations:</p>
+          <div class="button-row" style="margin-bottom: 24px;">
+            <button class="alima-btn btn-primary" id="btn-confetti">🎉 Launch Confetti</button>
+            <button class="alima-btn btn-outline" id="btn-ripple">✓ Checkmark Ripple</button>
+          </div>
+          
+          <hr style="border: none; border-top: 1px solid var(--border-color-light); margin: 20px 0;">
+          
+          <p style="color: var(--text-muted); margin-bottom: 12px; font-size: 0.9rem;">Trigger Dynamic AlimaToasts:</p>
+          <div class="button-row">
+            <button class="alima-btn btn-primary btn-sm" id="toast-success">Success Toast</button>
+            <button class="alima-btn btn-outline btn-sm" style="color: var(--color-warning); border-color: var(--color-warning);" id="toast-warning">Warning</button>
+            <button class="alima-btn btn-danger btn-sm" id="toast-error">Error</button>
+            <button class="alima-btn btn-ghost btn-sm" style="color: var(--color-accent);" id="toast-info">Info</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Section: Shimmer Skeletons & Floating Particles -->
+      <div class="grid-2">
+        
+        <!-- Loading State Card -->
+        <div class="alima-card">
+          <h3 class="section-title">Loading Shimmer Skeletons <span>CSS State</span></h3>
+          
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div style="display: flex; align-items: center; gap: 16px;">
+              <span class="shimmer-skeleton light" style="width: 48px; height: 48px; border-radius: 50%;"></span>
+              <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 8px;">
+                <span class="shimmer-skeleton light" style="width: 40%; height: 16px;"></span>
+                <span class="shimmer-skeleton light" style="width: 75%; height: 12px;"></span>
+              </div>
+            </div>
+            
+            <span class="shimmer-skeleton light" style="width: 100%; height: 100px; border-radius: 8px; margin-top: 8px;"></span>
+          </div>
+        </div>
+
+        <!-- Floating Particles Demo -->
+        <div class="alima-card">
+          <h3 class="section-title">Canvas Floating Particles <span>Background</span></h3>
+          
+          <div class="particle-demo-container">
+            <canvas id="particle-canvas" class="particle-canvas"></canvas>
+            <div class="particle-demo-content">
+              <h4 style="margin-bottom: 8px;">Floating Node Network</h4>
+              <p style="font-size: 0.85rem; opacity: 0.8; max-width: 260px; margin: 0 auto;">Drifting, interconnected points that load automatically behind fields (e.g. login cards)</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Interactive Modal Component Overlay -->
+  <div class="alima-modal-overlay" id="alima-modal-overlay">
+    <div class="alima-modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Configure Domain Settings</h3>
+        <button class="modal-close" id="close-modal-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom: 16px;">You are assigning a custom academic subdomain to your campus directory. This ensures high availability and SSL configuration across Alima's edge servers.</p>
+        <div class="alima-input-group">
+          <label class="alima-input-label" for="modal-input">Custom Domain Mapping</label>
+          <input type="text" id="modal-input" class="alima-input" placeholder="e.g. catalog.stateu.edu">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="alima-btn btn-ghost" id="modal-cancel-btn">Cancel</button>
+        <button class="alima-btn btn-primary" id="modal-confirm-btn">Confirm Subdomain</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase Auth monitoring -->
+  <script type="module">
+    import { auth } from "./firebase.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+    function showUserName(name) {
+      const sidebarName = document.querySelector('.user-name');
+      const sidebarAvatar = document.querySelector('.user-avatar');
+      if (sidebarName) sidebarName.textContent = name;
+      if (sidebarAvatar) sidebarAvatar.textContent = name.slice(0, 2).toUpperCase();
+    }
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = 'login.html';
+      } else {
+        showUserName(user.displayName || user.email);
+      }
+    });
+
+    function handleLogout() {
+      signOut(auth).then(() => {
+        window.location.href = "login.html";
+      });
+    }
+    window.handleLogout = handleLogout;
+  </script>
+
+  <!-- Design System JS utilities -->
+  <script src="shared.js"></script>
+  <script>
+    // Theme toggler logic
+    const themeBtn = document.getElementById('theme-toggle');
+    themeBtn.addEventListener('click', () => {
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        document.body.removeAttribute('data-theme');
+        themeBtn.innerHTML = '🌙 Toggle Dark Mode';
+        AlimaToast.show('Theme Updated', 'Main content area switched to Light mode.', 'info');
+      } else {
+        document.body.setAttribute('data-theme', 'dark');
+        themeBtn.innerHTML = '☀️ Toggle Light Mode';
+        AlimaToast.show('Theme Updated', 'Main content area switched to Dark mode.', 'success');
+      }
+    });
+
+    // Modal triggers
+    const openModalBtn = document.getElementById('open-modal-btn');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    const modalCancelBtn = document.getElementById('modal-cancel-btn');
+    const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+    const modalOverlay = document.getElementById('alima-modal-overlay');
+
+    openModalBtn.addEventListener('click', () => {
+      modalOverlay.classList.add('active');
+    });
+
+    const hideModal = () => {
+      modalOverlay.classList.remove('active');
+    };
+
+    closeModalBtn.addEventListener('click', hideModal);
+    modalCancelBtn.addEventListener('click', hideModal);
+    modalConfirmBtn.addEventListener('click', () => {
+      hideModal();
+      AlimaToast.show('Domain Mapped', 'Your domain mapping was submitted successfully.', 'success');
+      AlimaEffects.triggerConfetti();
+    });
+
+    // Particle Canvas initialization
+    let particleControl = initParticleBackground('particle-canvas');
+
+    // Success action triggers
+    document.getElementById('btn-confetti').addEventListener('click', () => {
+      AlimaEffects.triggerConfetti();
+      AlimaToast.show('Confetti Triggered', 'Confetti particle physics triggered on screen.', 'success');
+    });
+
+    document.getElementById('btn-ripple').addEventListener('click', (e) => {
+      AlimaEffects.triggerCheckmarkRipple(e.target);
+      AlimaToast.show('Checkmark Overlay', 'Ripple overlay scale animation executed.', 'info');
+    });
+
+    // Toast triggers
+    document.getElementById('toast-success').addEventListener('click', () => {
+      AlimaToast.show('Action Completed', 'Your adjustments have been securely saved to the database.', 'success');
+    });
+
+    document.getElementById('toast-warning').addEventListener('click', () => {
+      AlimaToast.show('Pending Approvals', 'Your custom domains have not completed DNS propagation.', 'warning');
+    });
+
+    document.getElementById('toast-error').addEventListener('click', () => {
+      AlimaToast.show('Connection Failed', 'Failed to synchronize with edge publishing network.', 'error');
+    });
+
+    document.getElementById('toast-info').addEventListener('click', () => {
+      AlimaToast.show('System Update', 'New campus template versions are now available in the library.', 'info');
+    });
+  </script>
+</body>
+</html>

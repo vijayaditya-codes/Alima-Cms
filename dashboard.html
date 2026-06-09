@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alima CMS - Dashboard</title>
+  <!-- Google Fonts -->
+  
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+  
+  <!-- Shared Design System CSS -->
+  <link rel="stylesheet" href="design-system.css">
+  
+  <style>
+    /* Specific Dashboard overrides & additions to maintain high quality */
+    
+    /* Left border + purple text + light purple bg override for active sidebar menu */
+    .alima-sidebar .menu-item.active .menu-link {
+      color: #c084fc;
+      background: rgba(124, 58, 237, 0.12);
+      font-weight: 600;
+    }
+    
+    .alima-sidebar .menu-item.active::before {
+      background: var(--color-primary);
+      box-shadow: 0 0 10px var(--color-primary);
+    }
+    
+    /* Top Header Bar */
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-color-light);
+      padding: 16px 40px;
+      margin: -40px -40px 0 -40px;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-heading);
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .breadcrumb a {
+      color: var(--text-light);
+      text-decoration: none;
+      transition: color var(--transition-fast);
+    }
+
+    .breadcrumb a:hover {
+      color: var(--color-primary);
+    }
+
+    .breadcrumb-sep {
+      color: var(--text-light);
+    }
+
+    .breadcrumb-current {
+      color: var(--text-main);
+    }
+
+    /* Hero greeting */
+    .hero-greeting {
+      margin-top: 8px;
+    }
+    
+    .hero-greeting h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text-main);
+    }
+
+    .hero-greeting p {
+      color: var(--text-muted);
+      margin-top: 6px;
+      font-size: 0.95rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    /* Custom Stats styling */
+    .dashboard-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+    }
+
+    .stat-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color-light);
+      border-radius: var(--radius-standard);
+      padding: 24px;
+      box-shadow: var(--shadow-standard);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      transition: all var(--transition-normal);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .stat-card.border-purple { border-left: 4px solid var(--color-primary); }
+    .stat-card.border-cyan { border-left: 4px solid var(--color-accent); }
+    .stat-card.border-green { border-left: 4px solid var(--color-success); }
+    .stat-card.border-orange { border-left: 4px solid var(--color-warning); }
+
+    .stat-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-family: var(--font-heading);
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1;
+    }
+
+    /* Websites grid section */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .section-header h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .websites-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 28px;
+    }
+
+    .website-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color-light);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      box-shadow: var(--shadow-standard);
+      transition: all var(--transition-normal);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .website-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    /* Premium thumbnail placeholder style */
+    .website-thumbnail {
+      height: 180px;
+      position: relative;
+      overflow: hidden;
+      background: var(--gradient-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid var(--border-color-light);
+    }
+
+    .website-thumbnail::before {
+      content: '';
+      position: absolute;
+      width: 140%;
+      height: 140%;
+      background: radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, rgba(6, 182, 212, 0.1) 50%, rgba(10, 10, 26, 0) 70%);
+      animation: rotateBg 20s infinite linear;
+    }
+
+    @keyframes rotateBg {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .mockup-frame {
+      position: relative;
+      z-index: 2;
+      width: 80%;
+      height: 70%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px 8px 0 0;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transform: translateY(15px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .mockup-header {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 4px;
+    }
+
+    .mockup-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+    }
+
+    .mockup-line {
+      height: 6px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 3px;
+    }
+
+    .website-details {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      flex-grow: 1;
+    }
+
+    .website-domain {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .website-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .website-card-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: auto;
+    }
+
+    /* User Profile indicator on top header */
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .bell-icon {
+      font-size: 1.2rem;
+      cursor: pointer;
+      position: relative;
+      color: var(--text-muted);
+      transition: color var(--transition-fast);
+    }
+
+    .bell-icon:hover {
+      color: var(--color-primary);
+    }
+
+    .bell-badge {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--color-error);
+    }
+
+    /* Mobile responsive header tweaks */
+    @media (max-width: 768px) {
+      .top-header {
+        padding: 16px 20px;
+        margin: -24px -24px 0 -24px;
+      }
+      .breadcrumb {
+        display: none;
+      }
+    }
+
+    /* Toggle Switch styling */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 20px;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--border-color-light);
+      transition: .3s;
+      border-radius: 20px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+    input:checked + .slider {
+      background-color: var(--color-success);
+    }
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+
+    /* Delete button hover styling */
+    .delete-btn-card {
+      color: var(--text-light);
+      border: 1.5px solid var(--border-color-light);
+      background: transparent;
+      transition: all var(--transition-fast);
+    }
+    .delete-btn-card:hover {
+      color: var(--color-error);
+      border-color: rgba(239, 68, 68, 0.3);
+      background: rgba(239, 68, 68, 0.05);
+    }
+
+    /* Delete card shrink animation */
+    .card-delete-animation {
+      opacity: 0 !important;
+      transform: scale(0.9) translateY(20px) !important;
+      max-height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border-width: 0 !important;
+      overflow: hidden !important;
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Sidebar component -->
+    <aside class="alima-sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon">A</div>
+        <span class="brand-text">Alima CMS</span>
+        <button class="sidebar-toggle">❮</button>
+      </div>
+      
+      <ul class="sidebar-menu">
+        <li class="menu-item active">
+          <a href="#" class="menu-link">
+            <i>🏠</i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link">
+            <i>🌐</i>
+            <span>My Websites</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link">
+            <i>📄</i>
+            <span>Content</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link">
+            <i>🧩</i>
+            <span>Page Builder</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link">
+            <i>🎨</i>
+            <span>Themes</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="media.html" class="menu-link">
+            <i>🖼</i>
+            <span>Media Library</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link">
+            <i>📋</i>
+            <span>Forms</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link">
+            <i>🔗</i>
+            <span>Domain Mapping</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link">
+            <i>🔍</i>
+            <span>SEO Settings</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link">
+            <i>🚀</i>
+            <span>Publishing</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link" onclick="handleLogout()">
+            <i>🚪</i>
+            <span>Sign Out</span>
+          </a>
+        </li>
+      </ul>
+      
+      <div class="sidebar-footer">
+        <div class="user-avatar" style="background: var(--gradient-primary);">JO</div>
+        <div class="user-info">
+          <span class="user-name">John</span>
+          <span class="user-role">Campus Creator</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="alima-main-content page-fade-scale">
+      
+      <!-- Top Header Bar -->
+      <header class="top-header">
+        <div class="breadcrumb">
+          <a href="#">Alima</a>
+          <span class="breadcrumb-sep">/</span>
+          <span class="breadcrumb-current">Dashboard</span>
+        </div>
+        
+        <div class="header-right">
+          <div class="bell-icon">
+            🔔<span class="bell-badge"></span>
+          </div>
+          <button class="alima-btn btn-primary btn-sm" onclick="triggerCreateWebsite()">+ New Website</button>
+        </div>
+      </header>
+
+      <!-- Hero Greeting Section -->
+      <section class="hero-greeting">
+        <h2>Good morning, John 👋</h2>
+        <p>You have 3 active websites and 2 pending drafts in your workspace.</p>
+        
+        <div class="hero-actions">
+          <button class="alima-btn btn-primary btn-sm" onclick="triggerCreateWebsite()">Create Website</button>
+          <button class="alima-btn btn-outline btn-sm" onclick="triggerNewPost()">New Blog Post</button>
+          <button class="alima-btn btn-ghost btn-sm" onclick="triggerUploadMedia()">Upload Media</button>
+        </div>
+      </section>
+
+      <!-- Stats Cards Row -->
+      <section class="dashboard-stats">
+        
+        <div class="stat-card border-purple stagger-card" style="animation-delay: 0.08s;">
+          <span class="stat-label">Total Websites</span>
+          <span class="stat-value" data-count-to="3" data-count-duration="1000">0</span>
+        </div>
+
+        <div class="stat-card border-cyan stagger-card" style="animation-delay: 0.18s;">
+          <span class="stat-label">Published Pages</span>
+          <span class="stat-value" data-count-to="12" data-count-duration="1000">0</span>
+        </div>
+
+        <div class="stat-card border-green stagger-card" style="animation-delay: 0.28s;">
+          <span class="stat-label">Media Files</span>
+          <span class="stat-value" data-count-to="47" data-count-duration="1000">0</span>
+        </div>
+
+        <div class="stat-card border-orange stagger-card" style="animation-delay: 0.38s;">
+          <span class="stat-label">Form Submissions</span>
+          <span class="stat-value" data-count-to="8" data-count-duration="1000">0</span>
+        </div>
+
+      </section>
+
+      <!-- Websites Area -->
+      <section style="display: flex; flex-direction: column; gap: 16px;">
+        <div class="section-header">
+          <h3>Your Digital Campus Sites</h3>
+          <button class="alima-btn btn-ghost btn-sm" style="font-size: 0.85rem;" onclick="triggerToastInfo()">View All Sites ➔</button>
+        </div>
+        
+        <div class="websites-grid">
+          
+          <!-- Card 1: myportfolio.alima.site -->
+          <div class="website-card stagger-card" style="animation-delay: 0.48s;">
+            <div class="website-thumbnail">
+              <div class="mockup-frame">
+                <div class="mockup-header">
+                  <span class="mockup-dot"></span>
+                  <span class="mockup-dot"></span>
+                  <span class="mockup-dot"></span>
+                </div>
+                <div class="mockup-line" style="width: 50%; margin-bottom: 6px; background: var(--color-primary);"></div>
+                <div class="mockup-line" style="width: 90%;"></div>
+                <div class="mockup-line" style="width: 75%;"></div>
+                <div class="mockup-line" style="width: 85%;"></div>
+              </div>
+            </div>
+            <div class="website-details">
+              <div class="website-domain">
+                <span>myportfolio.alima.site</span>
+                <span class="alima-badge badge-live">Live</span>
+              </div>
+              <p style="color: var(--text-muted); font-size: 0.85rem;">Personal scholar portfolio showing research publications, lectures, and CV details.</p>
+              <div class="website-card-actions">
+                <button class="alima-btn btn-outline btn-sm" style="flex: 1;" onclick="triggerEdit('myportfolio.alima.site')">Edit Site</button>
+                <a href="https://myportfolio.alima.site" target="_blank" class="alima-btn btn-ghost btn-sm" style="flex: 1; border: 1.5px solid var(--border-color-light);">Visit Link</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: blog.alima.site -->
+          <div class="website-card stagger-card" style="animation-delay: 0.58s;">
+            <div class="website-thumbnail">
+              <div class="mockup-frame">
+                <div class="mockup-header">
+                  <span class="mockup-dot"></span>
+                  <span class="mockup-dot"></span>
+                  <span class="mockup-dot"></span>
+                </div>
+                <div class="mockup-line" style="width: 40%; margin-bottom: 6px; background: var(--color-warning);"></div>
+                <div class="mockup-line" style="width: 80%;"></div>
+                <div class="mockup-line" style="width: 90%;"></div>
+              </div>
+            </div>
+            <div class="website-details">
+              <div class="website-domain">
+                <span>blog.alima.site</span>
+                <span class="alima-badge badge-draft">Draft</span>
+              </div>
+              <p style="color: var(--text-muted); font-size: 0.85rem;">Campus announcements blog covering calendar listings, class events, and department news.</p>
+              <div class="website-card-actions">
+                <button class="alima-btn btn-outline btn-sm" style="flex: 1;" onclick="triggerEdit('blog.alima.site')">Edit Site</button>
+                <a href="https://blog.alima.site" target="_blank" class="alima-btn btn-ghost btn-sm" style="flex: 1; border: 1.5px solid var(--border-color-light);">Visit Link</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: startup.alima.site -->
+          <div class="website-card stagger-card" style="animation-delay: 0.68s;">
+            <div class="website-thumbnail">
+              <div class="mockup-frame">
+                <div class="mockup-header">
+                  <span class="mockup-dot"></span>
+                  <span class="mockup-dot"></span>
+                  <span class="mockup-dot"></span>
+                </div>
+                <div class="mockup-line" style="width: 60%; margin-bottom: 6px; background: var(--color-success);"></div>
+                <div class="mockup-line" style="width: 85%;"></div>
+                <div class="mockup-line" style="width: 70%;"></div>
+              </div>
+            </div>
+            <div class="website-details">
+              <div class="website-domain">
+                <span>startup.alima.site</span>
+                <span class="alima-badge badge-live">Live</span>
+              </div>
+              <p style="color: var(--text-muted); font-size: 0.85rem;">Student accelerator directory profiling campus incubators, founders, and seed funding rounds.</p>
+              <div class="website-card-actions">
+                <button class="alima-btn btn-outline btn-sm" style="flex: 1;" onclick="triggerEdit('startup.alima.site')">Edit Site</button>
+                <a href="https://startup.alima.site" target="_blank" class="alima-btn btn-ghost btn-sm" style="flex: 1; border: 1.5px solid var(--border-color-light);">Visit Link</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Create Website Modal Overlay -->
+  <div class="alima-modal-overlay" id="create-website-modal">
+    <div class="alima-modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Create New Website</h3>
+        <button class="modal-close" onclick="closeCreateWebsiteModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom: 20px; font-size: 0.9rem;">Configure your new digital campus site parameters below. You can change these anytime in the settings panel.</p>
+        <div class="prop-group" style="margin-bottom: 16px; display: flex; flex-direction: column; gap: 6px;">
+          <label class="prop-label" style="font-size: 0.85rem; font-weight: 600; color: var(--text-on-dark-muted);">Website Name</label>
+          <input type="text" id="new-web-name" class="prop-control" placeholder="e.g. My Scholar Portfolio" style="width: 100%; padding: 10px 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color-dark); border-radius: var(--radius-standard); color: white; outline: none;">
+        </div>
+        <div class="prop-group" style="margin-bottom: 16px; display: flex; flex-direction: column; gap: 6px;">
+          <label class="prop-label" style="font-size: 0.85rem; font-weight: 600; color: var(--text-on-dark-muted);">Subdomain Prefix</label>
+          <div style="display: flex; align-items: center;">
+            <input type="text" id="new-web-subdomain" class="prop-control" placeholder="e.g. portfolio" style="flex: 1; padding: 10px 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color-dark); border-radius: var(--radius-standard) 0 0 var(--radius-standard); color: white; outline: none; border-right: none;">
+            <span style="padding: 10px 12px; background: rgba(255,255,255,0.1); border: 1px solid var(--border-color-dark); border-radius: 0 var(--radius-standard) var(--radius-standard) 0; color: var(--text-on-dark-muted); font-size: 0.85rem;">.alima.site</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="alima-btn btn-ghost btn-sm" onclick="closeCreateWebsiteModal()" style="border: 1px solid var(--border-color-dark); color: var(--text-on-dark-muted);">Cancel</button>
+        <button class="alima-btn btn-primary btn-sm" onclick="submitCreateWebsite()">Create Site</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Shared Design System JavaScript -->
+  <script src="shared.js"></script>
+  
+  <!-- Firebase config import -->
+  <script type="module" src="firebase.js"></script>
+
+  <script type="module">
+    import { auth, db } from "./firebase.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+    import { doc, getDoc, setDoc, collection, query, where, getDocs, addDoc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+    function showUserName(name) {
+      const greetingHeader = document.querySelector('.hero-greeting h2');
+      if (greetingHeader) greetingHeader.innerHTML = `Good morning, ${name} 👋`;
+
+      const sidebarName = document.querySelector('.user-name');
+      const sidebarAvatar = document.querySelector('.user-avatar');
+      if (sidebarName) sidebarName.textContent = name;
+      if (sidebarAvatar) sidebarAvatar.textContent = name.slice(0, 2).toUpperCase();
+    }
+
+    function showGridSkeleton() {
+      const grid = document.querySelector('.websites-grid');
+      if (grid) {
+        grid.innerHTML = `
+          <div class="website-card">
+            <div class="website-thumbnail" style="background: #e5e7eb; overflow: hidden; position: relative;">
+              <div class="shimmer-skeleton light" style="width: 80%; height: 70%; border-radius: 8px 8px 0 0; transform: translateY(15px);"></div>
+            </div>
+            <div class="website-details" style="gap: 12px; display: flex; flex-direction: column;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="shimmer-skeleton light" style="width: 60%; height: 20px; border-radius: 4px;"></div>
+                <div class="shimmer-skeleton light" style="width: 20%; height: 20px; border-radius: 4px;"></div>
+              </div>
+              <div class="shimmer-skeleton light" style="width: 90%; height: 14px; border-radius: 4px;"></div>
+              <div class="shimmer-skeleton light" style="width: 75%; height: 14px; border-radius: 4px;"></div>
+              <div style="display: flex; gap: 12px; margin-top: auto;">
+                <div class="shimmer-skeleton light" style="flex: 1; height: 36px; border-radius: var(--radius-standard);"></div>
+                <div class="shimmer-skeleton light" style="flex: 1; height: 36px; border-radius: var(--radius-standard);"></div>
+              </div>
+            </div>
+          </div>
+          <div class="website-card">
+            <div class="website-thumbnail" style="background: #e5e7eb; overflow: hidden; position: relative;">
+              <div class="shimmer-skeleton light" style="width: 80%; height: 70%; border-radius: 8px 8px 0 0; transform: translateY(15px);"></div>
+            </div>
+            <div class="website-details" style="gap: 12px; display: flex; flex-direction: column;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="shimmer-skeleton light" style="width: 60%; height: 20px; border-radius: 4px;"></div>
+                <div class="shimmer-skeleton light" style="width: 20%; height: 20px; border-radius: 4px;"></div>
+              </div>
+              <div class="shimmer-skeleton light" style="width: 90%; height: 14px; border-radius: 4px;"></div>
+              <div class="shimmer-skeleton light" style="width: 75%; height: 14px; border-radius: 4px;"></div>
+              <div style="display: flex; gap: 12px; margin-top: auto;">
+                <div class="shimmer-skeleton light" style="flex: 1; height: 36px; border-radius: var(--radius-standard);"></div>
+                <div class="shimmer-skeleton light" style="flex: 1; height: 36px; border-radius: var(--radius-standard);"></div>
+              </div>
+            </div>
+          </div>
+          <div class="website-card">
+            <div class="website-thumbnail" style="background: #e5e7eb; overflow: hidden; position: relative;">
+              <div class="shimmer-skeleton light" style="width: 80%; height: 70%; border-radius: 8px 8px 0 0; transform: translateY(15px);"></div>
+            </div>
+            <div class="website-details" style="gap: 12px; display: flex; flex-direction: column;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="shimmer-skeleton light" style="width: 60%; height: 20px; border-radius: 4px;"></div>
+                <div class="shimmer-skeleton light" style="width: 20%; height: 20px; border-radius: 4px;"></div>
+              </div>
+              <div class="shimmer-skeleton light" style="width: 90%; height: 14px; border-radius: 4px;"></div>
+              <div class="shimmer-skeleton light" style="width: 75%; height: 14px; border-radius: 4px;"></div>
+              <div style="display: flex; gap: 12px; margin-top: auto;">
+                <div class="shimmer-skeleton light" style="flex: 1; height: 36px; border-radius: var(--radius-standard);"></div>
+                <div class="shimmer-skeleton light" style="flex: 1; height: 36px; border-radius: var(--radius-standard);"></div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function formatLastUpdated(isoString) {
+      if (!isoString) return 'Never';
+      try {
+        const d = new Date(isoString);
+        return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+      } catch (e) {
+        return 'Recently';
+      }
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      showUserName(user.displayName || user.email);
+
+      // Render skeleton loading shimmer
+      showGridSkeleton();
+
+      // Sync metrics & websites card values from firestore
+      await syncDashboardData(user.uid);
+    });
+
+    async function updateStatsCounts() {
+      const user = auth.currentUser;
+      if (!user) return;
+      
+      try {
+        const websiteSnap = await getDocs(query(collection(db, "websites"), where("ownerUid", "==", user.uid)));
+        const websiteDocs = websiteSnap.docs;
+        const websitesCount = websiteDocs.length;
+        
+        let pagesCount = 0;
+        if (websitesCount > 0) {
+          const websiteIds = websiteDocs.map(d => d.id);
+          const pagesSnap = await getDocs(query(collection(db, "pages"), where("websiteId", "in", websiteIds), where("status", "==", "live")));
+          pagesCount = pagesSnap.docs.length;
+        }
+
+        const mediaSnap = await getDocs(query(collection(db, "media"), where("ownerUid", "==", user.uid)));
+        const mediaCount = mediaSnap.docs.length;
+        
+        // Re-animate count-up stats dynamically
+        const statElements = document.querySelectorAll('.stat-value');
+        if (statElements.length >= 4) {
+          statElements[0].setAttribute('data-count-to', websitesCount);
+          statElements[1].setAttribute('data-count-to', pagesCount);
+          statElements[2].setAttribute('data-count-to', mediaCount);
+          statElements[3].setAttribute('data-count-to', 8);
+          
+          statElements.forEach(el => {
+            if (window.animateCountUp) {
+              window.animateCountUp(el);
+            } else {
+              el.textContent = el.getAttribute('data-count-to');
+            }
+          });
+        }
+        
+        // Update hero greeting subtitle count
+        const greetingDesc = document.querySelector('.hero-greeting p');
+        if (greetingDesc) {
+          const liveCount = websiteDocs.filter(w => w.data().status === 'live').length;
+          const draftCount = websitesCount - liveCount;
+          greetingDesc.textContent = `You have ${liveCount} active websites and ${draftCount} pending drafts in your workspace.`;
+        }
+      } catch (err) {
+        console.error("Stats refresh error:", err);
+      }
+    }
+
+    async function syncDashboardData(uid) {
+      try {
+        const websitesRef = collection(db, "websites");
+        const q = query(websitesRef, where("ownerUid", "==", uid));
+        const querySnapshot = await getDocs(q);
+        
+        const websites = [];
+        querySnapshot.forEach(doc => {
+          websites.push({
+            id: doc.id,
+            ...doc.data()
+          });
+        });
+
+        // Update stats
+        await updateStatsCounts();
+
+        // Populate websites list grid
+        const grid = document.querySelector('.websites-grid');
+        if (grid) {
+          grid.innerHTML = ''; // Clear skeleton / mockup
+          
+          if (websites.length === 0) {
+            grid.innerHTML = `
+              <div style="grid-column: 1 / -1; text-align: center; padding: 48px; background: #ffffff; border: 1px dashed var(--border-color-light); border-radius: var(--radius-card); width: 100%;">
+                <span style="font-size: 3rem; display: block; margin-bottom: 16px;">🌐</span>
+                <h4 style="font-size: 1.2rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">No campus websites created yet</h4>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Click the button below or top right to build your first professional portfolio or blog.</p>
+                <button class="alima-btn btn-primary btn-sm" onclick="triggerCreateWebsite()">+ Create Website</button>
+              </div>
+            `;
+            return;
+          }
+
+          websites.forEach((web, idx) => {
+            const delay = 0.1 + idx * 0.08;
+            const card = document.createElement('div');
+            card.className = 'website-card stagger-card';
+            card.id = `web-card-${web.id}`;
+            card.style.animationDelay = `${delay}s`;
+            
+            const borderIndicator = web.status === 'live' ? 'var(--color-primary)' : 'var(--color-warning)';
+            const badgeClass = web.status === 'live' ? 'badge-live' : 'badge-draft';
+            
+            card.innerHTML = `
+              <div class="website-thumbnail">
+                <div class="mockup-frame">
+                  <div class="mockup-header">
+                    <span class="mockup-dot"></span>
+                    <span class="mockup-dot"></span>
+                    <span class="mockup-dot"></span>
+                  </div>
+                  <div class="mockup-line" style="width: 50%; margin-bottom: 6px; background: ${borderIndicator};"></div>
+                  <div class="mockup-line" style="width: 90%;"></div>
+                  <div class="mockup-line" style="width: 75%;"></div>
+                  <div class="mockup-line" style="width: 85%;"></div>
+                </div>
+              </div>
+              <div class="website-details">
+                <div class="website-domain" style="margin-bottom: 4px;">
+                  <span>${web.subdomain}.alima.site</span>
+                  <span class="alima-badge ${badgeClass}">${web.status.toUpperCase()}</span>
+                </div>
+                <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">${web.name}</h4>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 12px; line-height: 1.4;">
+                  Theme: <strong style="text-transform: capitalize; color: var(--color-primary);">${web.theme || 'default'}</strong><br>
+                  Updated: ${formatLastUpdated(web.updatedAt)}
+                </p>
+                
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-top: 1px solid var(--border-color-light); padding-top: 12px;">
+                  <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">Status Toggle</span>
+                  <label class="switch">
+                    <input type="checkbox" ${web.status === 'live' ? 'checked' : ''} onchange="toggleWebsiteStatus('${web.id}', this.checked)">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="website-card-actions" style="gap: 8px;">
+                  <button class="alima-btn btn-outline btn-sm" style="flex: 2; padding: 8px 12px;" onclick="triggerEdit('${web.id}')">Edit Site</button>
+                  <a href="https://${web.subdomain}.alima.site" target="_blank" class="alima-btn btn-ghost btn-sm" style="flex: 2; border: 1.5px solid var(--border-color-light); text-align: center; display: flex; align-items: center; justify-content: center; padding: 8px 12px;">Visit</a>
+                  <button class="alima-btn btn-ghost btn-sm delete-btn-card" style="flex: 1; padding: 8px; font-weight: bold;" title="Delete Website" onclick="deleteWebsite('${web.id}', this)">🗑️</button>
+                </div>
+              </div>
+            `;
+            grid.appendChild(card);
+          });
+        }
+      } catch (err) {
+        console.error(err);
+        AlimaToast.show("Error", "Could not load your websites", "error");
+      }
+    }
+
+    async function toggleWebsiteStatus(id, isChecked) {
+      const newStatus = isChecked ? 'live' : 'draft';
+      try {
+        const webRef = doc(db, "websites", id);
+        await updateDoc(webRef, {
+          status: newStatus,
+          updatedAt: new Date().toISOString()
+        });
+        
+        // Update the card badge visually
+        const card = document.getElementById(`web-card-${id}`);
+        if (card) {
+          const badge = card.querySelector('.alima-badge');
+          if (badge) {
+            badge.className = `alima-badge badge-${newStatus}`;
+            badge.textContent = newStatus.toUpperCase();
+          }
+          // Also update the thumbnail mockup border color indicator
+          const borderIndicator = newStatus === 'live' ? 'var(--color-primary)' : 'var(--color-warning)';
+          const indicatorLine = card.querySelector('.mockup-line');
+          if (indicatorLine) {
+            indicatorLine.style.background = borderIndicator;
+          }
+        }
+        
+        AlimaToast.show("Status Updated", `Website is now ${newStatus.toUpperCase()}`, "success");
+        
+        // Update stats counters
+        await updateStatsCounts();
+      } catch (err) {
+        console.error(err);
+        AlimaToast.show("Update Error", "Could not toggle website status.", "error");
+      }
+    }
+
+    async function deleteWebsite(id, btnElement) {
+      if (!confirm("Are you sure you want to delete this website? This action is permanent and will delete all associated pages.")) return;
+      
+      const card = btnElement.closest('.website-card');
+      
+      try {
+        // First delete from firestore
+        await deleteDoc(doc(db, "websites", id));
+        
+        // Also delete associated pages
+        const pagesRef = collection(db, "pages");
+        const q = query(pagesRef, where("websiteId", "==", id));
+        const pagesSnap = await getDocs(q);
+        const deletePromises = pagesSnap.docs.map(d => deleteDoc(doc(db, "pages", d.id)));
+        await Promise.all(deletePromises);
+        
+        // Show success toast
+        AlimaToast.show("Website Deleted", "Site and all of its pages have been removed.", "success");
+        
+        // Run fade-out and shrink animation
+        if (card) {
+          card.classList.add('card-delete-animation');
+          setTimeout(() => {
+            card.remove();
+            // Refresh stats counts
+            updateStatsCounts();
+          }, 500);
+        }
+      } catch (err) {
+        console.error(err);
+        AlimaToast.show("Delete Error", "Could not delete website.", "error");
+      }
+    }
+
+    function triggerCreateWebsite() {
+      const modal = document.getElementById('create-website-modal');
+      if (modal) {
+        modal.classList.add('active');
+        document.getElementById('new-web-name').value = '';
+        document.getElementById('new-web-subdomain').value = '';
+      }
+    }
+    
+    function closeCreateWebsiteModal() {
+      const modal = document.getElementById('create-website-modal');
+      if (modal) {
+        modal.classList.remove('active');
+      }
+    }
+    
+    async function submitCreateWebsite() {
+      const name = document.getElementById('new-web-name').value.trim();
+      const subdomainInput = document.getElementById('new-web-subdomain').value.trim().toLowerCase();
+      
+      if (!name) {
+        AlimaToast.show("Validation Error", "Please enter a website name.", "error");
+        return;
+      }
+      
+      if (!subdomainInput) {
+        AlimaToast.show("Validation Error", "Please enter a subdomain prefix.", "error");
+        return;
+      }
+      
+      const subRegex = /^[a-z0-9-]+$/;
+      if (!subRegex.test(subdomainInput)) {
+        AlimaToast.show("Validation Error", "Subdomain can only contain lowercase letters, numbers, and hyphens.", "error");
+        return;
+      }
+      
+      const user = auth.currentUser;
+      if (!user) {
+        AlimaToast.show("Authentication Error", "You must be logged in to create a website.", "error");
+        return;
+      }
+      
+      try {
+        // Check if subdomain is already taken
+        const qSub = query(collection(db, "websites"), where("subdomain", "==", subdomainInput));
+        const subSnap = await getDocs(qSub);
+        if (!subSnap.empty) {
+          AlimaToast.show("Subdomain Taken", "This subdomain prefix is already registered. Please choose another.", "error");
+          return;
+        }
+        
+        const newWeb = {
+          ownerUid: user.uid,
+          name: name,
+          subdomain: subdomainInput,
+          status: 'draft',
+          theme: 'default',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+        
+        await addDoc(collection(db, "websites"), newWeb);
+        
+        AlimaToast.show("Website Created", "Your new website has been initialized successfully.", "success");
+        closeCreateWebsiteModal();
+        
+        // Sync data to show new card instantly
+        await syncDashboardData(user.uid);
+      } catch (err) {
+        console.error(err);
+        AlimaToast.show("Creation Error", "Could not create new website.", "error");
+      }
+    }
+
+    function triggerNewPost() {
+      AlimaToast.show("Create Blog Post", "Drafting interface loading...", "success");
+    }
+
+    function triggerUploadMedia() {
+      window.location.href = "media.html?triggerUpload=true";
+    }
+
+    function triggerEdit(websiteId) {
+      AlimaToast.show("Page Builder", `Opening workspace editor...`, "info");
+      setTimeout(() => {
+        window.location.href = `builder.html?websiteId=${websiteId}`;
+      }, 1000);
+    }
+
+    function triggerToastInfo() {
+      AlimaToast.show("My Websites Directory", "Navigating to website repository list.", "info");
+    }
+
+    function handleLogout() {
+      signOut(auth).then(() => {
+        window.location.href = "login.html";
+      });
+    }
+
+    // Bind action callbacks to window for onclick triggers
+    window.triggerCreateWebsite = triggerCreateWebsite;
+    window.closeCreateWebsiteModal = closeCreateWebsiteModal;
+    window.submitCreateWebsite = submitCreateWebsite;
+    window.triggerNewPost = triggerNewPost;
+    window.triggerUploadMedia = triggerUploadMedia;
+    window.triggerEdit = triggerEdit;
+    window.triggerToastInfo = triggerToastInfo;
+    window.handleLogout = handleLogout;
+    window.toggleWebsiteStatus = toggleWebsiteStatus;
+    window.deleteWebsite = deleteWebsite;
+
+    // Bell notification trigger
+    document.querySelector('.bell-icon').addEventListener('click', () => {
+      AlimaToast.show("System Alerts", "All custom DNS domains have successfully verified propagation.", "success");
+      document.querySelector('.bell-badge').style.display = 'none'; // Clear notice
+    });
+  </script>
+</body>
+</html>
