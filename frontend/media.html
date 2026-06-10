@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <!-- Inline Head Theme Script to prevent flash -->
   <script>
     (function() {
@@ -106,6 +108,7 @@
     }
 
     .media-card:hover {
+      -webkit-transform: translateY(-4px);
       transform: translateY(-4px);
       box-shadow: var(--shadow-hover);
     }
@@ -159,6 +162,7 @@
 
     .card-fade-out {
       opacity: 0;
+      -webkit-transform: scale(0.9) translateY(10px);
       transform: scale(0.9) translateY(10px);
       transition: all 0.4s ease;
     }
@@ -221,8 +225,8 @@
         </li>
         <li class="menu-item">
           <a href="seo.html" class="menu-link">
-            <i>🔍</i>
-            <span>SEO Settings</span>
+            <i>🌐</i>
+            <span>Custom URL</span>
           </a>
         </li>
         <li class="menu-item">

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <!-- Inline Head Theme Script to prevent flash -->
   <script>
     (function() {
@@ -133,6 +135,7 @@
 
     .palette-block:hover {
       border-color: var(--color-primary);
+      -webkit-transform: translateY(-1px);
       transform: translateY(-1px);
       box-shadow: var(--shadow-standard);
     }

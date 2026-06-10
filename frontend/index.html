@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Alima | The Foundation of Your Digital Campus</title>
@@ -112,8 +114,8 @@
 
     .navbar.scrolled {
       background: var(--nav-bg);
-      backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--nav-border);
       height: 70px;
     }
@@ -183,6 +185,7 @@
 
     .btn-primary:hover {
       background: var(--gradient-primary-hover);
+      -webkit-transform: translateY(-1.5px);
       transform: translateY(-1.5px);
       box-shadow: 0 6px 20px rgba(124, 58, 237, 0.3);
     }
@@ -227,6 +230,7 @@
     .theme-toggle-btn:hover {
       border-color: var(--color-primary);
       color: var(--color-primary);
+      -webkit-transform: scale(1.05);
       transform: scale(1.05);
     }
 
@@ -288,7 +292,9 @@
 
     .hero-content > * {
       opacity: 0;
+      -webkit-transform: translateY(24px);
       transform: translateY(24px);
+      -webkit-animation: fadeUpEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       animation: fadeUpEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
@@ -298,9 +304,18 @@
     .hero-content .hero-actions { animation-delay: 0.55s; }
     .hero-content .hero-small-text { animation-delay: 0.65s; }
 
-    @keyframes fadeUpEntrance {
+    @-webkit-keyframes fadeUpEntrance {
       to {
         opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+      }
+    }
+
+@keyframes fadeUpEntrance {
+      to {
+        opacity: 1;
+        -webkit-transform: translateY(0);
         transform: translateY(0);
       }
     }
@@ -384,14 +399,22 @@
       position: absolute;
       bottom: 40px;
       left: 50%;
+      -webkit-transform: translateX(-50%);
       transform: translateX(-50%);
       font-size: 1.5rem;
       color: var(--text-muted);
+      -webkit-animation: bounce 2s infinite;
       animation: bounce 2s infinite;
       cursor: pointer;
     }
 
-    @keyframes bounce {
+    @-webkit-keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); }
+      40% { transform: translateY(-12px) translateX(-50%); }
+      60% { transform: translateY(-6px) translateX(-50%); }
+    }
+
+@keyframes bounce {
       0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); }
       40% { transform: translateY(-12px) translateX(-50%); }
       60% { transform: translateY(-6px) translateX(-50%); }
@@ -435,11 +458,13 @@
       box-shadow: var(--shadow-standard);
       transition: box-shadow var(--transition-normal), border-color var(--transition-normal), transform 0.1s ease-out;
       opacity: 0;
+      -webkit-transform: translateY(40px);
       transform: translateY(40px);
     }
 
     .feature-card.reveal {
       opacity: 1;
+      -webkit-transform: translateY(0);
       transform: translateY(0);
     }
 
@@ -485,12 +510,14 @@
       flex-direction: column;
       align-items: center;
       opacity: 0;
+      -webkit-transform: translateX(-20px);
       transform: translateX(-20px);
       transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
     }
 
     .step-card.reveal {
       opacity: 1;
+      -webkit-transform: translateX(0);
       transform: translateX(0);
     }
 
@@ -543,6 +570,7 @@
     }
 
     .testimonial-card:hover {
+      -webkit-transform: translateY(-5px);
       transform: translateY(-5px);
       box-shadow: var(--shadow-hover);
     }
@@ -688,8 +716,8 @@
       position: fixed;
       inset: 0;
       background: rgba(10, 10, 26, 0.4);
-      backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
       z-index: 2000;
       display: none;
       align-items: center;
@@ -710,10 +738,12 @@
       max-height: 85vh;
       overflow-y: auto;
       box-shadow: var(--shadow-hover);
+      -webkit-transform: translateY(20px);
       transform: translateY(20px);
       transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     .alima-modal-overlay.active .alima-modal {
+      -webkit-transform: translateY(0);
       transform: translateY(0);
     }
     .modal-header {
@@ -802,9 +832,11 @@
     }
     .support-btn:hover {
       opacity: 0.9;
+      -webkit-transform: translateY(-1px);
       transform: translateY(-1px);
     }
     .support-btn:active {
+      -webkit-transform: translateY(0);
       transform: translateY(0);
     }
     .support-btn:disabled {
@@ -827,9 +859,16 @@
       height: 6px;
       border-radius: 50%;
       background: var(--color-success);
+      -webkit-animation: pulse-dot 1.5s infinite;
       animation: pulse-dot 1.5s infinite;
     }
-    @keyframes pulse-dot {
+    @-webkit-keyframes pulse-dot {
+      0% { transform: scale(0.8); opacity: 0.5; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(0.8); opacity: 0.5; }
+    }
+
+@keyframes pulse-dot {
       0% { transform: scale(0.8); opacity: 0.5; }
       50% { transform: scale(1.2); opacity: 1; }
       100% { transform: scale(0.8); opacity: 0.5; }
@@ -841,6 +880,7 @@
       flex-direction: column;
       align-items: center;
       gap: 12px;
+      -webkit-animation: fadeIn 0.4s ease forwards;
       animation: fadeIn 0.4s ease forwards;
     }
     .success-icon {
@@ -860,9 +900,15 @@
       border-radius: 50%;
       width: 16px;
       height: 16px;
+      -webkit-animation: spin 0.8s linear infinite;
       animation: spin 0.8s linear infinite;
     }
-    @keyframes spin {
+    @-webkit-keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+@keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
@@ -1194,10 +1240,11 @@
     });
 
     // 5. Hero Particle Constellation Loop
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     const canvas = document.getElementById('hero-canvas');
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { alpha: false, desynchronized: true });
     let particles = [];
-    const numParticles = 120;
+    const numParticles = isIOS ? 25 : 120;
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
@@ -1249,8 +1296,9 @@
     initCanvasParticles();
 
     function animateParticles() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
       const isDark = document.documentElement.classList.contains('dark');
+      ctx.fillStyle = isDark ? '#0a0a1a' : '#f8f9fc';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       particles.forEach(p => {
         p.update();
@@ -1258,22 +1306,24 @@
       });
 
       // Connections lines draw
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const p1 = particles[i];
-          const p2 = particles[j];
-          const dx = p1.x - p2.x;
-          const dy = p1.y - p2.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
+      if (!isIOS) {
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const p1 = particles[i];
+            const p2 = particles[j];
+            const dx = p1.x - p2.x;
+            const dy = p1.y - p2.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 110) {
-            ctx.beginPath();
-            ctx.moveTo(p1.x, p1.y);
-            ctx.lineTo(p2.x, p2.y);
-            const lineOpacity = (1 - dist / 110) * 0.12 * Math.min(p1.alpha, p2.alpha);
-            ctx.strokeStyle = isDark ? `rgba(255, 255, 255, ${lineOpacity})` : `rgba(124, 58, 237, ${lineOpacity})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
+            if (dist < 110) {
+              ctx.beginPath();
+              ctx.moveTo(p1.x, p1.y);
+              ctx.lineTo(p2.x, p2.y);
+              const lineOpacity = (1 - dist / 110) * 0.12 * Math.min(p1.alpha, p2.alpha);
+              ctx.strokeStyle = isDark ? `rgba(255, 255, 255, ${lineOpacity})` : `rgba(124, 58, 237, ${lineOpacity})`;
+              ctx.lineWidth = 0.5;
+              ctx.stroke();
+            }
           }
         }
       }
@@ -1288,10 +1338,12 @@
         const rect = card.getBoundingClientRect();
         const x = e.clientX - rect.left - (rect.width / 2);
         const y = e.clientY - rect.top - (rect.height / 2);
+        card.style.webkitTransform = `perspective(1000px) rotateX(${-y / 12}deg) rotateY(${x / 12}deg) translateY(-4px)`;
         card.style.transform = `perspective(1000px) rotateX(${-y / 12}deg) rotateY(${x / 12}deg) translateY(-4px)`;
         card.style.boxShadow = 'var(--shadow-hover)';
       });
       card.addEventListener('mouseleave', () => {
+        card.style.webkitTransform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)';
         card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)';
         card.style.boxShadow = 'var(--shadow-standard)';
       });
@@ -1303,9 +1355,11 @@
         const rect = btn.getBoundingClientRect();
         const x = e.clientX - rect.left - (btn.offsetWidth / 2);
         const y = e.clientY - rect.top - (btn.offsetHeight / 2);
+        btn.style.webkitTransform = `translate(${x * 0.25}px, ${y * 0.25}px) scale(1.02)`;
         btn.style.transform = `translate(${x * 0.25}px, ${y * 0.25}px) scale(1.02)`;
       });
       btn.addEventListener('mouseleave', () => {
+        btn.style.webkitTransform = 'translate(0px, 0px) scale(1)';
         btn.style.transform = 'translate(0px, 0px) scale(1)';
       });
     });

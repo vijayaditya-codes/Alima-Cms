@@ -77,6 +77,7 @@ function setupMobileMenu(sidebar) {
     display: none;
     align-items: center;
     justify-content: center;
+    -webkit-transition: -webkit-transform 0.2s;
     transition: transform 0.2s;
   `;
 
@@ -87,6 +88,7 @@ function setupMobileMenu(sidebar) {
         display: flex !important;
       }
       .mobile-menu-trigger:active {
+        -webkit-transform: scale(0.9);
         transform: scale(0.9);
       }
     }
@@ -144,6 +146,7 @@ class AlimaToast {
 
     const closeBtn = toast.querySelector('.toast-close');
     const dismissToast = () => {
+      toast.style.webkitTransform = 'translateX(120%) scale(0.9)';
       toast.style.transform = 'translateX(120%) scale(0.9)';
       toast.style.opacity = '0';
       setTimeout(() => {

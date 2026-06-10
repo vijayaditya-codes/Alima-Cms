@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <!-- Inline Head Theme Script to prevent flash -->
   <script>
     (function() {
@@ -129,10 +131,16 @@
       box-shadow: var(--shadow-hover);
       margin-bottom: 20px;
       border-left: 4px solid var(--color-primary);
+      -webkit-animation: slideDown 0.2s ease;
       animation: slideDown 0.2s ease;
     }
 
-    @keyframes slideDown {
+    @-webkit-keyframes slideDown {
+      from { transform: translateY(-10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+@keyframes slideDown {
       from { transform: translateY(-10px); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
@@ -201,8 +209,8 @@
         </li>
         <li class="menu-item">
           <a href="seo.html" class="menu-link">
-            <i>🔍</i>
-            <span>SEO Settings</span>
+            <i>🌐</i>
+            <span>Custom URL</span>
           </a>
         </li>
         <li class="menu-item active">
@@ -694,6 +702,7 @@
         const tr = document.getElementById(`page-${id}`);
         if (tr) {
           tr.style.opacity = '0';
+          tr.style.webkitTransform = 'scale(0.95)';
           tr.style.transform = 'scale(0.95)';
           setTimeout(() => tr.remove(), 250);
         }

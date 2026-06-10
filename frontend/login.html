@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Alima CMS - Login</title>
@@ -137,13 +139,24 @@
       color: var(--text-muted);
       font-size: 0.95rem;
       opacity: 0;
+      -webkit-transform: translateY(10px);
       transform: translateY(10px);
+      -webkit-animation: fadeInUp 0.5s ease forwards;
       animation: fadeInUp 0.5s ease forwards;
     }
 
-    @keyframes fadeInUp {
+    @-webkit-keyframes fadeInUp {
       to {
         opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+      }
+    }
+
+@keyframes fadeInUp {
+      to {
+        opacity: 1;
+        -webkit-transform: translateY(0);
         transform: translateY(0);
       }
     }
@@ -155,14 +168,16 @@
 
     .glass-card-v2 {
       background: var(--bg-card);
-      backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
+      backdrop-filter: blur(24px);
       border: 1px solid var(--border-color-light);
       border-radius: 24px;
       padding: 48px;
       box-shadow: var(--shadow-standard);
+      -webkit-animation: cardEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       animation: cardEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       opacity: 0;
+      -webkit-transform: translateY(30px);
       transform: translateY(30px);
       position: relative;
       overflow: hidden;
@@ -175,9 +190,18 @@
       box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
     }
 
-    @keyframes cardEntrance {
+    @-webkit-keyframes cardEntrance {
       to {
         opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+      }
+    }
+
+@keyframes cardEntrance {
+      to {
+        opacity: 1;
+        -webkit-transform: translateY(0);
         transform: translateY(0);
       }
     }
@@ -336,8 +360,8 @@
       position: absolute;
       inset: 0;
       background: var(--bg-card);
-      backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
+      backdrop-filter: blur(24px);
       z-index: 100;
       display: flex;
       align-items: center;
@@ -380,19 +404,41 @@
       stroke: var(--color-primary);
       fill: none;
       transform-origin: center;
+      -webkit-animation: spin-loader 1.2s linear infinite;
       animation: spin-loader 1.2s linear infinite;
     }
     
-    @keyframes spin-loader {
+    @-webkit-keyframes spin-loader {
       0% {
+        -webkit-transform: rotate(0deg);
         transform: rotate(0deg);
         stroke-dashoffset: 130;
       }
       50% {
+        -webkit-transform: rotate(180deg);
         transform: rotate(180deg);
         stroke-dashoffset: 40;
       }
       100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+        stroke-dashoffset: 130;
+      }
+    }
+
+@keyframes spin-loader {
+      0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+        stroke-dashoffset: 130;
+      }
+      50% {
+        -webkit-transform: rotate(180deg);
+        transform: rotate(180deg);
+        stroke-dashoffset: 40;
+      }
+      100% {
+        -webkit-transform: rotate(360deg);
         transform: rotate(360deg);
         stroke-dashoffset: 130;
       }
@@ -408,42 +454,76 @@
     
     /* Active success state classes */
     .success-loader-ring.completed .checkmark-circle {
+      -webkit-animation: fill-circle .4s ease-in-out forwards;
       animation: fill-circle .4s ease-in-out forwards;
       stroke: var(--color-success);
     }
     
     .success-loader-ring.completed .checkmark-check {
+      -webkit-animation: draw-check .3s cubic-bezier(0.65, 0, 0.45, 1) .4s forwards;
       animation: draw-check .3s cubic-bezier(0.65, 0, 0.45, 1) .4s forwards;
       stroke: #ffffff;
     }
     
     .success-loader-ring.completed .checkmark-svg {
+      -webkit-animation: scale-up .3s ease-in-out .9s both, fill-bg .4s ease-in-out .4s forwards;
       animation: scale-up .3s ease-in-out .9s both, fill-bg .4s ease-in-out .4s forwards;
     }
     
-    @keyframes fill-circle {
+    @-webkit-keyframes fill-circle {
+      100% {
+        stroke-dashoffset: 0;
+      }
+    }
+
+@keyframes fill-circle {
       100% {
         stroke-dashoffset: 0;
       }
     }
     
-    @keyframes draw-check {
+    @-webkit-keyframes draw-check {
+      100% {
+        stroke-dashoffset: 0;
+      }
+    }
+
+@keyframes draw-check {
       100% {
         stroke-dashoffset: 0;
       }
     }
     
-    @keyframes fill-bg {
+    @-webkit-keyframes fill-bg {
+      100% {
+        box-shadow: inset 0px 0px 0px 40px var(--color-success);
+      }
+    }
+
+@keyframes fill-bg {
       100% {
         box-shadow: inset 0px 0px 0px 40px var(--color-success);
       }
     }
     
-    @keyframes scale-up {
+    @-webkit-keyframes scale-up {
       0%, 100% {
+        -webkit-transform: none;
         transform: none;
       }
       50% {
+        -webkit-transform: scale3d(1.1, 1.1, 1);
+        transform: scale3d(1.1, 1.1, 1);
+      }
+    }
+
+@keyframes scale-up {
+      0%, 100% {
+        -webkit-transform: none;
+        transform: none;
+      }
+      50% {
+        -webkit-transform: scale3d(1.1, 1.1, 1);
         transform: scale3d(1.1, 1.1, 1);
       }
     }
@@ -467,6 +547,7 @@
 
     .google-btn-v2:hover {
       background: #f1f5f9;
+      -webkit-transform: translateY(-1px);
       transform: translateY(-1px);
     }
 
@@ -488,8 +569,8 @@
       position: fixed;
       inset: 0;
       background: rgba(10, 10, 26, 0.6);
-      backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
       z-index: 2000;
       display: none;
       align-items: center;
@@ -509,11 +590,13 @@
       width: 100%;
       max-width: 460px;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      -webkit-transform: translateY(20px);
       transform: translateY(20px);
       transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       overflow: hidden;
     }
     .alima-modal-overlay.active .alima-modal {
+      -webkit-transform: translateY(0);
       transform: translateY(0);
     }
     .modal-header {
@@ -570,6 +653,7 @@
     }
     .modal-btn:hover {
       opacity: 0.9;
+      -webkit-transform: translateY(-1px);
       transform: translateY(-1px);
     }
     .modal-btn:disabled {
@@ -778,10 +862,11 @@
     import { setDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
     // 1. Particle System animation
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     const canvas = document.getElementById('starfield');
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { alpha: false, desynchronized: true });
     let stars = [];
-    const numStars = 150;
+    const numStars = isIOS ? 25 : 150;
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
@@ -802,8 +887,9 @@
     }
 
     function animateStars() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
       const isDark = document.documentElement.classList.contains('dark');
+      ctx.fillStyle = isDark ? '#0a0a1a' : '#f8f9fc';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
       
       for (let i = 0; i < stars.length; i++) {
         const s = stars[i];
@@ -823,20 +909,22 @@
         ctx.fill();
         ctx.globalAlpha = 1.0;
 
-        for (let j = i + 1; j < stars.length; j++) {
-          const s2 = stars[j];
-          const dx = s.x - s2.x;
-          const dy = s.y - s2.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
+        if (!isIOS) {
+          for (let j = i + 1; j < stars.length; j++) {
+            const s2 = stars[j];
+            const dx = s.x - s2.x;
+            const dy = s.y - s2.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 100) {
-            ctx.beginPath();
-            ctx.moveTo(s.x, s.y);
-            ctx.lineTo(s2.x, s2.y);
-            const alpha = (1 - dist / 100) * 0.15 * Math.min(s.opacity, s2.opacity);
-            ctx.strokeStyle = isDark ? `rgba(255, 255, 255, ${alpha})` : `rgba(124, 58, 237, ${alpha * 0.5})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
+            if (dist < 100) {
+              ctx.beginPath();
+              ctx.moveTo(s.x, s.y);
+              ctx.lineTo(s2.x, s2.y);
+              const alpha = (1 - dist / 100) * 0.15 * Math.min(s.opacity, s2.opacity);
+              ctx.strokeStyle = isDark ? `rgba(255, 255, 255, ${alpha})` : `rgba(124, 58, 237, ${alpha * 0.5})`;
+              ctx.lineWidth = 0.5;
+              ctx.stroke();
+            }
           }
         }
       }
@@ -866,12 +954,16 @@
       if (mode === 'login') {
         tabs[0].classList.add('active');
         tabs[1].classList.remove('active');
+        underline.style.webkitTransform = 'translateX(0%)';
         underline.style.transform = 'translateX(0%)';
+        viewport.style.webkitTransform = 'translateX(0%)';
         viewport.style.transform = 'translateX(0%)';
       } else {
         tabs[0].classList.remove('active');
         tabs[1].classList.add('active');
+        underline.style.webkitTransform = 'translateX(100%)';
         underline.style.transform = 'translateX(100%)';
+        viewport.style.webkitTransform = 'translateX(-50%)';
         viewport.style.transform = 'translateX(-50%)';
       }
     }

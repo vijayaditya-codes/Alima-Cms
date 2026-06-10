@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <!-- Inline Head Theme Script to prevent flash -->
   <script>
     (function() {
@@ -283,8 +285,8 @@
         </li>
         <li class="menu-item">
           <a href="seo.html" class="menu-link">
-            <i>🔍</i>
-            <span>SEO Settings</span>
+            <i>🌐</i>
+            <span>Custom URL</span>
           </a>
         </li>
         <li class="menu-item">
@@ -1073,6 +1075,7 @@
         const tr = document.getElementById(`submission-${id}`);
         if (tr) {
           tr.style.opacity = '0';
+          tr.style.webkitTransform = 'scale(0.95)';
           tr.style.transform = 'scale(0.95)';
           setTimeout(() => tr.remove(), 250);
         }
