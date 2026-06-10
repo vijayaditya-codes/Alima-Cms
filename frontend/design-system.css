@@ -299,10 +299,25 @@ h1, h2, h3, h4, h5, h6 {
   animation: popUp var(--transition-fast) forwards;
 }
 
-/* Float correctly when sidebar is collapsed */
+/* Collapsed sidebar profile dropdown: symbols/icons only layout */
 .alima-sidebar.collapsed .profile-dropdown {
-  right: auto !important;
-  width: 216px !important;
+  left: 12px !important;
+  right: 12px !important;
+  width: auto !important;
+}
+
+.alima-sidebar.collapsed .profile-dropdown .profile-dropdown-header,
+.alima-sidebar.collapsed .profile-dropdown hr {
+  display: none !important;
+}
+
+.alima-sidebar.collapsed .profile-dropdown-item span {
+  display: none !important;
+}
+
+.alima-sidebar.collapsed .profile-dropdown-item {
+  justify-content: center !important;
+  padding: 10px 0 !important;
 }
 
 @keyframes popUp {
