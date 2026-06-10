@@ -41,6 +41,7 @@
       flex-direction: column;
       height: 100vh;
       overflow: hidden;
+      position: relative;
     }
 
     /* Fixed Top Toolbar (56px) */
@@ -514,6 +515,191 @@
     /* Drop guideline zone border */
     .drop-guide-top { border-top: 2px dashed var(--color-primary) !important; }
     .drop-guide-bottom { border-bottom: 2px dashed var(--color-primary) !important; }
+
+    /* WordPress-style Publish Dropdown Panel */
+    .publish-dropdown-panel {
+      position: absolute;
+      top: 60px;
+      right: 16px;
+      width: 400px;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-color-light);
+      border-radius: var(--radius-standard);
+      box-shadow: var(--shadow-toast);
+      z-index: 300;
+      display: none;
+      flex-direction: column;
+      padding: 20px;
+      color: var(--text-main);
+      animation: slideDown 0.2s ease-out;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .publish-panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border-color-light);
+      padding-bottom: 12px;
+    }
+
+    .publish-panel-header h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: var(--font-heading);
+    }
+
+    .publish-checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 16px;
+      background: var(--bg-surface);
+      padding: 12px;
+      border-radius: var(--radius-standard);
+      border: 1px solid var(--border-color-light);
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+    }
+
+    .checklist-item.valid {
+      color: var(--color-success);
+    }
+
+    .checklist-item.warning {
+      color: var(--color-warning);
+    }
+
+    .checklist-item.invalid {
+      color: var(--color-error);
+    }
+
+    .publish-section-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      margin-top: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    .visibility-options, .schedule-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      color: var(--text-main);
+    }
+
+    .radio-option input {
+      cursor: pointer;
+    }
+
+    .password-input-wrapper, .schedule-picker-wrapper {
+      margin-left: 24px;
+      display: none;
+      margin-top: 4px;
+    }
+
+    .publish-panel-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+      border-top: 1px solid var(--border-color-light);
+      padding-top: 16px;
+    }
+
+    /* Success Card CSS */
+    .success-slide-up-card {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 380px;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-color-light);
+      border-radius: var(--radius-standard);
+      box-shadow: var(--shadow-toast);
+      z-index: 400;
+      display: none;
+      flex-direction: column;
+      padding: 20px;
+      animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%) scale(0.9); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .success-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .success-card-header h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: var(--color-success);
+      font-family: var(--font-heading);
+    }
+
+    .url-display-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color-light);
+      padding: 10px;
+      border-radius: var(--radius-standard);
+      font-family: monospace;
+      font-size: 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      color: var(--text-main);
+    }
+
+    .success-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* Spinner style inside buttons */
+    .spinner {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 6px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -542,9 +728,105 @@
         <span id="auto-save-status" style="font-size: 0.75rem; color: var(--text-muted);">Saved just now</span>
         <button class="alima-btn btn-ghost btn-sm" style="border: 1px solid var(--border-color-light);" onclick="savePageData(false)">Save Draft</button>
         <button class="alima-btn btn-outline btn-sm" onclick="openPagePreviewOverlay()">Preview</button>
-        <button class="alima-btn btn-primary btn-sm" onclick="savePageData(true)">Publish</button>
+        <button id="publish-btn" class="alima-btn btn-primary btn-sm" onclick="togglePublishPanel()">Publish</button>
       </div>
     </header>
+
+    <!-- WordPress-Style Publish Dropdown Panel -->
+    <div id="publish-panel" class="publish-dropdown-panel">
+      <div class="publish-panel-header">
+        <h3>Ready to publish?</h3>
+        <button class="alima-btn btn-ghost btn-sm" style="padding: 0; border: none; font-size: 1.25rem; cursor: pointer; background: transparent; color: var(--text-muted);" onclick="togglePublishPanel(false)">&times;</button>
+      </div>
+
+      <!-- Pre-publish Checklist -->
+      <div class="publish-section-title">Pre-publish Checklist</div>
+      <div class="publish-checklist">
+        <div class="checklist-item" id="chk-title">
+          <span class="chk-icon">⏳</span> Page has a title
+        </div>
+        <div class="checklist-item" id="chk-blocks">
+          <span class="chk-icon">⏳</span> At least one block added
+        </div>
+        <div class="checklist-item" id="chk-theme">
+          <span class="chk-icon">⏳</span> Theme is set
+        </div>
+        <div class="checklist-item" id="chk-featured">
+          <span class="chk-icon">⏳</span> Featured image set
+        </div>
+      </div>
+
+      <!-- Visibility Settings -->
+      <div class="publish-section-title">Visibility Settings</div>
+      <div class="visibility-options">
+        <label class="radio-option">
+          <input type="radio" name="page-visibility" value="public" checked onchange="handleVisibilityChange(this.value)">
+          <span>🌍 Public <span style="font-size: 0.75rem; color: var(--text-muted);">— Anyone can see this</span></span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="page-visibility" value="private" onchange="handleVisibilityChange(this.value)">
+          <span>🔒 Private <span style="font-size: 0.75rem; color: var(--text-muted);">— Only you can see</span></span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="page-visibility" value="password" onchange="handleVisibilityChange(this.value)">
+          <span>🔑 Password protected <span style="font-size: 0.75rem; color: var(--text-muted);">— Visitors need a password</span></span>
+        </label>
+      </div>
+      <div id="password-input-wrapper" class="password-input-wrapper">
+        <input type="password" id="page-publish-password" class="alima-input" placeholder="Enter password" style="height: 36px; font-size: 0.85rem; padding: 0 10px;">
+      </div>
+
+      <!-- Publish Date Settings -->
+      <div class="publish-section-title">Publish Date</div>
+      <div class="schedule-options">
+        <label class="radio-option">
+          <input type="radio" name="page-schedule" value="immediately" checked onchange="handleScheduleChange(this.value)">
+          <span>● Publish immediately</span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="page-schedule" value="later" onchange="handleScheduleChange(this.value)">
+          <span>○ Schedule for later</span>
+        </label>
+      </div>
+      <div id="schedule-picker-wrapper" class="schedule-picker-wrapper">
+        <input type="datetime-local" id="page-schedule-time" class="alima-input" style="height: 36px; font-size: 0.85rem; padding: 0 10px; color: var(--text-main); background: var(--bg-surface); border: 1px solid var(--border-color-light);">
+      </div>
+
+      <!-- URL Preview / Slug -->
+      <div class="publish-section-title">Page Link / URL Slug</div>
+      <div style="font-family: monospace; font-size: 0.75rem; margin-bottom: 8px; color: var(--text-muted);" id="panel-url-preview">
+        yourname.alima.site/about
+      </div>
+
+      <!-- Footer Actions -->
+      <div class="publish-panel-footer">
+        <button id="unpublish-btn" class="alima-btn btn-ghost btn-sm" style="border: 1px solid var(--border-color-light); color: var(--color-error); display: none;" onclick="unpublishPage()">Switch to Draft</button>
+        <button id="confirm-publish-btn" class="alima-btn btn-primary btn-sm" onclick="publishPageAction()">Publish</button>
+      </div>
+    </div>
+
+    <!-- Success Celebration Slide-up Card -->
+    <div id="success-publish-card" class="success-slide-up-card">
+      <div class="success-card-header">
+        <h3>🎉 Your page is live!</h3>
+        <button class="alima-btn btn-ghost btn-sm" style="padding: 0; border: none; font-size: 1.25rem; cursor: pointer; background: transparent; color: var(--text-muted);" onclick="closeSuccessCard()">&times;</button>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;" id="success-card-message">
+        Your website page is now live and ready to view.
+      </p>
+      <div class="url-display-box">
+        <span id="success-url-text" style="word-break: break-all; margin-right: 8px;">subdomain.alima.site/about</span>
+        <button class="alima-btn btn-ghost btn-sm" style="border: 1px solid var(--border-color-light); font-size: 0.75rem; white-space: nowrap; padding: 4px 8px; background: var(--bg-card);" onclick="copySuccessLink()">Copy Link</button>
+      </div>
+      <div class="success-actions">
+        <a id="success-whatsapp-share" href="#" target="_blank" class="alima-btn btn-outline btn-sm" style="display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; border: 1.5px solid #25d366; color: #25d366; font-weight: 600; background: transparent;">
+          💬 Share on WhatsApp
+        </a>
+        <a id="success-view-site-btn" href="#" target="_blank" class="alima-btn btn-primary btn-sm" style="text-decoration: none; text-align: center; font-weight: 600;">
+          View site →
+        </a>
+      </div>
+    </div>
 
     <!-- Split Workspace -->
     <div class="builder-workspace">
@@ -800,6 +1082,9 @@
   <!-- Hidden file selector upload helper -->
   <input type="file" id="block-image-file-selector" style="display: none;" accept="image/*">
 
+  <!-- Confetti script -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
   <!-- Shared JS Utilities -->
   <script src="shared.js"></script>
 
@@ -818,6 +1103,15 @@
     let selectedBlockIndex = null;
     let websitePlugins = {};
     let siteName = "";
+    let websiteSubdomain = "";
+    let websiteThemeName = "";
+
+    // WordPress Publish State variables
+    let activePageStatus = "draft";
+    let activePageVisibility = "public";
+    let activePagePassword = "";
+    let activePagePublishDate = "immediately";
+    let activePageScheduleDateTime = "";
 
     // History state stacks (maximum 20 snapshots)
     let historyState = [];
@@ -868,6 +1162,8 @@
           siteName = web.name || "My Website";
           document.getElementById('toolbar-website-name').value = siteName;
           websitePlugins = web.plugins || {};
+          websiteSubdomain = web.subdomain || "";
+          websiteThemeName = (web.theme && web.theme.name) || "";
         }
       } catch (err) {
         console.error("Failed to query website settings:", err);
@@ -1887,6 +2183,13 @@
       document.getElementById('page-slug-field').value = activePageSlug;
       document.getElementById('page-seo-desc-field').value = activePageSeo;
       document.getElementById('page-featured-img-field').value = activePageFeatured;
+
+      activePageStatus = page.status || 'draft';
+      activePageVisibility = page.visibility || 'public';
+      activePagePassword = page.password || '';
+      activePagePublishDate = page.scheduledAt ? 'later' : 'immediately';
+      activePageScheduleDateTime = page.scheduledAt || '';
+      updatePublishButtonUI();
     }
 
     // TAB 2: Pages managers CRUD
@@ -2304,8 +2607,341 @@
       if (e.key === 'Escape') {
         closePagePreviewOverlay();
         closeThemePreviewModal();
+        togglePublishPanel(false);
+        closeSuccessCard();
       }
     });
+
+    // WordPress-style publishing scripts
+    function updatePublishButtonUI() {
+      const btn = document.getElementById('publish-btn');
+      if (!btn) return;
+      if (activePageStatus === 'published' || activePageStatus === 'scheduled') {
+        btn.textContent = activePageStatus === 'published' ? 'Published ✓' : 'Scheduled ✓';
+        btn.style.background = 'var(--color-success)';
+        btn.style.borderColor = 'var(--color-success)';
+        btn.style.color = '#ffffff';
+      } else {
+        btn.textContent = 'Publish';
+        btn.style.background = 'var(--gradient-primary)';
+        btn.style.borderColor = 'transparent';
+        btn.style.color = '#ffffff';
+      }
+    }
+    window.updatePublishButtonUI = updatePublishButtonUI;
+
+    function handleVisibilityChange(val) {
+      activePageVisibility = val;
+      const pwWrapper = document.getElementById('password-input-wrapper');
+      if (pwWrapper) {
+        pwWrapper.style.display = val === 'password' ? 'block' : 'none';
+      }
+    }
+    window.handleVisibilityChange = handleVisibilityChange;
+
+    function handleScheduleChange(val) {
+      activePagePublishDate = val;
+      const timeWrapper = document.getElementById('schedule-picker-wrapper');
+      if (timeWrapper) {
+        timeWrapper.style.display = val === 'later' ? 'block' : 'none';
+      }
+    }
+    window.handleScheduleChange = handleScheduleChange;
+
+    function updatePublishChecklist() {
+      const chkTitle = document.getElementById('chk-title');
+      const hasTitle = activePageTitle && activePageTitle.trim().length > 0;
+      if (chkTitle) {
+        if (hasTitle) {
+          chkTitle.className = 'checklist-item valid';
+          chkTitle.innerHTML = '<span class="chk-icon">✅</span> Page has a title';
+        } else {
+          chkTitle.className = 'checklist-item invalid';
+          chkTitle.innerHTML = '<span class="chk-icon">❌</span> Page title is required';
+        }
+      }
+
+      const chkBlocks = document.getElementById('chk-blocks');
+      const hasBlocks = pageBlocks && pageBlocks.length > 0;
+      if (chkBlocks) {
+        if (hasBlocks) {
+          chkBlocks.className = 'checklist-item valid';
+          chkBlocks.innerHTML = '<span class="chk-icon">✅</span> At least one block added';
+        } else {
+          chkBlocks.className = 'checklist-item invalid';
+          chkBlocks.innerHTML = '<span class="chk-icon">❌</span> Add at least one block';
+        }
+      }
+
+      const chkTheme = document.getElementById('chk-theme');
+      const hasTheme = !!websiteThemeName;
+      if (chkTheme) {
+        if (hasTheme) {
+          chkTheme.className = 'checklist-item valid';
+          chkTheme.innerHTML = `<span class="chk-icon">✅</span> Theme is set (${websiteThemeName})`;
+        } else {
+          chkTheme.className = 'checklist-item invalid';
+          chkTheme.innerHTML = '<span class="chk-icon">❌</span> Theme is not set';
+        }
+      }
+
+      const chkFeatured = document.getElementById('chk-featured');
+      const hasFeatured = !!activePageFeatured;
+      if (chkFeatured) {
+        if (hasFeatured) {
+          chkFeatured.className = 'checklist-item valid';
+          chkFeatured.innerHTML = '<span class="chk-icon">✅</span> Featured image set';
+        } else {
+          chkFeatured.className = 'checklist-item warning';
+          chkFeatured.innerHTML = '<span class="chk-icon">⚠️</span> No featured image (optional)';
+        }
+      }
+
+      const confirmBtn = document.getElementById('confirm-publish-btn');
+      if (confirmBtn) {
+        confirmBtn.disabled = !(hasTitle && hasBlocks && hasTheme);
+      }
+    }
+    window.updatePublishChecklist = updatePublishChecklist;
+
+    function populatePublishPanelDetails() {
+      const radios = document.getElementsByName('page-visibility');
+      radios.forEach(r => {
+        r.checked = r.value === activePageVisibility;
+      });
+      handleVisibilityChange(activePageVisibility);
+      
+      const pwInput = document.getElementById('page-publish-password');
+      if (pwInput) pwInput.value = activePagePassword;
+
+      const scheds = document.getElementsByName('page-schedule');
+      scheds.forEach(s => {
+        s.checked = s.value === activePagePublishDate;
+      });
+      handleScheduleChange(activePagePublishDate);
+
+      const timeInput = document.getElementById('page-schedule-time');
+      if (timeInput) {
+        if (activePageScheduleDateTime) {
+          const dt = new Date(activePageScheduleDateTime);
+          const localStr = new Date(dt.getTime() - dt.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+          timeInput.value = localStr;
+        } else {
+          timeInput.value = "";
+        }
+      }
+
+      const unpub = document.getElementById('unpublish-btn');
+      if (unpub) {
+        unpub.style.display = (activePageStatus === 'published' || activePageStatus === 'scheduled') ? 'block' : 'none';
+      }
+
+      const confirmBtn = document.getElementById('confirm-publish-btn');
+      if (confirmBtn) {
+        confirmBtn.textContent = (activePageStatus === 'published' || activePageStatus === 'scheduled') ? 'Update' : 'Publish';
+      }
+
+      const urlPreview = document.getElementById('panel-url-preview');
+      if (urlPreview) {
+        urlPreview.textContent = `${websiteSubdomain || 'yourname'}.alima.site/${activePageSlug === 'home' ? '' : activePageSlug}`;
+      }
+    }
+
+    function togglePublishPanel(show) {
+      const panel = document.getElementById('publish-panel');
+      if (!panel) return;
+      
+      const isVisible = panel.style.display === 'flex';
+      const targetShow = (show !== undefined) ? show : !isVisible;
+
+      if (targetShow) {
+        closeSuccessCard();
+        populatePublishPanelDetails();
+        updatePublishChecklist();
+        panel.style.display = 'flex';
+      } else {
+        panel.style.display = 'none';
+      }
+    }
+    window.togglePublishPanel = togglePublishPanel;
+
+    function closeSuccessCard() {
+      const successCard = document.getElementById('success-publish-card');
+      if (successCard) successCard.style.display = 'none';
+    }
+    window.closeSuccessCard = closeSuccessCard;
+
+    function copySuccessLink() {
+      const pageUrl = `${window.location.origin}/frontend/site.html?u=${websiteSubdomain}${activePageSlug !== 'home' ? '&p=' + activePageSlug : ''}`;
+      navigator.clipboard.writeText(pageUrl).then(() => {
+        AlimaToast.show("Link Copied", "Copied page URL to clipboard.", "success");
+      }).catch(err => {
+        console.error("Clipboard copy failed:", err);
+      });
+    }
+    window.copySuccessLink = copySuccessLink;
+
+    async function publishPageAction() {
+      if (!pageDocId) return;
+
+      const confirmBtn = document.getElementById('confirm-publish-btn');
+      const originalText = confirmBtn.textContent;
+      confirmBtn.disabled = true;
+      confirmBtn.innerHTML = '<span class="spinner"></span> Publishing...';
+
+      const mainBtn = document.getElementById('publish-btn');
+      if (mainBtn) {
+        mainBtn.disabled = true;
+        mainBtn.innerHTML = '<span class="spinner"></span> Publishing...';
+      }
+
+      try {
+        const visRadios = document.getElementsByName('page-visibility');
+        let selectedVis = 'public';
+        visRadios.forEach(r => { if (r.checked) selectedVis = r.value; });
+
+        const pwInput = document.getElementById('page-publish-password');
+        const passwordVal = pwInput ? pwInput.value.trim() : '';
+
+        const schedRadios = document.getElementsByName('page-schedule');
+        let selectedSched = 'immediately';
+        schedRadios.forEach(r => { if (r.checked) selectedSched = r.value; });
+
+        const timeInput = document.getElementById('page-schedule-time');
+        const timeVal = timeInput ? timeInput.value : '';
+
+        let targetStatus = 'published';
+        let scheduledAtStr = null;
+
+        if (selectedSched === 'later' && timeVal) {
+          const schedDate = new Date(timeVal);
+          if (schedDate > new Date()) {
+            targetStatus = 'scheduled';
+            scheduledAtStr = schedDate.toISOString();
+          }
+        }
+
+        // Update Firestore
+        const ref = doc(db, "pages", pageDocId);
+        await updateDoc(ref, {
+          title: activePageTitle.trim(),
+          slug: activePageSlug.trim(),
+          blocks: pageBlocks,
+          status: targetStatus,
+          visibility: selectedVis,
+          password: selectedVis === 'password' ? passwordVal : '',
+          scheduledAt: scheduledAtStr,
+          updatedAt: new Date().toISOString()
+        });
+
+        // Also update website status in websites collection
+        const webRef = doc(db, "websites", websiteId);
+        await updateDoc(webRef, { status: "published" });
+
+        activePageStatus = targetStatus;
+        activePageVisibility = selectedVis;
+        activePagePassword = selectedVis === 'password' ? passwordVal : '';
+        activePagePublishDate = selectedSched;
+        activePageScheduleDateTime = scheduledAtStr;
+
+        const indicator = document.getElementById('auto-save-status');
+        if (indicator) indicator.textContent = 'Saved just now';
+
+        togglePublishPanel(false);
+        updatePublishButtonUI();
+
+        if (typeof confetti === 'function') {
+          confetti({
+            particleCount: 150,
+            spread: 80,
+            origin: { y: 0.6 }
+          });
+        }
+
+        const successCard = document.getElementById('success-publish-card');
+        const successMsg = document.getElementById('success-card-message');
+        const successUrl = document.getElementById('success-url-text');
+        const successViewBtn = document.getElementById('success-view-site-btn');
+        const successWhatsApp = document.getElementById('success-whatsapp-share');
+
+        const pageUrl = `${window.location.origin}/frontend/site.html?u=${websiteSubdomain}${activePageSlug !== 'home' ? '&p=' + activePageSlug : ''}`;
+
+        if (successMsg) {
+          successMsg.textContent = targetStatus === 'scheduled' 
+            ? `Your page is scheduled to go live on ${new Date(scheduledAtStr).toLocaleString()}.`
+            : "Your page content is live! Feel free to share it with the world.";
+        }
+
+        if (successUrl) successUrl.textContent = `${websiteSubdomain}.alima.site${activePageSlug !== 'home' ? '/' + activePageSlug : ''}`;
+        
+        if (successViewBtn) {
+          successViewBtn.href = pageUrl;
+        }
+
+        if (successWhatsApp) {
+          const shareText = `Check out my new website page: ${pageUrl}`;
+          successWhatsApp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
+        }
+
+        if (successCard) {
+          successCard.style.display = 'flex';
+        }
+
+        AlimaToast.show(
+          targetStatus === 'scheduled' ? "⏰ Page Scheduled!" : "🎉 Your website is live!", 
+          targetStatus === 'scheduled' ? `Scheduled for ${new Date(scheduledAtStr).toLocaleString()}` : "Your page is live on the internet.", 
+          "success"
+        );
+
+        await fetchPagesList();
+      } catch (err) {
+        console.error(err);
+        AlimaToast.show("Publish Failed", "Could not publish page.", "error");
+      } finally {
+        if (confirmBtn) {
+          confirmBtn.disabled = false;
+          confirmBtn.textContent = originalText;
+        }
+        if (mainBtn) {
+          mainBtn.disabled = false;
+        }
+        updatePublishButtonUI();
+      }
+    }
+    window.publishPageAction = publishPageAction;
+
+    async function unpublishPage() {
+      if (!pageDocId) return;
+
+      const unpubBtn = document.getElementById('unpublish-btn');
+      const originalText = unpubBtn.textContent;
+      unpubBtn.disabled = true;
+      unpubBtn.textContent = 'Unpublishing...';
+
+      try {
+        const ref = doc(db, "pages", pageDocId);
+        await updateDoc(ref, {
+          status: 'draft',
+          updatedAt: new Date().toISOString()
+        });
+
+        activePageStatus = 'draft';
+        updatePublishButtonUI();
+        togglePublishPanel(false);
+
+        AlimaToast.show("Reverted to Draft", "This page is now hidden from public view.", "success");
+        await fetchPagesList();
+      } catch (err) {
+        console.error(err);
+        AlimaToast.show("Unpublish Failed", "Could not revert page to draft.", "error");
+      } finally {
+        if (unpubBtn) {
+          unpubBtn.disabled = false;
+          unpubBtn.textContent = originalText;
+        }
+      }
+    }
+    window.unpublishPage = unpublishPage;
 
     // Export selectors & triggers
     window.selectBlock = selectBlock;
