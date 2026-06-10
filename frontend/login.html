@@ -335,7 +335,9 @@
     .success-overlay-v2 {
       position: absolute;
       inset: 0;
-      background: #0a0a1a;
+      background: var(--bg-card);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
       z-index: 100;
       display: flex;
       align-items: center;
@@ -846,9 +848,11 @@
     // Stub for window particle reinitialization
     window.initCanvasParticles = () => {};
 
+    let isAuthenticating = false;
+
     // 2. Auth state observer
     onAuthStateChanged(auth, (user) => {
-      if (user) {
+      if (user && !isAuthenticating) {
         window.location.href = "dashboard.html";
       }
     });
@@ -928,9 +932,11 @@
           btn.disabled = true;
           btn.innerHTML = `<span class="shimmer-skeleton" style="width: 24px; height: 24px; display: inline-block; border-radius: 50%;"></span>`;
           
+          isAuthenticating = true;
           await signInWithEmailAndPassword(auth, email, pwd);
           triggerSuccessState(card, btn);
         } catch (err) {
+          isAuthenticating = false;
           btn.disabled = false;
           btn.textContent = initialText;
           shakeCard(card);
@@ -956,6 +962,7 @@
           btn.disabled = true;
           btn.innerHTML = `<span class="shimmer-skeleton" style="width: 24px; height: 24px; display: inline-block; border-radius: 50%;"></span>`;
 
+          isAuthenticating = true;
           const userCreds = await createUserWithEmailAndPassword(auth, email, pwd);
           const user = userCreds.user;
           await updateProfile(user, { displayName: name });
@@ -973,6 +980,7 @@
           
           triggerSuccessState(card, btn);
         } catch (err) {
+          isAuthenticating = false;
           btn.disabled = false;
           btn.textContent = initialText;
           shakeCard(card);
@@ -984,6 +992,7 @@
     async function handleGoogleSignIn() {
       const card = document.getElementById('auth-card');
       try {
+        isAuthenticating = true;
         const result = await signInWithPopup(auth, googleProvider);
         const user = result.user;
         
@@ -998,6 +1007,7 @@
         
         triggerSuccessState(card, document.querySelector('#login-form button[type="submit"]'));
       } catch (err) {
+        isAuthenticating = false;
         shakeCard(card);
         AlimaToast.show("Google Sign In Failed", "Could not complete authentication with Google.", "error");
       }
