@@ -299,6 +299,12 @@ h1, h2, h3, h4, h5, h6 {
   animation: popUp var(--transition-fast) forwards;
 }
 
+/* Float correctly when sidebar is collapsed */
+.alima-sidebar.collapsed .profile-dropdown {
+  right: auto;
+  width: 216px;
+}
+
 @keyframes popUp {
   from { transform: translateY(10px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
