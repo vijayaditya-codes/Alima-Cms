@@ -301,8 +301,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Float correctly when sidebar is collapsed */
 .alima-sidebar.collapsed .profile-dropdown {
-  right: auto;
-  width: 216px;
+  right: auto !important;
+  width: 216px !important;
 }
 
 @keyframes popUp {
