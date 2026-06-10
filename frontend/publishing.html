@@ -17,138 +17,339 @@
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alima CMS - Publishing Hub</title>
+  <title>Alima CMS - Website Preview & Publishing</title>
+  
   <!-- Google Fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
   
   <!-- Shared Design System CSS -->
   <link rel="stylesheet" href="design-system.css">
   
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
   <style>
     body {
       background-color: var(--bg-main);
       color: var(--text-main);
       transition: background-color var(--transition-normal), color var(--transition-normal);
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* Status Pill overrides */
-    .alima-badge.badge-published {
-      background: rgba(16, 185, 129, 0.1);
-      color: var(--color-success);
-    }
-    .alima-badge.badge-published::before {
-      background-color: var(--color-success);
-    }
-
-    .alima-badge.badge-scheduled {
-      background: rgba(6, 182, 212, 0.1);
-      color: var(--color-accent);
-    }
-    .alima-badge.badge-scheduled::before {
-      background-color: var(--color-accent);
+    .publishing-layout {
+      display: grid;
+      grid-template-columns: 60% 40%;
+      gap: 32px;
+      margin-top: 24px;
+      padding-bottom: 60px;
     }
 
-    /* Release table formatting */
-    .publishing-table-card {
+    @media (max-width: 1100px) {
+      .publishing-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* LEFT COLUMN: PREVIEW PANEL */
+    .preview-column {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .preview-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       background: var(--bg-card);
       border: 1px solid var(--border-color-light);
-      border-radius: var(--radius-card);
-      padding: 24px;
-      box-shadow: var(--shadow-standard);
-      overflow: hidden;
-    }
-
-    .table-container {
-      width: 100%;
-      overflow-x: auto;
-      margin-top: 16px;
       border-radius: var(--radius-standard);
-      border: 1px solid var(--border-color-light);
+      padding: 12px 20px;
+      box-shadow: var(--shadow-standard);
+      flex-wrap: wrap;
+      gap: 12px;
     }
 
-    .publishing-table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 0.9rem;
+    .viewport-controls {
+      display: flex;
+      background: var(--bg-surface);
+      padding: 3px;
+      border-radius: 8px;
+      gap: 2px;
     }
 
-    .publishing-table th {
-      background-color: var(--bg-surface);
-      color: var(--text-main);
+    .viewport-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
       font-family: var(--font-heading);
+      font-size: 0.75rem;
       font-weight: 700;
-      padding: 14px 18px;
-      border-bottom: 1px solid var(--border-color-light);
-      white-space: nowrap;
-    }
-
-    .publishing-table td {
-      padding: 14px 18px;
-      border-bottom: 1px solid var(--border-color-light);
-      color: var(--text-main);
-      vertical-align: middle;
-    }
-
-    .publishing-table tr:last-child td {
-      border-bottom: none;
-    }
-
-    .publishing-table tr:hover td {
-      background-color: rgba(124, 58, 237, 0.02);
-    }
-
-    /* Schedule Config Form Row */
-    .schedule-control-group {
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
       display: flex;
       align-items: center;
       gap: 6px;
-      width: auto;
+      transition: all var(--transition-fast);
     }
 
-    .schedule-input {
-      font-family: var(--font-body);
-      font-size: 0.8rem;
-      border: 1px solid var(--border-color-light);
-      border-radius: 6px;
-      padding: 6px 10px;
-      outline: none;
-    }
-
-    .schedule-input:focus {
-      border-color: var(--color-primary);
-    }
-
-    /* Bulk actions menu bar */
-    .bulk-bar {
+    .viewport-btn.active {
       background: var(--bg-card);
+      color: var(--color-primary);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .iframe-wrapper {
+      background: #1f2937; /* Mock desktop browser frame dark accent */
       border: 1px solid var(--border-color-light);
       border-radius: var(--radius-card);
-      padding: 16px 24px;
-      display: none; /* toggled based on checkbox selection counts */
+      overflow: hidden;
+      height: 540px;
+      display: flex;
+      justify-content: center;
       align-items: center;
-      justify-content: space-between;
-      box-shadow: var(--shadow-hover);
-      margin-bottom: 20px;
-      border-left: 4px solid var(--color-primary);
-      -webkit-animation: slideDown 0.2s ease;
-      animation: slideDown 0.2s ease;
+      position: relative;
+      box-shadow: var(--shadow-standard);
     }
 
-    @-webkit-keyframes slideDown {
-      from { transform: translateY(-10px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+    .preview-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #ffffff;
+      transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-@keyframes slideDown {
-      from { transform: translateY(-10px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+    .preview-iframe.tablet-mode {
+      width: 768px;
     }
 
-    .bulk-count {
+    .preview-iframe.mobile-mode {
+      width: 375px;
+    }
+
+    /* STATUS CARD */
+    .status-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-color-light);
+      border-radius: var(--radius-card);
+      padding: 24px;
+      box-shadow: var(--shadow-standard);
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 500px) {
+      .status-card {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .status-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .status-label {
+      font-size: 0.75rem;
       font-weight: 700;
-      font-size: 0.95rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .status-value {
+      font-weight: 700;
+      font-size: 1.05rem;
       color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .subdomain-link-row {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-surface);
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-top: 4px;
+      border: 1px solid var(--border-color-light);
+    }
+
+    /* RIGHT COLUMN: PUBLISHING CONTROLS */
+    .controls-column {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .control-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-color-light);
+      border-radius: var(--radius-card);
+      padding: 24px;
+      box-shadow: var(--shadow-standard);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card-title {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text-main);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Pre-publish Checklist */
+    .checklist-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .checklist-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
+
+    .checklist-badge.success {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--color-success);
+    }
+
+    .checklist-badge.warn {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--color-warning);
+    }
+
+    /* Success Card after Publish */
+    .success-alert-card {
+      background: rgba(16, 185, 129, 0.04);
+      border: 1.5px solid var(--color-success);
+      border-radius: var(--radius-card);
+      padding: 24px;
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+      -webkit-animation: zoomIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      animation: zoomIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @-webkit-keyframes zoomIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .success-icon {
+      font-size: 2.2rem;
+      text-align: center;
+    }
+
+    .success-title {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--color-success);
+      text-align: center;
+    }
+
+    .share-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    /* Pages status row */
+    .pages-status-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 220px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .page-status-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color-light);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+    }
+
+    .page-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .page-title {
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .page-slug {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .page-actions-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Custom Domain instructions card */
+    .domain-instructions {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color-light);
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 0.8rem;
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .domain-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-left: 14px;
+      color: var(--text-muted);
     }
   </style>
 </head>
@@ -248,94 +449,148 @@
       <!-- Top header bar -->
       <header style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color-light); padding-bottom: 16px; flex-wrap: wrap; gap: 16px;">
         <div>
-          <h2 style="font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px;">Publishing Release Control</h2>
-          <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">Launch layout structures to the web instantly or configure scheduled time pipelines.</p>
+          <h2 style="font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px;">Publishing Center</h2>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">Preview your campus layout in real-time and toggle website launch settings.</p>
         </div>
         
-        <!-- Site selectors -->
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <span style="font-size: 0.9rem; font-weight: 700; color: var(--text-muted);">Website:</span>
-          <select id="site-selector" class="alima-input" style="width: 220px; cursor: pointer; height: 44px; padding: 0 16px;" onchange="loadSitePages(this.value)">
-            <option value="">Loading sites...</option>
-          </select>
+        <!-- Active Website Selector -->
+        <div class="alima-input-group" style="width: auto; flex-direction: row; align-items: center; gap: 12px; margin-bottom: 0;">
+          <label class="alima-input-label" style="white-space: nowrap; margin-bottom: 0; font-weight: 700;">Active Website:</label>
+          <select id="site-selector" class="alima-input" style="width: 220px; padding: 8px 12px; font-size: 0.85rem;" onchange="loadSitePublishingData(this.value)"></select>
         </div>
       </header>
 
-      <!-- Bulk actions control bar -->
-      <div class="bulk-bar" id="bulk-actions-bar">
-        <span class="bulk-count" id="bulk-selected-count">0 items selected</span>
-        <div style="display: flex; gap: 8px;">
-          <button class="alima-btn btn-primary btn-sm" onclick="triggerBulkAction('publish')">Bulk Publish</button>
-          <button class="alima-btn btn-outline btn-sm" onclick="triggerBulkAction('unpublish')">Revert to Draft</button>
-        </div>
-      </div>
-
-      <!-- Release Pages Table Card -->
-      <section style="display: flex; flex-direction: column; gap: 24px;">
+      <!-- Publishing layout columns -->
+      <div class="publishing-layout">
         
-        <div class="publishing-table-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; border-bottom: 1px solid var(--border-color-light); padding-bottom: 16px;">
-            <h3 style="font-size: 1.25rem; font-weight: 800;">Site Pages Index</h3>
-            <button class="alima-btn btn-primary btn-sm" onclick="openCreatePageModal()">+ Add New Page</button>
+        <!-- LEFT COLUMN: PREVIEW PANEL -->
+        <div class="preview-column">
+          <div class="preview-bar">
+            <!-- Sizing triggers -->
+            <div class="viewport-controls">
+              <button class="viewport-btn active" id="vp-desktop" onclick="switchPreviewViewport('desktop')">🖥 Desktop</button>
+              <button class="viewport-btn" id="vp-tablet" onclick="switchPreviewViewport('tablet')">📱 Tablet</button>
+              <button class="viewport-btn" id="vp-mobile" onclick="switchPreviewViewport('mobile')">📱 Mobile</button>
+            </div>
+
+            <div style="display:flex; gap:8px;">
+              <button class="alima-btn btn-ghost btn-sm" style="border: 1.5px solid var(--border-color-light);" onclick="refreshPreviewIframe()">🔄 Refresh</button>
+              <a href="#" id="open-tab-btn" class="alima-btn btn-ghost btn-sm" style="border: 1.5px solid var(--border-color-light); text-decoration:none;" target="_blank">🔗 Open tab</a>
+            </div>
           </div>
 
-          <div class="table-container">
-            <table class="publishing-table">
-              <thead>
-                <tr>
-                  <th style="width: 40px; text-align: center;">
-                    <input type="checkbox" id="select-all-pages" style="accent-color: var(--color-primary); cursor: pointer;" onchange="toggleSelectAll(this.checked)">
-                  </th>
-                  <th>Page Name</th>
-                  <th>Slug URL Path</th>
-                  <th>Current Status</th>
-                  <th>Publication Scheduler</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="pages-table-body">
-                <tr>
-                  <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 40px;">Select a website to populate layout page documents.</td>
-                </tr>
-              </tbody>
-            </table>
+          <!-- Iframe wrapper -->
+          <div class="iframe-wrapper">
+            <iframe id="preview-frame" class="preview-iframe" src=""></iframe>
+          </div>
+
+          <!-- Status metadata card -->
+          <div class="status-card">
+            <div class="status-item">
+              <span class="status-label">Launch Status</span>
+              <span class="status-value" id="status-badge-row">
+                <!-- Badges injected -->
+              </span>
+            </div>
+
+            <div class="status-item">
+              <span class="status-label">Last Published</span>
+              <span class="status-value" id="last-published-date">-</span>
+            </div>
+
+            <div class="status-item" style="grid-column:1/-1;">
+              <span class="status-label">Website URL Address</span>
+              <div class="subdomain-link-row">
+                <span style="font-family:monospace; font-weight:700; color:var(--text-main); flex-grow:1; word-break:break-all;" id="subdomain-text">yourname.alima.site</span>
+                <button class="alima-btn btn-ghost btn-sm" style="border:1.5px solid var(--border-color-light); padding:4px 8px; font-size:0.75rem;" onclick="copySubdomainAddress()">Copy URL</button>
+              </div>
+            </div>
           </div>
         </div>
 
-      </section>
+        <!-- RIGHT COLUMN: CONTROLS PANEL -->
+        <div class="controls-column">
+          
+          <!-- SUCCESS ALERT CARD -->
+          <div class="success-alert-card" id="publish-success-card">
+            <div class="success-icon">🎉</div>
+            <div class="success-title">Your website is live!</div>
+            <p style="font-size:0.825rem; color:var(--text-muted); text-align:center; line-height:1.4;">Branding custom styles and content pages are now public on the web.</p>
+            <div class="subdomain-link-row" style="margin-top:0; background:var(--bg-card);">
+              <a href="#" id="success-url-link" style="font-family:monospace; font-weight:700; color:var(--color-primary); text-decoration:none; flex-grow:1;" target="_blank">yourname.alima.site</a>
+            </div>
+            <div class="share-row">
+              <button class="alima-btn btn-ghost btn-sm" style="flex:1; border:1.5px solid var(--border-color-light);" onclick="copySuccessLink()">Copy Link</button>
+              <button class="alima-btn btn-primary btn-sm" style="flex:1.2; background:linear-gradient(135deg, #25D366 0%, #128C7E 100%); border:none;" onclick="shareOnWhatsApp()">WhatsApp Share</button>
+            </div>
+          </div>
 
+          <!-- SECTION 1: PUBLISH NOW -->
+          <div class="control-card" id="publish-now-card">
+            <div class="card-title">Ready to go live?</div>
+            
+            <div class="checklist-list" id="publish-checklist">
+              <!-- Checklist injected dynamically -->
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:10px; margin-top:8px;">
+              <button class="alima-btn btn-primary" id="publish-btn-trigger" style="width:100%; font-weight:700; background:var(--gradient-primary); border:none;" onclick="triggerPublishAction()">Publish Website</button>
+              <button class="alima-btn btn-ghost" id="unpublish-btn-trigger" style="width:100%; font-weight:700; border:1.5px solid var(--color-error); color:var(--color-error); display:none;" onclick="triggerUnpublishAction()">Unpublish Website</button>
+            </div>
+          </div>
+
+          <!-- SECTION 2: SCHEDULE PUBLISH -->
+          <div class="control-card">
+            <div class="card-title">Schedule for later</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+              <div class="alima-input-group" style="margin-bottom:0;">
+                <input type="date" id="schedule-date-picker" class="alima-input" style="height:36px; padding:0 8px; font-size:0.8rem;">
+              </div>
+              <div class="alima-input-group" style="margin-bottom:0;">
+                <input type="time" id="schedule-time-picker" class="alima-input" style="height:36px; padding:0 8px; font-size:0.8rem;">
+              </div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px;" id="schedule-info-block">
+              <!-- Schedule details if scheduled -->
+            </div>
+            <button class="alima-btn btn-ghost btn-sm" style="width:100%; font-weight:700; border:1.5px solid var(--border-color-light);" onclick="triggerScheduleAction()">Schedule Launch</button>
+          </div>
+
+          <!-- SECTION 3: PAGES STATUS -->
+          <div class="control-card">
+            <div class="card-title">Pages Status</div>
+            <div class="pages-status-list" id="pages-status-container">
+              <!-- Loaded dynamically -->
+            </div>
+          </div>
+
+          <!-- SECTION 4: CUSTOM DOMAIN -->
+          <div class="control-card">
+            <div class="card-title">Connect your own domain</div>
+            <div class="alima-input-group" style="margin-bottom:0; display:flex; gap:8px; flex-direction:row;">
+              <input type="text" id="domain-input-field" class="alima-input" style="height:36px; font-size:0.85rem; padding:0 12px; flex-grow:1;" placeholder="www.yourdomain.com">
+              <button class="alima-btn btn-primary btn-sm" style="height:36px; padding:0 16px; font-size:0.85rem; white-space:nowrap;" onclick="triggerConnectDomain()">Connect</button>
+            </div>
+            
+            <div class="domain-instructions" id="domain-dns-instructions">
+              <div style="display:flex; justify-content:space-between; align-items:center; font-weight:700; border-bottom:1px solid var(--border-color-light); padding-bottom:6px; margin-bottom:6px;">
+                <span>Domain Configuration</span>
+                <span id="domain-status-badge">Pending</span>
+              </div>
+              <p style="line-height:1.4; color:var(--text-main);">Add the following records at your registrar DNS panel:</p>
+              <ol class="domain-steps">
+                <li>Go to your domain provider (e.g. GoDaddy, Namecheap)</li>
+                <li>Add CNAME record mapping: <code>www</code> ➔ <code>alima-cms.vercel.app</code></li>
+                <li>Wait 24-48 hours for global propagation</li>
+              </ol>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
     </main>
 
-  </div>
-
-  <!-- Create Page Modal -->
-  <div class="alima-modal-overlay" id="create-page-modal">
-    <div class="alima-modal">
-      <div class="modal-header">
-        <h3 style="font-size: 1.4rem; font-weight: 700;">Add Site Page</h3>
-        <button class="modal-close" onclick="closeCreatePageModal()">&times;</button>
-      </div>
-      <form id="create-page-form" onsubmit="submitNewPage(event)">
-        <div style="display: flex; flex-direction: column; gap: 16px;">
-          
-          <div class="alima-input-group">
-            <label class="alima-input-label">Page Title</label>
-            <input type="text" id="new-page-title" class="alima-input" placeholder="e.g. Courses & Class Syllabi" required>
-          </div>
-
-          <div class="alima-input-group">
-            <label class="alima-input-label">URL Slug Prefix</label>
-            <input type="text" id="new-page-slug" class="alima-input" placeholder="e.g. syllabi" required>
-          </div>
-
-        </div>
-        
-        <div class="modal-footer">
-          <button type="button" class="alima-btn btn-ghost" onclick="closeCreatePageModal()">Cancel</button>
-          <button type="submit" class="alima-btn btn-primary">Create Page</button>
-        </div>
-      </form>
-    </div>
   </div>
 
   <!-- Shared JS Utilities -->
@@ -344,16 +599,16 @@
   <!-- Firebase configuration import -->
   <script type="module" src="firebase.js"></script>
 
+  <!-- Main script logic module -->
   <script type="module">
     import { auth, db } from "./firebase.js";
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-    import { collection, query, where, getDocs, addDoc, updateDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+    import { collection, query, where, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-    let websites = [];
-    let selectedWebsiteId = "";
-    
-    let pages = [];
-    let selectedPageIds = [];
+    let userWebsites = [];
+    let selectedWebsiteId = null;
+    let websitePages = [];
+    let activeWebsite = null;
 
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
@@ -361,364 +616,562 @@
         return;
       }
 
+      // Sidebar credentials loading
       const name = user.displayName || user.email;
       document.getElementById('sidebar-username').textContent = name;
       document.getElementById('sidebar-avatar').textContent = name.slice(0, 2).toUpperCase();
 
-      // Load Websites List
-      await loadWebsites(user.uid);
+      // Retrieve websites lists
+      await loadUserWebsites(user.uid);
     });
 
-    // 1. Websites fetch
-    async function loadWebsites(uid) {
+    // Load user websites selector
+    async function loadUserWebsites(uid) {
       try {
         const q = query(collection(db, "websites"), where("ownerUid", "==", uid));
         const snap = await getDocs(q);
         const selector = document.getElementById('site-selector');
         selector.innerHTML = '';
-        websites = [];
+        userWebsites = [];
 
         if (snap.empty) {
-          selector.innerHTML = `<option value="">No Sites Found</option>`;
-          document.getElementById('pages-table-body').innerHTML = `
-            <tr>
-              <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 40px;">
-                No campus sites created yet. Initialize a site on the dashboard to trigger page releases.
-              </td>
-            </tr>
-          `;
+          selector.innerHTML = `<option value="">No sites found</option>`;
+          AlimaToast.show("No Websites", "Create a digital site layout on dashboard page first.", "warning");
           return;
         }
 
         snap.forEach(d => {
-          websites.push({ id: d.id, ...d.data() });
+          userWebsites.push({ id: d.id, ...d.data() });
           const opt = document.createElement('option');
           opt.value = d.id;
           opt.textContent = `${d.data().subdomain}.alima.site`;
           selector.appendChild(opt);
         });
 
-        selectedWebsiteId = websites[0].id;
+        // Set default selector value
+        selectedWebsiteId = userWebsites[0].id;
         selector.value = selectedWebsiteId;
 
-        await loadSitePages(selectedWebsiteId);
+        await loadSitePublishingData(selectedWebsiteId);
 
       } catch (err) {
-        console.error("Failed to load websites list:", err);
+        console.error("Failed to load user websites:", err);
       }
     }
 
-    // 2. Fetch pages for selected website
-    async function loadSitePages(webId) {
+    // Load active selector website configurations
+    async function loadSitePublishingData(webId) {
       if (!webId) return;
       selectedWebsiteId = webId;
-      selectedPageIds = [];
-      document.getElementById('select-all-pages').checked = false;
-      syncBulkActionsBar();
+      activeWebsite = userWebsites.find(w => w.id === webId);
 
+      if (!activeWebsite) return;
+
+      // Update iframe source preview
+      const previewFrame = document.getElementById('preview-frame');
+      previewFrame.src = `preview.html?websiteId=${webId}&preview=true`;
+
+      // Update open new tab anchors href
+      const openBtn = document.getElementById('open-tab-btn');
+      openBtn.href = `preview.html?websiteId=${webId}`;
+
+      // Update URL displaying text
+      const subdomainText = document.getElementById('subdomain-text');
+      const textUrl = activeWebsite.customDomain || `${activeWebsite.subdomain}.alima.site`;
+      subdomainText.textContent = textUrl;
+
+      // Load all pages belonging to selected site
+      await fetchWebsitePages(webId);
+
+      // Render website status cards
+      renderStatusPanelCard();
+
+      // Render publishing checklist
+      renderPublishingChecklist();
+
+      // Render Scheduler details
+      renderSchedulerStatus();
+
+      // Render Pages status list
+      renderPagesStatusList();
+
+      // Render Domain instructions
+      renderDomainConnectorUI();
+    }
+    window.loadSitePublishingData = loadSitePublishingData;
+
+    // Fetch site pages
+    async function fetchWebsitePages(webId) {
       try {
         const q = query(collection(db, "pages"), where("websiteId", "==", webId));
         const snap = await getDocs(q);
-        
-        pages = [];
-        const container = document.getElementById('pages-table-body');
-        container.innerHTML = '';
-
+        websitePages = [];
         snap.forEach(d => {
-          pages.push({ id: d.id, ...d.data() });
+          websitePages.push({ id: d.id, ...d.data() });
         });
-
-        if (pages.length === 0) {
-          container.innerHTML = `
-            <tr>
-              <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 40px;">
-                This website has no pages yet. Click "+ Add New Page" to draft layout records.
-              </td>
-            </tr>
-          `;
-          return;
-        }
-
-        // Sort by slug alphabetical
-        pages.sort((a,b) => (a.slug || '').localeCompare(b.slug || ''));
-
-        pages.forEach(p => {
-          const tr = document.createElement('tr');
-          tr.id = `page-${p.id}`;
-
-          const status = p.status || 'draft';
-          const badgeClass = `badge-${status}`;
-          
-          let scheduleStr = '-';
-          if (status === 'scheduled' && p.scheduledAt) {
-            const date = new Date(p.scheduledAt);
-            scheduleStr = `📅 ${date.toLocaleDateString()} ${date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
-          }
-
-          const localDateVal = p.scheduledAt ? p.scheduledAt.slice(0, 16) : "";
-
-          // Action button structures depending on status
-          let actionBtnHtml = '';
-          if (status === 'published') {
-            actionBtnHtml = `<button class="alima-btn btn-ghost btn-sm" style="color: var(--color-warning);" onclick="changePageStatus('${p.id}', 'draft')">Revert Draft</button>`;
-          } else {
-            actionBtnHtml = `<button class="alima-btn btn-primary btn-sm" onclick="changePageStatus('${p.id}', 'published')">Publish Now</button>`;
-          }
-
-          tr.innerHTML = `
-            <td style="text-align: center;">
-              <input type="checkbox" class="page-row-check" value="${p.id}" style="accent-color: var(--color-primary); cursor: pointer;" onchange="toggleSelectRow('${p.id}', this.checked)">
-            </td>
-            <td style="font-weight: 600;">${escapeHtml(p.title)}</td>
-            <td><code>/${escapeHtml(p.slug || '')}</code></td>
-            <td>
-              <span class="alima-badge ${badgeClass}">${status}</span>
-            </td>
-            <td>
-              <div class="schedule-control-group">
-                <input type="datetime-local" id="sched-input-${p.id}" class="schedule-input" value="${localDateVal}">
-                <button class="action-icon-btn" onclick="schedulePageRelease('${p.id}')" title="Apply schedule">✓</button>
-                ${status === 'scheduled' ? `<button class="action-icon-btn delete" onclick="cancelPageSchedule('${p.id}')" title="Cancel schedule">&times;</button>` : ''}
-              </div>
-              <span style="font-size:0.75rem; color:var(--text-muted); display:block; margin-top:4px;">${scheduleStr}</span>
-            </td>
-            <td>
-              <div style="display: flex; gap: 8px; align-items:center;">
-                ${actionBtnHtml}
-                <button class="action-icon-btn delete" onclick="deletePageDirect('${p.id}', '${p.title}')" title="Delete page">🗑️</button>
-              </div>
-            </td>
-          `;
-
-          container.appendChild(tr);
-        });
-
       } catch (err) {
-        console.error("Failed to load site pages:", err);
+        console.error("Failed to query website pages list:", err);
       }
     }
 
-    // 3. Status Change Direct Actions
-    async function changePageStatus(id, newStatus) {
+    // Viewports toggling
+    function switchPreviewViewport(mode) {
+      const frame = document.getElementById('preview-frame');
+      const deskBtn = document.getElementById('vp-desktop');
+      const tabBtn = document.getElementById('vp-tablet');
+      const mobBtn = document.getElementById('vp-mobile');
+
+      [deskBtn, tabBtn, mobBtn].forEach(btn => btn.classList.remove('active'));
+
+      frame.className = 'preview-iframe';
+      if (mode === 'desktop') {
+        deskBtn.classList.add('active');
+      } else if (mode === 'tablet') {
+        frame.classList.add('tablet-mode');
+        tabBtn.classList.add('active');
+      } else if (mode === 'mobile') {
+        frame.classList.add('mobile-mode');
+        mobBtn.classList.add('active');
+      }
+    }
+    window.switchPreviewViewport = switchPreviewViewport;
+
+    function refreshPreviewIframe() {
+      const frame = document.getElementById('preview-frame');
+      frame.contentWindow.location.reload();
+    }
+    window.refreshPreviewIframe = refreshPreviewIframe;
+
+    // RENDER STATUS CARD
+    function renderStatusPanelCard() {
+      const badgeContainer = document.getElementById('status-badge-row');
+      const lastPubContainer = document.getElementById('last-published-date');
+
+      badgeContainer.innerHTML = '';
+      const status = activeWebsite.status || 'draft';
+      
+      let badgeClass = 'badge-draft';
+      if (status === 'published') badgeClass = 'badge-live';
+      else if (status === 'scheduled') badgeClass = 'badge-scheduled';
+
+      badgeContainer.innerHTML = `<span class="alima-badge ${badgeClass}">${status}</span>`;
+
+      // Last published date formats
+      if (activeWebsite.publishedAt) {
+        const pubDate = new Date(activeWebsite.publishedAt);
+        lastPubContainer.textContent = pubDate.toLocaleDateString();
+      } else {
+        lastPubContainer.textContent = "Never";
+      }
+
+      // Hide or show unpublish btn
+      const unpubBtn = document.getElementById('unpublish-btn-trigger');
+      const pubBtn = document.getElementById('publish-btn-trigger');
+      if (status === 'published') {
+        unpubBtn.style.display = 'block';
+        pubBtn.textContent = 'Re-publish changes';
+      } else {
+        unpubBtn.style.display = 'none';
+        pubBtn.textContent = 'Publish Website';
+      }
+    }
+
+    // CHECKLIST VALIDATIONS
+    function renderPublishingChecklist() {
+      const container = document.getElementById('publish-checklist');
+      container.innerHTML = '';
+
+      // Rule 1: has pages
+      const hasPages = websitePages.length >= 1;
+      // Rule 2: has home page set
+      const hasHome = websitePages.some(p => p.slug === 'home');
+      // Rule 3: has custom URL set
+      const hasCustomDomain = !!activeWebsite.customDomain;
+      // Rule 4: theme configuration exists
+      const isThemeConfigured = !!activeWebsite.theme && !!activeWebsite.theme.name;
+
+      container.innerHTML = `
+        <div class="checklist-item">
+          <span class="checklist-badge ${hasPages ? 'success' : 'warn'}">${hasPages ? '✓' : '⚠'}</span>
+          <span>Website has at least 1 page</span>
+        </div>
+        <div class="checklist-item">
+          <span class="checklist-badge ${hasHome ? 'success' : 'warn'}">${hasHome ? '✓' : '⚠'}</span>
+          <span>Homepage is set (slug: "home")</span>
+        </div>
+        <div class="checklist-item">
+          <span class="checklist-badge ${hasCustomDomain ? 'success' : 'warn'}">${hasCustomDomain ? '✓' : '⚠'}</span>
+          <span>${hasCustomDomain ? 'Custom domain connected' : 'No custom domain connected yet (optional)'}</span>
+        </div>
+        <div class="checklist-item">
+          <span class="checklist-badge ${isThemeConfigured ? 'success' : 'warn'}">${isThemeConfigured ? '✓' : '⚠'}</span>
+          <span>Starter theme layout is configured</span>
+        </div>
+      `;
+
+      // Enable/Disable publish button based on blocks rules (cannot publish with 0 pages or no homepage)
+      const pubBtn = document.getElementById('publish-btn-trigger');
+      pubBtn.disabled = !(hasPages && hasHome);
+    }
+
+    // PUBLISH NOW ACTION
+    async function triggerPublishAction() {
+      if (!selectedWebsiteId || !activeWebsite) return;
+
       try {
-        const ref = doc(db, "pages", id);
-        const updatePayload = {
-          status: newStatus,
+        const ref = doc(db, "websites", selectedWebsiteId);
+        const now = new Date().toISOString();
+
+        await updateDoc(ref, {
+          status: 'published',
+          publishedAt: now,
+          scheduledAt: null, // clear schedule if publishing immediately
+          updatedAt: now
+        });
+
+        // Run client confetti celebration!
+        confetti({
+          particleCount: 120,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+
+        // Update local memory list cache
+        const idx = userWebsites.findIndex(w => w.id === selectedWebsiteId);
+        if (idx !== -1) {
+          userWebsites[idx].status = 'published';
+          userWebsites[idx].publishedAt = now;
+          userWebsites[idx].scheduledAt = null;
+        }
+
+        activeWebsite = userWebsites[idx];
+
+        // Renders success alert card
+        const successCard = document.getElementById('publish-success-card');
+        const successUrlLink = document.getElementById('success-url-link');
+        const urlStr = activeWebsite.customDomain || `${activeWebsite.subdomain}.alima.site`;
+        
+        successUrlLink.textContent = urlStr;
+        successUrlLink.href = `preview.html?websiteId=${selectedWebsiteId}`;
+        successCard.style.display = 'flex';
+
+        // Scroll success alert card into view
+        successCard.scrollIntoView({ behavior: 'smooth' });
+
+        // Update layouts
+        renderStatusPanelCard();
+        renderPublishingChecklist();
+        renderSchedulerStatus();
+
+        await window.logActivity(`Published site "${activeWebsite.name}" live to the web`);
+        AlimaToast.show("🎉 Launched Live!", "Website layout published successfully.", "success");
+
+      } catch (err) {
+        console.error(err);
+        AlimaToast.show("Publish Error", "Could not synchronize launch parameters.", "error");
+      }
+    }
+    window.triggerPublishAction = triggerPublishAction;
+
+    // UNPUBLISH ACTION
+    async function triggerUnpublishAction() {
+      if (!selectedWebsiteId || !activeWebsite) return;
+
+      if (!confirm("Are you sure you want to unpublish this website? Visitors will not be able to view details page layouts.")) return;
+
+      try {
+        const ref = doc(db, "websites", selectedWebsiteId);
+        await updateDoc(ref, {
+          status: 'draft',
+          publishedAt: null,
           updatedAt: new Date().toISOString()
-        };
+        });
 
-        if (newStatus !== 'scheduled') {
-          updatePayload.scheduledAt = null;
+        const idx = userWebsites.findIndex(w => w.id === selectedWebsiteId);
+        if (idx !== -1) {
+          userWebsites[idx].status = 'draft';
+          userWebsites[idx].publishedAt = null;
         }
 
-        await updateDoc(ref, updatePayload);
+        activeWebsite = userWebsites[idx];
+
+        // Hide success card if open
+        document.getElementById('publish-success-card').style.display = 'none';
+
+        renderStatusPanelCard();
+        renderPublishingChecklist();
         
-        await window.logActivity(`Changed page release status to ${newStatus}`);
-        AlimaToast.show("Status Updated", `Page changed to ${newStatus.toUpperCase()}`, "success");
-        
-        await loadSitePages(selectedWebsiteId);
+        await window.logActivity(`Unpublished site "${activeWebsite.name}"`);
+        AlimaToast.show("Website Offline", "Site reverted to draft status.", "info");
 
       } catch (err) {
-        AlimaToast.show("Operation Failed", "Could not change status.", "error");
+        console.error(err);
+      }
+    }
+    window.triggerUnpublishAction = triggerUnpublishAction;
+
+    // SCHEDULER CONTROLS
+    function renderSchedulerStatus() {
+      const container = document.getElementById('schedule-info-block');
+      container.innerHTML = '';
+
+      if (activeWebsite.status === 'scheduled' && activeWebsite.scheduledAt) {
+        const date = new Date(activeWebsite.scheduledAt);
+        const dateStr = date.toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' });
+        const timeStr = date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+
+        container.innerHTML = `
+          <div style="background:rgba(6, 182, 212, 0.05); border:1px solid var(--color-accent); padding:10px 14px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <span style="font-size:0.75rem; color:var(--text-muted); display:block; text-transform:uppercase; font-weight:700;">Scheduled Launch</span>
+              <strong style="font-size:0.85rem; color:var(--text-main);">${dateStr} at ${timeStr}</strong>
+            </div>
+            <button class="alima-btn btn-ghost btn-sm" style="color:var(--color-error); padding:2px 8px;" onclick="cancelScheduleAction()">Cancel</button>
+          </div>
+        `;
       }
     }
 
-    // 4. Scheduling Engine Actions
-    async function schedulePageRelease(id) {
-      const input = document.getElementById(`sched-input-${id}`);
-      const val = input.value;
-      if (!val) {
-        AlimaToast.show("Validation Check", "Please pick a date and time to schedule release.", "warning");
+    async function triggerScheduleAction() {
+      if (!selectedWebsiteId || !activeWebsite) return;
+
+      const dateVal = document.getElementById('schedule-date-picker').value;
+      const timeVal = document.getElementById('schedule-time-picker').value;
+
+      if (!dateVal || !timeVal) {
+        AlimaToast.show("Scheduler Validation", "Please set both schedule date and time.", "warning");
         return;
       }
 
-      const selectedDate = new Date(val);
-      if (selectedDate <= new Date()) {
-        AlimaToast.show("Validation Check", "Schedule time must be in the future.", "warning");
+      const scheduleDate = new Date(`${dateVal}T${timeVal}`);
+      if (scheduleDate <= new Date()) {
+        AlimaToast.show("Scheduler Validation", "Scheduled time must be set in the future.", "warning");
         return;
       }
 
       try {
-        const ref = doc(db, "pages", id);
+        const ref = doc(db, "websites", selectedWebsiteId);
         await updateDoc(ref, {
           status: 'scheduled',
-          scheduledAt: selectedDate.toISOString(),
+          scheduledAt: scheduleDate.toISOString(),
           updatedAt: new Date().toISOString()
         });
 
-        await window.logActivity(`Scheduled page publication release`);
-        AlimaToast.show("Publication Scheduled", `Successfully scheduled page release.`, "success");
-        await loadSitePages(selectedWebsiteId);
+        const idx = userWebsites.findIndex(w => w.id === selectedWebsiteId);
+        if (idx !== -1) {
+          userWebsites[idx].status = 'scheduled';
+          userWebsites[idx].scheduledAt = scheduleDate.toISOString();
+        }
+
+        activeWebsite = userWebsites[idx];
+
+        // Hide success alert
+        document.getElementById('publish-success-card').style.display = 'none';
+
+        renderStatusPanelCard();
+        renderPublishingChecklist();
+        renderSchedulerStatus();
+
+        await window.logActivity(`Scheduled launch for site "${activeWebsite.name}"`);
+        AlimaToast.show("Launch Scheduled", `Launch set for ${scheduleDate.toLocaleDateString()} at ${scheduleDate.toLocaleTimeString()}`, "success");
 
       } catch (err) {
-        AlimaToast.show("Schedule Failed", "Could not write schedule parameters.", "error");
+        console.error(err);
+        AlimaToast.show("Scheduler Failed", "Could not write schedule configurations.", "error");
       }
     }
+    window.triggerScheduleAction = triggerScheduleAction;
 
-    async function cancelPageSchedule(id) {
+    async function cancelScheduleAction() {
+      if (!selectedWebsiteId || !activeWebsite) return;
+
       try {
-        const ref = doc(db, "pages", id);
+        const ref = doc(db, "websites", selectedWebsiteId);
         await updateDoc(ref, {
           status: 'draft',
           scheduledAt: null,
           updatedAt: new Date().toISOString()
         });
 
-        await window.logActivity(`Cancelled scheduled publication`);
-        AlimaToast.show("Schedule Cancelled", "Page reverted to draft status.", "success");
-        await loadSitePages(selectedWebsiteId);
+        const idx = userWebsites.findIndex(w => w.id === selectedWebsiteId);
+        if (idx !== -1) {
+          userWebsites[idx].status = 'draft';
+          userWebsites[idx].scheduledAt = null;
+        }
+
+        activeWebsite = userWebsites[idx];
+
+        renderStatusPanelCard();
+        renderPublishingChecklist();
+        renderSchedulerStatus();
+
+        await window.logActivity(`Cleared scheduled launch timestamp`);
+        AlimaToast.show("Schedule Cancelled", "Launch schedule cleared. Site reverted to Draft status.", "info");
 
       } catch (err) {
-        AlimaToast.show("Cancel Failed", "Could not clear schedules.", "error");
+        console.error(err);
       }
     }
+    window.cancelScheduleAction = cancelScheduleAction;
 
-    // 5. Bulk Actions Logic
-    function toggleSelectRow(id, isChecked) {
-      if (isChecked) {
-        if (!selectedPageIds.includes(id)) selectedPageIds.push(id);
-      } else {
-        selectedPageIds = selectedPageIds.filter(val => val !== id);
+    // PAGES INDIVIDUAL STATUSES
+    function renderPagesStatusList() {
+      const container = document.getElementById('pages-status-container');
+      container.innerHTML = '';
+
+      if (websitePages.length === 0) {
+        container.innerHTML = `<div style="text-align:center; padding:10px; color:var(--text-muted); font-size:0.85rem;">No pages found.</div>`;
+        return;
       }
-      
-      // Sync master check status
-      const totalChecks = document.querySelectorAll('.page-row-check').length;
-      document.getElementById('select-all-pages').checked = (selectedPageIds.length === totalChecks && totalChecks > 0);
-      
-      syncBulkActionsBar();
-    }
 
-    function toggleSelectAll(isChecked) {
-      selectedPageIds = [];
-      const checkboxes = document.querySelectorAll('.page-row-check');
-      checkboxes.forEach(cb => {
-        cb.checked = isChecked;
-        if (isChecked) {
-          selectedPageIds.push(cb.value);
-        }
+      websitePages.forEach((p) => {
+        const item = document.createElement('div');
+        item.className = 'page-status-item';
+
+        const isLive = p.status === 'published';
+
+        item.innerHTML = `
+          <div class="page-meta">
+            <span class="page-title">${escapeHtml(p.title)}</span>
+            <span class="page-slug"><code>/${escapeHtml(p.slug || '')}</code> — ${p.status || 'draft'}</span>
+          </div>
+          <div class="page-actions-row">
+            <a href="builder.html?id=${selectedWebsiteId}&pageId=${p.id}" class="alima-btn btn-ghost btn-sm" style="border:1.5px solid var(--border-color-light); padding:4px 8px; font-size:0.75rem; text-decoration:none;">Edit</a>
+            <button class="alima-btn btn-sm ${isLive ? 'btn-ghost' : 'btn-primary'}" style="padding:4px 10px; font-size:0.75rem; ${isLive ? 'border:1.5px solid var(--border-color-light);' : 'border:none;'}" onclick="toggleIndividualPagePublish('${p.id}', ${isLive})">
+              ${isLive ? 'Draft' : 'Publish'}
+            </button>
+          </div>
+        `;
+        container.appendChild(item);
       });
-      syncBulkActionsBar();
     }
 
-    function syncBulkActionsBar() {
-      const bar = document.getElementById('bulk-actions-bar');
-      const text = document.getElementById('bulk-selected-count');
-
-      if (selectedPageIds.length > 0) {
-        text.textContent = `${selectedPageIds.length} pages selected`;
-        bar.style.display = 'flex';
-      } else {
-        bar.style.display = 'none';
-      }
-    }
-
-    async function triggerBulkAction(action) {
-      if (selectedPageIds.length === 0) return;
-      const confirmMsg = action === 'publish' 
-        ? `Are you sure you want to PUBLISH all ${selectedPageIds.length} selected pages?` 
-        : `Are you sure you want to revert all ${selectedPageIds.length} selected pages back to drafts?`;
-      
-      if (!confirm(confirmMsg)) return;
-
-      const newStatus = action === 'publish' ? 'published' : 'draft';
-
+    async function toggleIndividualPagePublish(pageId, isLive) {
+      const targetStatus = isLive ? 'draft' : 'published';
       try {
-        const batchPromises = selectedPageIds.map(id => {
-          const ref = doc(db, "pages", id);
-          return updateDoc(ref, {
-            status: newStatus,
-            scheduledAt: null,
-            updatedAt: new Date().toISOString()
-          });
+        const ref = doc(db, "pages", pageId);
+        await updateDoc(ref, {
+          status: targetStatus,
+          updatedAt: new Date().toISOString()
         });
 
-        await Promise.all(batchPromises);
-        
-        await window.logActivity(`Executed bulk status updates on ${selectedPageIds.length} pages`);
-        AlimaToast.show("Bulk Actions Complete", `Successfully updated status on selected items.`, "success");
-        
-        await loadSitePages(selectedWebsiteId);
+        // Update local memory cache
+        const pageIdx = websitePages.findIndex(p => p.id === pageId);
+        if (pageIdx !== -1) websitePages[pageIdx].status = targetStatus;
+
+        renderPagesStatusList();
+        renderPublishingChecklist();
+        refreshPreviewIframe();
+
+        AlimaToast.show("Page Updated", `Page status changed to ${targetStatus.toUpperCase()}`, "success");
 
       } catch (err) {
-        AlimaToast.show("Bulk Action Failed", "Failed to update batch of page releases.", "error");
+        console.error(err);
+      }
+    }
+    window.toggleIndividualPagePublish = toggleIndividualPagePublish;
+
+    // CUSTOM DOMAINS CONNECTOR
+    function renderDomainConnectorUI() {
+      const instBlock = document.getElementById('domain-dns-instructions');
+      const inputEl = document.getElementById('domain-input-field');
+      const badge = document.getElementById('domain-status-badge');
+
+      if (activeWebsite.customDomain) {
+        inputEl.value = activeWebsite.customDomain;
+        const status = activeWebsite.customDomainStatus || "pending";
+        badge.textContent = status.toUpperCase();
+        badge.className = status === 'connected' ? 'checklist-badge success' : 'checklist-badge warn';
+        instBlock.style.display = 'flex';
+      } else {
+        inputEl.value = '';
+        instBlock.style.display = 'none';
       }
     }
 
-    // Page creation / deletions direct triggers
-    function openCreatePageModal() {
-      document.getElementById('create-page-modal').classList.add('active');
-      document.getElementById('new-page-title').value = '';
-      document.getElementById('new-page-slug').value = '';
-    }
+    async function triggerConnectDomain() {
+      if (!selectedWebsiteId || !activeWebsite) return;
 
-    function closeCreatePageModal() {
-      document.getElementById('create-page-modal').classList.remove('active');
-    }
+      const domainVal = document.getElementById('domain-input-field').value.trim();
+      if (!domainVal) {
+        AlimaToast.show("Validation check", "Please input a domain address (e.g. www.mysite.com).", "warning");
+        return;
+      }
 
-    async function submitNewPage(e) {
-      e.preventDefault();
-      if (!selectedWebsiteId) return;
-
-      const title = document.getElementById('new-page-title').value.trim();
-      const slugInput = document.getElementById('new-page-slug').value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '');
-
-      if (!slugInput) {
-        AlimaToast.show("Validation Error", "Please provide a valid slug syntax.", "error");
+      if (domainVal.length < 4 || !domainVal.includes('.')) {
+        AlimaToast.show("Validation check", "Domain address format is invalid.", "error");
         return;
       }
 
       try {
-        const newPage = {
-          websiteId: selectedWebsiteId,
-          title: title,
-          slug: slugInput,
-          status: 'draft',
-          blocks: [],
-          seo: {
-            title: `${title} | Alima Site`,
-            description: `Check out our ${title.toLowerCase()} page on Alima.`,
-            ogImage: ''
-          },
+        const ref = doc(db, "websites", selectedWebsiteId);
+        await updateDoc(ref, {
+          customDomain: domainVal,
+          customDomainStatus: 'pending',
           updatedAt: new Date().toISOString()
-        };
+        });
 
-        await addDoc(collection(db, "pages"), newPage);
-        closeCreatePageModal();
-
-        await window.logActivity(`Created page layout "${title}"`);
-        AlimaToast.show("Page Created", `Successfully initialized layout "${title}".`, "success");
-
-        await loadSitePages(selectedWebsiteId);
-
-      } catch (err) {
-        AlimaToast.show("Page Creation Failed", "Could not commit document.", "error");
-      }
-    }
-
-    async function deletePageDirect(id, name) {
-      if (!confirm(`Are you sure you want to delete the page "${name}"? This action is permanent.`)) return;
-
-      try {
-        const tr = document.getElementById(`page-${id}`);
-        if (tr) {
-          tr.style.opacity = '0';
-          tr.style.webkitTransform = 'scale(0.95)';
-          tr.style.transform = 'scale(0.95)';
-          setTimeout(() => tr.remove(), 250);
+        const idx = userWebsites.findIndex(w => w.id === selectedWebsiteId);
+        if (idx !== -1) {
+          userWebsites[idx].customDomain = domainVal;
+          userWebsites[idx].customDomainStatus = 'pending';
         }
 
-        await deleteDoc(doc(db, "pages", id));
-        await window.logActivity(`Deleted page "${name}"`);
-        AlimaToast.show("Page Deleted", "Page layout document cleared.", "success");
-        
-        setTimeout(async () => {
-          await loadSitePages(selectedWebsiteId);
-        }, 300);
+        activeWebsite = userWebsites[idx];
+
+        renderDomainConnectorUI();
+        renderPublishingChecklist();
+
+        await window.logActivity(`Requested connection for custom domain "${domainVal}"`);
+        AlimaToast.show("Domain Requested", "Verification parameters initialized.", "success");
 
       } catch (err) {
-        AlimaToast.show("Deletion Failed", "Failed to clear page record.", "error");
+        console.error(err);
       }
     }
+    window.triggerConnectDomain = triggerConnectDomain;
+
+    // SUCCESS MODAL SHARING AND ACTIONS
+    function copySubdomainAddress() {
+      const txt = document.getElementById('subdomain-text').textContent;
+      navigator.clipboard.writeText(`https://${txt}`).then(() => {
+        AlimaToast.show("URL Copied", "Link saved to clipboard.", "success");
+      });
+    }
+    window.copySubdomainAddress = copySubdomainAddress;
+
+    function copySuccessLink() {
+      const urlLink = document.getElementById('success-url-link').textContent;
+      navigator.clipboard.writeText(`https://${urlLink}`).then(() => {
+        AlimaToast.show("Link Copied", "URL saved to clipboard.", "success");
+      });
+    }
+    window.copySuccessLink = copySuccessLink;
+
+    function shareOnWhatsApp() {
+      const urlLink = document.getElementById('success-url-link').textContent;
+      const text = encodeURIComponent(`Check out my newly launched academic portal on Alima! 🚀 Visit here: https://${urlLink}`);
+      window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+    }
+    window.shareOnWhatsApp = shareOnWhatsApp;
+
+    // Esc handle
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.getElementById('publish-success-card').style.display = 'none';
+      }
+    });
+
+    // Sign out routine
+    async function handleSignOutAction() {
+      if (confirm("Are you sure you want to sign out?")) {
+        await window.logActivity("Signed out");
+        signOut(auth).then(() => {
+          window.location.href = "login.html";
+        });
+      }
+    }
+    window.handleSignOutAction = handleSignOutAction;
 
     // Helper sanitization
     function escapeHtml(str) {
@@ -730,30 +1183,6 @@
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
     }
-
-    // Bind triggers
-    window.loadSitePages = loadSitePages;
-    window.changePageStatus = changePageStatus;
-    window.schedulePageRelease = schedulePageRelease;
-    window.cancelPageSchedule = cancelPageSchedule;
-    
-    window.toggleSelectRow = toggleSelectRow;
-    window.toggleSelectAll = toggleSelectAll;
-    window.triggerBulkAction = triggerBulkAction;
-    
-    window.openCreatePageModal = openCreatePageModal;
-    window.closeCreatePageModal = closeCreatePageModal;
-    window.submitNewPage = submitNewPage;
-    window.deletePageDirect = deletePageDirect;
-
-    async function handleSignOutAction() {
-      if (confirm("Are you sure you want to sign out?")) {
-        signOut(auth).then(() => {
-          window.location.href = "login.html";
-        });
-      }
-    }
-    window.handleSignOutAction = handleSignOutAction;
 
   </script>
 </body>

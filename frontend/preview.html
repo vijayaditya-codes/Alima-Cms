@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Website Preview</title>
+  
+  <!-- Premium Google Fonts pairing stylesheet -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;700&family=Inter:wght@300;400;500;600;700&family=Lato:wght@400;700&family=Montserrat:wght@400;700;800&family=Nunito:wght@400;600;700&family=Open+Sans:wght@400;600;700&family=Playfair+Display:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+  
+  <style>
+    /* Reset styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      line-height: 1.5;
+      background-color: #ffffff;
+      color: #111827;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Layout limits based on width settings */
+    .theme-width-full {
+      width: 100%;
+      max-width: 100%;
+      padding: 0 24px;
+    }
+    .theme-width-boxed {
+      max-width: 1200px;
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 0 24px;
+    }
+    .theme-width-narrow {
+      max-width: 960px;
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 0 24px;
+    }
+
+    /* Core components styles */
+    header.site-header {
+      background-color: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      transition: all 0.3s ease;
+    }
+
+    header.site-header.fixed {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    header.site-header.transparent {
+      background-color: transparent;
+      border-bottom-color: transparent;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: inherit;
+    }
+
+    .logo-img {
+      height: 32px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .nav-item {
+      position: relative;
+    }
+
+    .nav-item a {
+      text-decoration: none;
+      color: inherit;
+      transition: color 0.15s ease;
+    }
+
+    .nav-item:hover > a {
+      opacity: 0.8;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background-color: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 10px 0;
+      min-width: 140px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      list-style: none;
+      margin-top: 10px;
+      z-index: 1010;
+    }
+
+    .nav-item:hover .dropdown-menu {
+      display: block;
+    }
+
+    .dropdown-menu li a {
+      padding: 8px 16px;
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .dropdown-menu li a:hover {
+      background-color: #f3f4f6;
+    }
+
+    /* Main Area */
+    main.site-content {
+      flex-grow: 1;
+      padding-top: 40px;
+      padding-bottom: 60px;
+    }
+
+    /* Block utilities rendering styles */
+    .block-container {
+      margin-bottom: 24px;
+      width: 100%;
+    }
+
+    /* General widgets templates */
+    .alima-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: opacity 0.15s ease;
+      cursor: pointer;
+    }
+
+    .alima-btn:hover {
+      opacity: 0.9;
+    }
+
+    .faq-accordion-item {
+      border-bottom: 1px solid #e5e7eb;
+      padding: 16px 0;
+    }
+
+    .faq-question {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 1rem;
+      user-select: none;
+    }
+
+    .faq-answer {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: #4b5563;
+      display: none;
+      line-height: 1.5;
+    }
+
+    .faq-answer.show {
+      display: block;
+    }
+
+    /* Footer styling */
+    footer.site-footer {
+      border-top: 1px solid #e5e7eb;
+      padding: 48px 0 32px 0;
+      background-color: #f9fafb;
+      font-size: 0.85rem;
+    }
+
+    .footer-columns-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 32px;
+      margin-bottom: 40px;
+    }
+
+    .footer-column-title {
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+    }
+
+    .footer-links-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      list-style: none;
+    }
+
+    .footer-links-list li a {
+      text-decoration: none;
+      color: #4b5563;
+      transition: opacity 0.15s ease;
+    }
+
+    .footer-links-list li a:hover {
+      opacity: 0.8;
+    }
+
+    .footer-bottom-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      border-top: 1px solid #e5e7eb;
+      padding-top: 24px;
+      color: #6b7280;
+    }
+
+    .footer-socials {
+      display: flex;
+      gap: 16px;
+      font-size: 1.25rem;
+    }
+
+    .footer-socials a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Error and Not Found placeholder state */
+    .not-found-wrapper {
+      text-align: center;
+      padding: 100px 24px;
+    }
+
+    .not-found-title {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .not-found-desc {
+      color: #6b7280;
+      margin-bottom: 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Site branding navigation header -->
+  <header class="site-header" id="public-header">
+    <div class="theme-width-boxed" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+      <a href="#" class="brand-logo" id="public-logo-link">
+        <!-- Logo or name goes here -->
+      </a>
+      <nav>
+        <ul class="nav-links" id="public-nav-wrapper">
+          <!-- Populated from menu array -->
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Live blocks content canvas -->
+  <main class="site-content" id="public-content-canvas">
+    <div class="not-found-wrapper">
+      <h2 class="not-found-title">Loading Website...</h2>
+      <p class="not-found-desc">Retrieving digital campus files from Cloud Firestore.</p>
+    </div>
+  </main>
+
+  <!-- Footers page details -->
+  <footer class="site-footer" id="public-footer" style="display:none;">
+    <div class="theme-width-boxed">
+      <div class="footer-columns-grid" id="public-footer-columns">
+        <!-- Columns details -->
+      </div>
+      <div class="footer-bottom-row">
+        <span id="public-footer-copyright">© 2026 Alima. All rights reserved.</span>
+        <div class="footer-socials" id="public-footer-socials">
+          <!-- Social Link Anchor tags -->
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Firebase configuration import -->
+  <script type="module" src="firebase.js"></script>
+
+  <!-- Preview Engine Processing script -->
+  <script type="module">
+    import { auth, db } from "./firebase.js";
+    import { collection, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+    let websiteId = null;
+    let pageSlug = "home";
+    
+    let websiteData = null;
+    let websitePages = [];
+    let currentPage = null;
+    let themeConfig = null;
+
+    async function initializePreviewEngine() {
+      const urlParams = new URLSearchParams(window.location.search);
+      websiteId = urlParams.get('websiteId') || urlParams.get('id');
+      pageSlug = urlParams.get('page') || "home";
+
+      if (!websiteId) {
+        renderErrorState("Missing Website ID", "Please specify a websiteId parameter in the URL address bar.");
+        return;
+      }
+
+      try {
+        // Fetch Website branding configuration
+        const webRef = doc(db, "websites", websiteId);
+        const webSnap = await getDoc(webRef);
+        if (!webSnap.exists()) {
+          renderErrorState("Website Not Found", "The requested website configuration does not exist in Firestore.");
+          return;
+        }
+
+        websiteData = { id: webSnap.id, ...webSnap.data() };
+        themeConfig = websiteData.theme || {};
+
+        // Fetch Website pages
+        const pagesQuery = query(collection(db, "pages"), where("websiteId", "==", websiteId));
+        const pagesSnap = await getDocs(pagesQuery);
+        websitePages = [];
+        pagesSnap.forEach(d => {
+          websitePages.push({ id: d.id, ...d.data() });
+        });
+
+        // Set active loaded page doc
+        currentPage = websitePages.find(p => p.slug === pageSlug);
+        
+        // If not found and searching homepage, load first page in array
+        if (!currentPage && pageSlug === 'home' && websitePages.length > 0) {
+          currentPage = websitePages[0];
+        }
+
+        if (!currentPage) {
+          renderErrorState("404 Page Not Found", `The page "/${pageSlug}" does not exist on this website.`);
+          // Load navbar still so they aren't trapped
+          applyThemeBranding();
+          renderHeaderNavigation();
+          return;
+        }
+
+        // Apply theme colors & fonts styling
+        applyThemeBranding();
+
+        // Render Header, Page blocks, Footer
+        renderHeaderNavigation();
+        renderPageBlocks();
+        renderFooterSection();
+
+      } catch (err) {
+        console.error(err);
+        renderErrorState("Loading Error", "Could not query Firestore documents. Please verify your internet connection.");
+      }
+    }
+
+    // Apply global color variables & font pairings in stylesheet
+    function applyThemeBranding() {
+      if (!themeConfig) return;
+
+      const colors = themeConfig.colors || { primary: "#7c3aed", secondary: "#06b6d4", background: "#ffffff", text: "#111827" };
+      const fonts = themeConfig.fonts || { headings: "Plus Jakarta Sans", body: "Inter" };
+
+      // Set document page title
+      document.title = currentPage ? `${currentPage.title} | ${websiteData.name}` : websiteData.name;
+
+      // Create a style element dynamically
+      const style = document.createElement('style');
+      style.textContent = `
+        body {
+          font-family: "${fonts.body}", sans-serif;
+          background-color: ${colors.background} !important;
+          color: ${colors.text} !important;
+        }
+        h1, h2, h3, h4, h5, h6, .theme-heading {
+          font-family: "${fonts.headings}", sans-serif !important;
+        }
+        .primary-accent-color {
+          color: ${colors.primary} !important;
+        }
+        .primary-accent-bg {
+          background-color: ${colors.primary} !important;
+          color: ${getContrastColor(colors.primary)} !important;
+        }
+        .secondary-accent-color {
+          color: ${colors.secondary} !important;
+        }
+        .secondary-accent-border {
+          border-color: ${colors.secondary} !important;
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    // RENDER HEADER
+    function renderHeaderNavigation() {
+      const header = document.getElementById('public-header');
+      const logoLink = document.getElementById('public-logo-link');
+      const navWrapper = document.getElementById('public-nav-wrapper');
+
+      if (!websiteData) return;
+
+      // Set header sticky behavior
+      const headerStyle = (themeConfig && themeConfig.layout && themeConfig.layout.headerStyle) || "static";
+      header.className = "site-header";
+      if (headerStyle === 'fixed') {
+        header.classList.add('fixed');
+      } else if (headerStyle === 'transparent') {
+        header.classList.add('transparent');
+      }
+
+      // Configure Logo & Title
+      logoLink.innerHTML = '';
+      logoLink.href = `preview.html?websiteId=${websiteId}&page=home`;
+      
+      const showLogo = themeConfig && themeConfig.header && themeConfig.header.logoUrl;
+      if (showLogo) {
+        logoLink.innerHTML += `<img src="${themeConfig.header.logoUrl}" class="logo-img" alt="logo">`;
+      } else {
+        logoLink.innerHTML += `<span style="font-size:1.4rem;">🎓</span>`;
+      }
+
+      const showTitle = themeConfig && themeConfig.header && themeConfig.header.showTitle !== false;
+      if (showTitle) {
+        logoLink.innerHTML += `<span style="font-weight:800; font-size:1.15rem; color:inherit;">${escapeHtml(websiteData.name)}</span>`;
+      }
+
+      // Render Navigation list
+      navWrapper.innerHTML = '';
+      const menu = (themeConfig && themeConfig.header && themeConfig.header.menu) || [];
+
+      // Group nested dropdown sub-menus
+      const groupedMenu = [];
+      menu.forEach((item) => {
+        if (!item.nested) {
+          groupedMenu.push({ ...item, children: [] });
+        } else {
+          if (groupedMenu.length > 0) {
+            groupedMenu[groupedMenu.length - 1].children.push(item);
+          } else {
+            groupedMenu.push({ ...item, children: [] });
+          }
+        }
+      });
+
+      groupedMenu.forEach((item) => {
+        const li = document.createElement('li');
+        li.className = 'nav-item';
+        
+        // Target Link mapping
+        let targetHref = item.link;
+        if (targetHref.startsWith('/')) {
+          const slug = targetHref.slice(1) || 'home';
+          targetHref = `preview.html?websiteId=${websiteId}&page=${slug}`;
+        }
+
+        if (item.children.length > 0) {
+          li.innerHTML = `
+            <a href="#" onclick="event.preventDefault()">${escapeHtml(item.label)} ▾</a>
+            <ul class="dropdown-menu">
+              ${item.children.map(child => {
+                let childHref = child.link;
+                if (childHref.startsWith('/')) {
+                  const cSlug = childHref.slice(1) || 'home';
+                  childHref = `preview.html?websiteId=${websiteId}&page=${cSlug}`;
+                }
+                return `<li><a href="${childHref}">${escapeHtml(child.label)}</a></li>`;
+              }).join('')}
+            </ul>
+          `;
+        } else {
+          li.innerHTML = `<a href="${targetHref}">${escapeHtml(item.label)}</a>`;
+        }
+        navWrapper.appendChild(li);
+      });
+    }
+
+    // RENDER PAGE BLOCKS CONTENT
+    function renderPageBlocks() {
+      const container = document.getElementById('public-content-canvas');
+      container.innerHTML = '';
+
+      if (!currentPage || !currentPage.blocks || currentPage.blocks.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center; padding:80px 24px; color:#6b7280; font-weight:700;">
+            <h3>Empty Page Layout</h3>
+            <p style="font-size:0.9rem; font-weight:400; margin-top:8px;">No block items have been added to this page yet inside the builder.</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Configure layout width wrapper class
+      const widthVal = (themeConfig && themeConfig.layout && themeConfig.layout.width) || "boxed";
+      const widthClass = `theme-width-${widthVal}`;
+
+      currentPage.blocks.forEach((block, idx) => {
+        const row = document.createElement('div');
+        row.className = "block-container";
+
+        // Render block HTML without edit markings
+        const html = renderIndividualBlock(block, idx);
+        
+        // Wrap layout sections
+        if (block.type === 'section') {
+          // Section behaves as container wrapper
+          row.style.backgroundColor = block.background || 'transparent';
+          row.style.padding = `${block.paddingTop}px 0 ${block.paddingBottom}px 0`;
+          row.innerHTML = `<div class="${widthClass}">${html}</div>`;
+        } else {
+          row.className = `block-container ${widthClass}`;
+          row.innerHTML = html;
+        }
+
+        container.appendChild(row);
+      });
+
+      // Bind dynamic features (e.g. accordion click toggles, newsletter form events)
+      bindVisitorInteractions();
+    }
+
+    // Dynamic clean rendering for block lists
+    function renderIndividualBlock(block, idx) {
+      const headingsFontFamily = themeConfig && themeConfig.fonts ? themeConfig.fonts.headings : 'Plus Jakarta Sans';
+      const headingStyle = `font-family:"${headingsFontFamily}", sans-serif !important;`;
+
+      switch (block.type) {
+        case 'heading':
+          return `<${block.level} style="font-size:${block.fontSize}px; color:${block.color}; text-align:${block.align}; font-weight:${block.fontWeight}; margin-top:${block.marginTop}px; margin-bottom:${block.marginBottom}px; background:${block.bgColor}; width:100%; border:none; ${headingStyle}">${escapeHtml(block.text)}</${block.level}>`;
+        
+        case 'paragraph': {
+          const style = `font-size:${block.fontSize}px; color:${block.color}; line-height:${block.lineHeight}; margin:10px 0;`;
+          if (block.isReadableWidth) {
+            return `<div style="max-width:680px; margin:0 auto;"><p style="${style}">${escapeHtml(block.text)}</p></div>`;
+          }
+          return `<p style="${style}">${escapeHtml(block.text)}</p>`;
+        }
+        
+        case 'quote':
+          return `
+            <div style="border-left:4px solid ${block.color}; padding-left:16px; margin:18px 0; text-align:${block.align};">
+              <p style="font-style:italic; font-size:${block.fontSize}px; color:#475569;">"${escapeHtml(block.text)}"</p>
+              <cite style="font-size:0.85rem; color:#6b7280; font-weight:700; display:block; margin-top:4px;">— ${escapeHtml(block.author)}</cite>
+            </div>
+          `;
+        
+        case 'list': {
+          const tag = block.listType === 'ol' ? 'ol' : 'ul';
+          return `
+            <${tag} style="padding-left:24px; font-size:${block.fontSize}px; color:${block.color}; margin:12px 0;">
+              ${block.items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}
+            </${tag}>
+          `;
+        }
+        
+        case 'code':
+          return `
+            <pre style="background:#0f172a; color:#cbd5e1; padding:16px; border-radius:8px; overflow-x:auto; font-family:monospace; font-size:${block.fontSize}px; text-align:left; margin:14px 0;"><code>${escapeHtml(block.code)}</code></pre>
+          `;
+        
+        case 'image': {
+          const w = block.width === 'small' ? '250px' : block.width === 'medium' ? '450px' : block.width === 'large' ? '750px' : '100%';
+          const margin = block.width === 'full' ? '0' : '0 auto';
+          if (!block.url) return '';
+          return `
+            <div style="width:${w}; margin:${margin}; text-align:center;">
+              <img src="${block.url}" alt="${block.alt || 'image'}" style="width:100%; max-height:450px; object-fit:cover; border-radius:${block.radius}px;">
+              ${block.hasCaption ? `<div style="font-size:0.8rem; color:#6b7280; margin-top:6px; font-style:italic;">${escapeHtml(block.caption)}</div>` : ''}
+            </div>
+          `;
+        }
+        
+        case 'video':
+          if (!block.url) return '';
+          return `
+            <div style="max-width:680px; margin:0 auto;">
+              <iframe src="${formatYoutubeUrl(block.url)}" style="width:100%; height:380px; border-radius:${block.radius}px; border:none;" allowfullscreen></iframe>
+            </div>
+          `;
+        
+        case 'gallery':
+          if (block.urls.length === 0) return '';
+          return `
+            <div style="display:grid; grid-template-columns:repeat(${block.columns}, 1fr); gap:12px; margin:16px 0;">
+              ${block.urls.map(url => `<img src="${url}" style="width:100%; aspect-ratio:1; object-fit:cover; border-radius:${block.radius}px;">`).join('')}
+            </div>
+          `;
+        
+        case 'audio':
+          if (!block.url) return '';
+          return `
+            <div style="max-width:400px; margin:0 auto; padding:12px; background:#f3f4f6; border-radius:12px; display:flex; align-items:center; justify-content:center;">
+              <audio src="${block.url}" controls style="width:100%;"></audio>
+            </div>
+          `;
+        
+        case 'section':
+          return `<div style="max-width:${block.maxWidth}; margin:0 auto;">${escapeHtml(block.content || '')}</div>`;
+        
+        case '2col':
+          return `
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; margin:16px 0;">
+              <div style="padding:20px; border:1px solid #e5e7eb; border-radius:8px; background:#ffffff;">
+                <h4 style="font-weight:700; margin-bottom:8px; ${headingStyle}">${escapeHtml(block.leftTitle)}</h4>
+                <p style="font-size:0.85rem; color:#4b5563;">${escapeHtml(block.leftText)}</p>
+              </div>
+              <div style="padding:20px; border:1px solid #e5e7eb; border-radius:8px; background:#ffffff;">
+                <h4 style="font-weight:700; margin-bottom:8px; ${headingStyle}">${escapeHtml(block.rightTitle)}</h4>
+                <p style="font-size:0.85rem; color:#4b5563;">${escapeHtml(block.rightText)}</p>
+              </div>
+            </div>
+          `;
+        
+        case '3col':
+          return `
+            <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; margin:16px 0;">
+              <div style="padding:16px; border:1px solid #e5e7eb; border-radius:8px; background:#ffffff;">
+                <h5 style="font-weight:700; margin-bottom:8px; ${headingStyle}">${escapeHtml(block.col1Title)}</h5>
+                <p style="font-size:0.8rem; color:#4b5563;">${escapeHtml(block.col1Text)}</p>
+              </div>
+              <div style="padding:16px; border:1px solid #e5e7eb; border-radius:8px; background:#ffffff;">
+                <h5 style="font-weight:700; margin-bottom:8px; ${headingStyle}">${escapeHtml(block.col2Title)}</h5>
+                <p style="font-size:0.8rem; color:#4b5563;">${escapeHtml(block.col2Text)}</p>
+              </div>
+              <div style="padding:16px; border:1px solid #e5e7eb; border-radius:8px; background:#ffffff;">
+                <h5 style="font-weight:700; margin-bottom:8px; ${headingStyle}">${escapeHtml(block.col3Title)}</h5>
+                <p style="font-size:0.8rem; color:#4b5563;">${escapeHtml(block.col3Text)}</p>
+              </div>
+            </div>
+          `;
+        
+        case 'spacer':
+          return `<div style="height:${block.height}px;"></div>`;
+        
+        case 'divider':
+          return `<hr style="border:none; border-top:${block.thickness}px solid ${block.color}; margin:20px 0;">`;
+        
+        case 'button': {
+          const isFilled = block.btnStyle === 'filled';
+          const bg = isFilled ? block.color : 'transparent';
+          const border = block.btnStyle === 'outline' ? `2px solid ${block.color}` : 'none';
+          const textCol = isFilled ? '#ffffff' : block.color;
+          const pad = block.size === 'small' ? '8px 16px' : block.size === 'large' ? '16px 32px' : '12px 24px';
+          const w = block.isFullWidth ? '100%' : 'max-content';
+          return `
+            <div style="text-align:center; margin:12px 0;">
+              <a href="${block.url}" class="alima-btn" style="background:${bg}; border:${border}; color:${textCol}; padding:${pad}; width:${w}; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; font-weight:700; border-radius:6px;">${escapeHtml(block.label)}</a>
+            </div>
+          `;
+        }
+        
+        case 'form':
+          return `
+            <div style="border:1px solid #e5e7eb; border-radius:12px; padding:24px; text-align:left; background:#ffffff; max-width:550px; margin:20px auto;">
+              <form onsubmit="handleVisitorFormSubmit(event, '${block.btnText}')">
+                ${block.fields.map((f, i) => `
+                  <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:14px;">
+                    <label style="font-weight:700; font-size:0.85rem; color:#374151;">${escapeHtml(f)}</label>
+                    <input type="text" name="field-${i}" class="alima-input" style="height:38px; border:1px solid #d1d5db; border-radius:6px; padding:0 12px; outline:none;" required>
+                  </div>
+                `).join('')}
+                <button type="submit" class="alima-btn primary-accent-bg" style="width:100%; height:40px; font-weight:700; border:none;">${escapeHtml(block.btnText)}</button>
+              </form>
+            </div>
+          `;
+        
+        case 'newsletter':
+          return `
+            <div style="border:1px solid #e5e7eb; border-radius:12px; padding:28px; text-align:center; max-width:480px; margin:24px auto; background:#ffffff; box-shadow:0 4px 12px rgba(0,0,0,0.02);">
+              <h4 style="font-weight:800; margin-bottom:8px; color:#1e293b; ${headingStyle}">${escapeHtml(block.title)}</h4>
+              <p style="font-size:0.8rem; color:#6b7280; margin-bottom:16px;">Subscribe to get the latest updates direct in your inbox.</p>
+              <form onsubmit="handleVisitorNewsletter(event)">
+                <div style="display:flex; gap:8px;">
+                  <input type="email" class="alima-input" style="height:38px; font-size:0.85rem; border:1px solid #d1d5db; border-radius:6px; padding:0 12px; outline:none; flex-grow:1;" placeholder="Email address..." required>
+                  <button type="submit" class="alima-btn primary-accent-bg" style="white-space:nowrap; border:none; padding:0 16px; font-size:0.85rem;">${escapeHtml(block.btnText)}</button>
+                </div>
+              </form>
+            </div>
+          `;
+        
+        case 'socials':
+          return `
+            <div style="display:flex; justify-content:center; gap:16px; margin:16px 0;">
+              ${block.platforms.map(p => `
+                <a href="${p.url}" target="_blank" style="width:36px; height:36px; border-radius:50%; background:#f3f4f6; display:flex; align-items:center; justify-content:center; font-size:1.1rem; text-decoration:none; border:1px solid #e5e7eb;">
+                  ${getSocialSymbol(p.name)}
+                </a>
+              `).join('')}
+            </div>
+          `;
+        
+        case 'map':
+          return `
+            <div style="border-radius:12px; overflow:hidden; border:1px solid #e5e7eb; height:240px; margin:16px 0;">
+              <iframe width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen src="https://maps.google.com/maps?q=${encodeURIComponent(block.address)}&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe>
+            </div>
+          `;
+        
+        case 'course':
+          return `
+            <div style="background:#ffffff; border:1px solid #e5e7eb; border-radius:12px; overflow:hidden; display:flex; flex-direction:column; max-width:320px; margin:16px auto; box-shadow:0 4px 12px rgba(0,0,0,0.05); text-align:left;">
+              <div style="height:120px; background:#1e293b; display:flex; align-items:center; justify-content:center; color:white; font-family:'Plus Jakarta Sans', sans-serif; font-weight:800; font-size:1.2rem;">${escapeHtml(block.code)}</div>
+              <div style="padding:16px; display:flex; flex-direction:column; gap:8px;">
+                <h4 style="font-weight:700; font-size:1rem; color:#1e293b; ${headingStyle}">${escapeHtml(block.title)}</h4>
+                <p style="font-size:0.8rem; color:#6b7280; line-height:1.4;">${escapeHtml(block.desc)}</p>
+                <button class="alima-btn primary-accent-bg" style="width:100%; margin-top:8px; border:none; height:36px; font-size:0.8rem;" onclick="alert('Successfully registered for course: ${block.code}!')">Enroll Course</button>
+              </div>
+            </div>
+          `;
+        
+        case 'team':
+          return `
+            <div style="background:#ffffff; border:1px solid #e5e7eb; border-radius:12px; padding:24px; text-align:center; max-width:280px; margin:16px auto; box-shadow:0 4px 12px rgba(0,0,0,0.04);">
+              <div style="width:80px; height:80px; border-radius:50%; background:#e2e8f0; display:flex; align-items:center; justify-content:center; font-size:2rem; margin:0 auto 12px auto; overflow:hidden;">👤</div>
+              <h4 style="font-weight:700; font-size:1.05rem; color:#1e293b; margin-bottom:4px; ${headingStyle}">${escapeHtml(block.name)}</h4>
+              <span class="primary-accent-color" style="font-size:0.75rem; font-weight:700; text-transform:uppercase;">${escapeHtml(block.role)}</span>
+              <p style="font-size:0.8rem; color:#6b7280; line-height:1.4; margin-top:8px;">${escapeHtml(block.bio)}</p>
+            </div>
+          `;
+        
+        case 'testimonial':
+          return `
+            <div style="background:#f9fafb; border-left:4px solid ${themeConfig && themeConfig.colors ? themeConfig.colors.primary : '#7c3aed'}; padding:20px; border-radius:8px; max-width:600px; margin:20px auto; text-align:left;">
+              <span class="primary-accent-color" style="font-size:2.5rem; line-height:1; display:block; margin-bottom:4px; font-family:serif;">“</span>
+              <p style="font-style:italic; font-size:0.95rem; color:#374151; line-height:1.5; margin-bottom:12px;">${escapeHtml(block.text)}</p>
+              <div>
+                <strong style="font-size:0.85rem; color:#1e293b; display:block;">${escapeHtml(block.author)}</strong>
+                <span style="font-size:0.75rem; color:#6b7280;">${escapeHtml(block.role)}</span>
+              </div>
+            </div>
+          `;
+        
+        case 'pricing':
+          return `
+            <div style="background:#ffffff; border:2px solid ${themeConfig && themeConfig.colors ? themeConfig.colors.primary : '#7c3aed'}; border-radius:16px; padding:28px; text-align:center; max-width:300px; margin:20px auto; box-shadow:0 8px 20px rgba(0,0,0,0.06);">
+              <span class="primary-accent-bg" style="font-size:0.75rem; font-weight:700; text-transform:uppercase; padding:4px 12px; border-radius:20px;">${escapeHtml(block.plan)}</span>
+              <h2 style="font-size:2.2rem; font-weight:800; color:#1e293b; margin:16px 0 8px 0; ${headingStyle}">${escapeHtml(block.price)}</h2>
+              <ul style="list-style:none; padding:0; margin:16px 0 24px 0; display:flex; flex-direction:column; gap:8px; font-size:0.85rem; color:#475569;">
+                ${block.features.map(f => `<li>✓ ${escapeHtml(f)}</li>`).join('')}
+              </ul>
+              <button class="alima-btn primary-accent-bg" style="width:100%; border:none; height:40px;" onclick="alert('Proceeding to check out for: ${block.plan}!')">Select Plan</button>
+            </div>
+          `;
+        
+        case 'faq':
+          return `
+            <div style="max-width:620px; margin:20px auto; text-align:left;">
+              ${block.items.map((item, i) => `
+                <div class="faq-accordion-item">
+                  <div class="faq-question" onclick="toggleFaqAccordion(${idx}, ${i})">
+                    <span>Q: ${escapeHtml(item.q)}</span>
+                    <span id="faq-arrow-${idx}-${i}">▾</span>
+                  </div>
+                  <div class="faq-answer" id="faq-ans-${idx}-${i}">
+                    ${escapeHtml(item.a)}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        
+        case 'countdown': {
+          const rand = Math.floor(Math.random() * 10000);
+          return `
+            <div style="border:1px solid #e5e7eb; border-radius:12px; padding:24px; text-align:center; max-width:440px; margin:20px auto; background:#ffffff;">
+              <h4 style="font-weight:800; margin-bottom:12px; color:#1e293b; ${headingStyle}">${escapeHtml(block.title)}</h4>
+              <div style="display:flex; justify-content:center; gap:12px;" id="countdown-wrapper-${rand}">
+                <div style="background:#f3f4f6; padding:10px; border-radius:6px; min-width:60px;">
+                  <strong style="font-size:1.3rem; display:block; color:#111827;">02</strong>
+                  <span style="font-size:0.65rem; color:#6b7280; text-transform:uppercase;">Days</span>
+                </div>
+                <div style="background:#f3f4f6; padding:10px; border-radius:6px; min-width:60px;">
+                  <strong style="font-size:1.3rem; display:block; color:#111827;">14</strong>
+                  <span style="font-size:0.65rem; color:#6b7280; text-transform:uppercase;">Hours</span>
+                </div>
+                <div style="background:#f3f4f6; padding:10px; border-radius:6px; min-width:60px;">
+                  <strong style="font-size:1.3rem; display:block; color:#111827;">35</strong>
+                  <span style="font-size:0.65rem; color:#6b7280; text-transform:uppercase;">Mins</span>
+                </div>
+                <div style="background:#f3f4f6; padding:10px; border-radius:6px; min-width:60px;">
+                  <strong style="font-size:1.3rem; display:block; color:#111827;" id="countdown-sec-${rand}">56</strong>
+                  <span style="font-size:0.65rem; color:#6b7280; text-transform:uppercase;">Secs</span>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+        
+        case 'banner':
+          return `
+            <div style="background:linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('${block.bgUrl || ''}') center/cover no-repeat; padding:72px 24px; text-align:center; color:#ffffff; border-radius:12px; display:flex; flex-direction:column; gap:12px; align-items:center; min-height:240px; justify-content:center; margin:20px 0;">
+              <h2 style="font-size:2.2rem; font-weight:800; font-family:'Plus Jakarta Sans', sans-serif; letter-spacing:-0.5px; text-shadow:0 2px 8px rgba(0,0,0,0.3);">${escapeHtml(block.title)}</h2>
+              <p style="font-size:0.95rem; max-width:500px; opacity:0.9; text-shadow:0 1px 4px rgba(0,0,0,0.3);">${escapeHtml(block.desc)}</p>
+              ${block.btnLabel ? `<button class="alima-btn primary-accent-bg" style="border:none; padding:10px 24px; margin-top:8px; font-size:0.85rem;">${escapeHtml(block.btnLabel)}</button>` : ''}
+            </div>
+          `;
+        
+        default:
+          return `<div style="padding:10px; border:1px solid #ccc; text-align:center; font-size:0.8rem; color:#999;">Render Placeholder: ${block.type}</div>`;
+      }
+    }
+
+    // Helper functions
+    function formatYoutubeUrl(url) {
+      if (!url) return '';
+      let videoId = '';
+      if (url.includes('youtube.com/watch?v=')) {
+        videoId = url.split('v=')[1].split('&')[0];
+      } else if (url.includes('youtu.be/')) {
+        videoId = url.split('youtu.be/')[1].split('?')[0];
+      } else if (url.includes('youtube.com/embed/')) {
+        return url;
+      }
+      return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
+    }
+
+    function getSocialSymbol(name) {
+      const symbols = { instagram: "📸", twitter: "🐦", linkedin: "💼", youtube: "📺", github: "🐙" };
+      return symbols[name.toLowerCase()] || "🔗";
+    }
+
+    function getContrastColor(hexColor) {
+      if (!hexColor.startsWith('#')) return '#ffffff';
+      const r = parseInt(hexColor.slice(1, 3), 16);
+      const g = parseInt(hexColor.slice(3, 5), 16);
+      const b = parseInt(hexColor.slice(5, 7), 16);
+      const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+      return (yiq >= 128) ? '#111827' : '#ffffff';
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // FAQ Toggler
+    function toggleFaqAccordion(blockIdx, itemIdx) {
+      const answer = document.getElementById(`faq-ans-${blockIdx}-${itemIdx}`);
+      const arrow = document.getElementById(`faq-arrow-${blockIdx}-${itemIdx}`);
+      if (answer.classList.contains('show')) {
+        answer.classList.remove('show');
+        arrow.textContent = '▾';
+      } else {
+        answer.classList.add('show');
+        arrow.textContent = '▴';
+      }
+    }
+    window.toggleFaqAccordion = toggleFaqAccordion;
+
+    // RENDER FOOTER
+    function renderFooterSection() {
+      const footer = document.getElementById('public-footer');
+      const footerCols = document.getElementById('public-footer-columns');
+      const footerCopyright = document.getElementById('public-footer-copyright');
+      const footerSocials = document.getElementById('public-footer-socials');
+
+      if (!themeConfig || !themeConfig.footer) {
+        footer.style.display = 'none';
+        return;
+      }
+
+      footer.style.display = 'block';
+
+      const config = themeConfig.footer;
+      const layoutStyle = (themeConfig.layout && themeConfig.layout.footerStyle) || "simple";
+
+      footerCopyright.textContent = config.copyright || `© ${new Date().getFullYear()} ${websiteData.name}. All rights reserved.`;
+
+      // 1. Column layout switch
+      footerCols.innerHTML = '';
+      if (config.showColumns !== false && layoutStyle === 'detailed') {
+        footerCols.style.display = 'grid';
+        footerCols.innerHTML = `
+          <div>
+            <span class="footer-column-title">Department</span>
+            <ul class="footer-links-list">
+              <li><a href="#">Engineering</a></li>
+              <li><a href="#">Humanities & Sciences</a></li>
+              <li><a href="#">Admissions Hub</a></li>
+            </ul>
+          </div>
+          <div>
+            <span class="footer-column-title">Resources</span>
+            <ul class="footer-links-list">
+              <li><a href="#">Library Catalogs</a></li>
+              <li><a href="#">Academics Calendar</a></li>
+              <li><a href="#">Student Portals</a></li>
+            </ul>
+          </div>
+          <div>
+            <span class="footer-column-title">Help & Info</span>
+            <ul class="footer-links-list">
+              <li><a href="#">IT Support Helpdesk</a></li>
+              <li><a href="#">Campus Directory</a></li>
+              <li><a href="#">Security Office</a></li>
+            </ul>
+          </div>
+        `;
+      } else {
+        footerCols.style.display = 'none';
+      }
+
+      // 2. Social Handles
+      footerSocials.innerHTML = '';
+      if (layoutStyle !== 'minimal') {
+        footerSocials.style.display = 'flex';
+        const handles = config.socials || {};
+        const symbols = { instagram: "📸", twitter: "🐦", linkedin: "💼", youtube: "📺", github: "🐙" };
+        
+        Object.keys(handles).forEach(key => {
+          if (handles[key]) {
+            footerSocials.innerHTML += `<a href="${handles[key]}" target="_blank" title="${key}">${symbols[key] || '🔗'}</a>`;
+          }
+        });
+      } else {
+        footerSocials.style.display = 'none';
+        footerCopyright.style.textAlign = 'center';
+        footerCopyright.style.width = '100%';
+      }
+    }
+
+    // Submissions handlers
+    window.handleVisitorFormSubmit = (e, btnText) => {
+      e.preventDefault();
+      alert(`Simulated Form Submission received successfully! Button: "${btnText}"`);
+      e.target.reset();
+    };
+
+    window.handleVisitorNewsletter = (e) => {
+      e.preventDefault();
+      alert("🎉 Successfully subscribed to digital campus newsletters!");
+      e.target.reset();
+    };
+
+    // Bind event animations/timers
+    function bindVisitorInteractions() {
+      // Setup dynamic countdown updates
+      const countdownSecs = document.querySelectorAll('[id^="countdown-sec-"]');
+      countdownSecs.forEach(secEl => {
+        let count = 56;
+        setInterval(() => {
+          count--;
+          if (count < 0) count = 59;
+          secEl.textContent = count.toString().padStart(2, '0');
+        }, 1000);
+      });
+    }
+
+    function renderErrorState(title, message) {
+      const container = document.getElementById('public-content-canvas');
+      container.innerHTML = `
+        <div class="not-found-wrapper">
+          <h2 class="not-found-title">${escapeHtml(title)}</h2>
+          <p class="not-found-desc">${escapeHtml(message)}</p>
+          <a href="dashboard.html" class="alima-btn primary-accent-bg" style="padding:10px 24px; font-size:0.85rem; border:none; border-radius:6px; color:#ffffff; font-weight:700;">Back to Dashboard</a>
+        </div>
+      `;
+    }
+
+    // Boot
+    initializePreviewEngine();
+
+  </script>
+</body>
+</html>
