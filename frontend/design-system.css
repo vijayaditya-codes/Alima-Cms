@@ -329,6 +329,19 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
 }
 
+/* Light glassmorphism overrides in dark mode */
+html.dark .profile-dropdown {
+  background: rgba(255, 255, 255, 0.18) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
+}
+
+html.dark .profile-dropdown-item:hover {
+  background-color: rgba(255, 255, 255, 0.12) !important;
+}
+
 .profile-dropdown-item {
   display: flex;
   align-items: center;
