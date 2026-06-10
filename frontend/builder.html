@@ -335,6 +335,12 @@
         <div class="palette-block" draggable="true" ondragstart="handleDragStart(event, 'html')">
           <span class="block-icon">&lt;&gt;</span> Custom HTML
         </div>
+        <div class="palette-block" draggable="true" ondragstart="handleDragStart(event, 'blog')">
+          <span class="block-icon">✍️</span> Blog Articles
+        </div>
+        <div class="palette-block" draggable="true" ondragstart="handleDragStart(event, 'events')">
+          <span class="block-icon">📅</span> Events List
+        </div>
       </div>
     </aside>
 
@@ -425,16 +431,27 @@
       }, 30000);
     });
 
+    let siteContent = [];
     async function loadWebsiteData() {
       try {
         const docRef = doc(db, "websites", websiteId);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           websitePlugins = docSnap.data().plugins || {};
-          renderCanvas();
         }
+
+        // Fetch site-wide content feeds
+        const contentSnap = await getDocs(query(collection(db, "content"), where("websiteId", "==", websiteId)));
+        siteContent = [];
+        contentSnap.forEach(d => {
+          siteContent.push({ id: d.id, ...d.data() });
+        });
+        // Sort by published/creation date descending
+        siteContent.sort((a, b) => new Date(b.publishedAt || b.createdAt) - new Date(a.publishedAt || a.createdAt));
+
+        renderCanvas();
       } catch (err) {
-        console.error("Failed to fetch website settings:", err);
+        console.error("Failed to fetch website settings/content:", err);
       }
     }
 
@@ -535,7 +552,11 @@
         case 'quote':
           return { id, type, text: 'The beautiful thing about learning is that no one can take it away from you.', author: 'B.B. King', color: '#7c3aed' };
         case 'html':
-          return { id, type, code: '<div style="padding: 10px; border-radius: 8px; background: #fee2e2; color: #b91c1c; font-weight: 600; text-align: center;">HTML Block Sandbox</div>' };
+          return { id, type, code: '<div style="padding: 20px; background: #e0f2fe; border-radius: 8px; text-align: center; color: #0369a1; font-weight: bold;">👋 Custom HTML Frame</div>' };
+        case 'blog':
+          return { id, type, count: 3, style: 'grid' };
+        case 'events':
+          return { id, type, count: 3, style: 'list' };
         default:
           return { id, type: 'unknown' };
       }
@@ -652,6 +673,118 @@
             case 'html':
               previewHtml = `<div>${block.code}</div>`;
               break;
+            case 'blog': {
+              const blogs = siteContent.filter(item => item.type === 'blog' && item.status === 'published');
+              if (blogs.length === 0) {
+                previewHtml = `
+                  <div style="padding: 24px; border: 1px dashed var(--border-color-light); border-radius: 12px; text-align: center; background: rgba(124, 58, 237, 0.02); width:100%;">
+                    <span style="font-size: 2rem; display: block; margin-bottom: 8px;">✍️</span>
+                    <strong style="color: var(--text-main); display: block; margin-bottom: 4px;">Blog Articles Feed</strong>
+                    <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0 0 12px 0;">No published blog articles found for this site. Go to Content Manager to add articles.</p>
+                    <a href="content.html" class="alima-btn btn-ghost btn-sm" style="text-decoration:none; border:1px solid var(--border-color-light); border-radius:var(--radius-pill);">Go to Content Manager</a>
+                  </div>
+                `;
+              } else {
+                const count = block.count || 3;
+                const displayStyle = block.style || 'grid';
+                const itemsToDisplay = blogs.slice(0, count);
+                
+                if (displayStyle === 'grid') {
+                  previewHtml = `
+                    <div style="display: flex; flex-direction: column; gap: 16px; width:100%;">
+                      <h4 style="font-size: 1.15rem; font-weight: 800; color: var(--text-main); font-family: var(--font-heading); margin-bottom:4px;">Recent Publications</h4>
+                      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                        ${itemsToDisplay.map(post => `
+                          <div style="background: var(--bg-card); border: 1px solid var(--border-color-light); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 8px; box-shadow: var(--shadow-standard);">
+                            <span style="font-size: 0.7rem; color: var(--color-primary); font-weight: 700; text-transform: uppercase;">${new Date(post.publishedAt || post.createdAt).toLocaleDateString()}</span>
+                            <h5 style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin: 0;">${escapeHtml(post.title)}</h5>
+                            <p style="color: var(--text-muted); font-size: 0.8rem; line-height: 1.5; margin: 0;">${escapeHtml(post.excerpt || 'Read the full publication inside...')}</p>
+                            <a href="#" style="color: var(--color-primary); text-decoration: none; font-size: 0.8rem; font-weight: 600; margin-top: auto; display: inline-flex; align-items: center; gap: 4px;">Read Article ➔</a>
+                          </div>
+                        `).join('')}
+                      </div>
+                    </div>
+                  `;
+                } else {
+                  previewHtml = `
+                    <div style="display: flex; flex-direction: column; gap: 16px; width:100%;">
+                      <h4 style="font-size: 1.15rem; font-weight: 800; color: var(--text-main); font-family: var(--font-heading); margin-bottom:4px;">Recent Publications</h4>
+                      <div style="display: flex; flex-direction: column; gap: 12px;">
+                        ${itemsToDisplay.map(post => `
+                          <div style="background: var(--bg-card); border: 1px solid var(--border-color-light); border-radius: 8px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; gap: 16px; box-shadow: var(--shadow-standard);">
+                            <div>
+                              <h5 style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin: 0;">${escapeHtml(post.title)}</h5>
+                              <p style="color: var(--text-muted); font-size: 0.8rem; line-height: 1.4; margin: 4px 0 0 0;">${escapeHtml(post.excerpt || 'No description preview available.')}</p>
+                            </div>
+                            <span style="font-size: 0.75rem; color: var(--text-muted); white-space: nowrap;">${new Date(post.publishedAt || post.createdAt).toLocaleDateString()}</span>
+                          </div>
+                        `).join('')}
+                      </div>
+                    </div>
+                  `;
+                }
+              }
+              break;
+            }
+            case 'events': {
+              const events = siteContent.filter(item => item.type === 'event' && item.status === 'published');
+              if (events.length === 0) {
+                previewHtml = `
+                  <div style="padding: 24px; border: 1px dashed var(--border-color-light); border-radius: 12px; text-align: center; background: rgba(6, 182, 212, 0.02); width:100%;">
+                    <span style="font-size: 2rem; display: block; margin-bottom: 8px;">📅</span>
+                    <strong style="color: var(--text-main); display: block; margin-bottom: 4px;">Upcoming Campus Events</strong>
+                    <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0 0 12px 0;">No published events found for this site. Go to Content Manager to schedule events.</p>
+                    <a href="content.html" class="alima-btn btn-ghost btn-sm" style="text-decoration:none; border:1px solid var(--border-color-light); border-radius:var(--radius-pill);">Go to Content Manager</a>
+                  </div>
+                `;
+              } else {
+                const count = block.count || 3;
+                const displayStyle = block.style || 'list';
+                const itemsToDisplay = events.slice(0, count);
+                
+                if (displayStyle === 'grid') {
+                  previewHtml = `
+                    <div style="display: flex; flex-direction: column; gap: 16px; width:100%;">
+                      <h4 style="font-size: 1.15rem; font-weight: 800; color: var(--text-main); font-family: var(--font-heading); margin-bottom:4px;">Events Calendar</h4>
+                      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                        ${itemsToDisplay.map(ev => `
+                          <div style="background: var(--bg-card); border: 1px solid var(--border-color-light); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 8px; box-shadow: var(--shadow-standard);">
+                            <span style="font-size: 0.75rem; color: var(--color-accent); font-weight: 700; text-transform: uppercase; background: rgba(6, 182, 212, 0.08); padding: 4px 8px; border-radius: 4px; width: max-content;">📅 ${escapeHtml(ev.eventDate || 'TBD')}</span>
+                            <h5 style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin: 4px 0 0 0;">${escapeHtml(ev.title)}</h5>
+                            <p style="color: var(--text-muted); font-size: 0.8rem; line-height: 1.4; margin: 0;">📍 ${escapeHtml(ev.location || 'Online')}</p>
+                            <p style="color: var(--text-muted); font-size: 0.8rem; line-height: 1.4; margin: 0;">${escapeHtml(ev.excerpt || ev.body?.slice(0,60) || 'No details available.')}</p>
+                          </div>
+                        `).join('')}
+                      </div>
+                    </div>
+                  `;
+                } else {
+                  previewHtml = `
+                    <div style="display: flex; flex-direction: column; gap: 16px; width:100%;">
+                      <h4 style="font-size: 1.15rem; font-weight: 800; color: var(--text-main); font-family: var(--font-heading); margin-bottom:4px;">Events Calendar</h4>
+                      <div style="display: flex; flex-direction: column; gap: 12px;">
+                        ${itemsToDisplay.map(ev => `
+                          <div style="background: var(--bg-card); border: 1px solid var(--border-color-light); border-radius: 8px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px; box-shadow: var(--shadow-standard);">
+                            <div style="display: flex; gap: 16px; align-items: center;">
+                              <div style="background: rgba(6, 182, 212, 0.08); color: var(--color-accent); border: 1px solid rgba(6, 182, 212, 0.15); padding: 8px 12px; border-radius: 8px; text-align: center; min-width: 60px;">
+                                <span style="display: block; font-size: 0.8rem; font-weight: 700; text-transform: uppercase;">DATE</span>
+                                <span style="display: block; font-size: 0.95rem; font-weight: 800;">${escapeHtml(ev.eventDate?.split(',')[0] || 'TBD')}</span>
+                              </div>
+                              <div>
+                                <h5 style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin: 0;">${escapeHtml(ev.title)}</h5>
+                                <p style="color: var(--text-muted); font-size: 0.8rem; margin: 4px 0 0 0;">📍 ${escapeHtml(ev.location || 'Online')} • ${escapeHtml(ev.excerpt || 'No description details.')}</p>
+                              </div>
+                            </div>
+                            <span style="font-size: 0.75rem; color: var(--color-accent); font-weight: 700; text-transform: uppercase;">RSVP ➔</span>
+                          </div>
+                        `).join('')}
+                      </div>
+                    </div>
+                  `;
+                }
+              }
+              break;
+            }
           }
 
           // HUD overlay elements
@@ -1012,6 +1145,36 @@
             <div class="alima-input-group">
               <label class="alima-input-label">Raw HTML Code</label>
               <textarea class="alima-input" style="height:150px; font-family:monospace; font-size:0.8rem; resize:vertical;" oninput="updateBlockProp('code', this.value)">${block.code}</textarea>
+            </div>
+          `;
+          break;
+        case 'blog':
+          fieldsHtml = `
+            <div class="alima-input-group">
+              <label class="alima-input-label">Articles to Show</label>
+              <input type="number" class="alima-input" min="1" max="10" value="${block.count || 3}" oninput="updateBlockProp('count', parseInt(this.value) || 3)">
+            </div>
+            <div class="alima-input-group">
+              <label class="alima-input-label">Display Format</label>
+              <select class="alima-input" onchange="updateBlockProp('style', this.value)">
+                <option value="grid" ${block.style === 'grid' ? 'selected' : ''}>Grid Layout</option>
+                <option value="list" ${block.style === 'list' ? 'selected' : ''}>List Layout</option>
+              </select>
+            </div>
+          `;
+          break;
+        case 'events':
+          fieldsHtml = `
+            <div class="alima-input-group">
+              <label class="alima-input-label">Events to Show</label>
+              <input type="number" class="alima-input" min="1" max="10" value="${block.count || 3}" oninput="updateBlockProp('count', parseInt(this.value) || 3)">
+            </div>
+            <div class="alima-input-group">
+              <label class="alima-input-label">Display Format</label>
+              <select class="alima-input" onchange="updateBlockProp('style', this.value)">
+                <option value="list" ${block.style === 'list' ? 'selected' : ''}>List Layout</option>
+                <option value="grid" ${block.style === 'grid' ? 'selected' : ''}>Grid Layout</option>
+              </select>
             </div>
           `;
           break;
