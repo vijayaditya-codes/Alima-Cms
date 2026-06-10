@@ -17,9 +17,10 @@
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alima CMS - Themes</title>
-  <!-- Google Fonts -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap">
+  <title>Alima CMS - Themes Marketplace</title>
+  
+  <!-- Google Fonts support for pairings -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;700&family=Inter:wght@300;400;500;600;700&family=Lato:wght@400;700&family=Montserrat:wght@400;700;800&family=Nunito:wght@400;600;700&family=Open+Sans:wght@400;600;700&family=Playfair+Display:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
   
   <!-- Shared Design System CSS -->
   <link rel="stylesheet" href="design-system.css">
@@ -29,36 +30,102 @@
       background-color: var(--bg-main);
       color: var(--text-main);
       transition: background-color var(--transition-normal), color var(--transition-normal);
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* Tabs Filter Categories */
-    .filter-tabs {
+    .themes-container {
       display: flex;
-      gap: 24px;
+      flex-direction: column;
+      gap: 32px;
+      padding-bottom: 60px;
+    }
+
+    /* Marketplace Section Header */
+    .section-header {
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-family: var(--font-heading);
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text-main);
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+
+    /* Top Marketplace Controls Bar */
+    .controls-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
       border-bottom: 1px solid var(--border-color-light);
-      margin-top: 12px;
+      padding-bottom: 16px;
       margin-bottom: 24px;
     }
 
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
     .filter-tab {
-      background: none;
-      border: none;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color-light);
       font-family: var(--font-heading);
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       font-weight: 600;
       color: var(--text-muted);
-      padding: 10px 4px;
+      padding: 8px 16px;
       cursor: pointer;
-      border-bottom: 2px solid transparent;
-      transition: all var(--transition-normal);
+      border-radius: var(--radius-pill);
+      transition: all var(--transition-fast);
+    }
+
+    .filter-tab:hover {
+      border-color: var(--color-primary);
+      color: var(--text-main);
     }
 
     .filter-tab.active {
-      color: var(--color-primary);
-      border-bottom-color: var(--color-primary);
+      background: var(--gradient-primary);
+      color: #ffffff;
+      border-color: transparent;
     }
 
-    /* Themes Grid */
+    .search-input-wrapper {
+      position: relative;
+      width: 260px;
+    }
+
+    .search-input {
+      width: 100%;
+      height: 38px;
+      padding: 0 16px 0 36px;
+      font-size: 0.85rem;
+      border-radius: var(--radius-pill);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      -webkit-transform: translateY(-50%);
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      pointer-events: none;
+    }
+
+    /* Themes Grid Layout */
     .themes-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -67,7 +134,7 @@
 
     .theme-card {
       background: var(--bg-card);
-      border: 1px solid var(--border-color-light);
+      border: 1.5px solid var(--border-color-light);
       border-radius: var(--radius-card);
       overflow: hidden;
       box-shadow: var(--shadow-standard);
@@ -81,122 +148,271 @@
       -webkit-transform: translateY(-4px);
       transform: translateY(-4px);
       box-shadow: var(--shadow-hover);
+      border-color: var(--color-primary);
     }
 
     .theme-card.active-theme {
       border-color: var(--color-primary);
-      box-shadow: 0 0 16px rgba(124, 58, 237, 0.15);
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
     }
 
-    .theme-card.active-theme::after {
-      content: 'Active';
+    .active-badge {
       position: absolute;
       top: 12px;
       right: 12px;
       background: var(--color-primary);
-      color: white;
-      font-size: 0.7rem;
+      color: #ffffff;
+      font-size: 0.75rem;
       font-weight: 700;
-      text-transform: uppercase;
-      padding: 4px 10px;
+      padding: 6px 12px;
       border-radius: var(--radius-pill);
-      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+      z-index: 10;
     }
 
     .theme-thumbnail {
-      height: 160px;
+      height: 150px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: white;
+      color: #ffffff;
       font-family: var(--font-heading);
       font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      font-size: 1.25rem;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      position: relative;
     }
 
     .theme-details {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex-grow: 1;
+    }
+
+    .theme-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .theme-badge {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color-light);
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .theme-rating {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--color-warning);
+    }
+
+    .theme-name {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text-main);
+    }
+
+    .theme-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      flex-grow: 1;
+    }
+
+    .theme-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    /* Full-screen Theme Preview Modal */
+    .preview-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 10, 26, 0.85);
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+      z-index: 2000;
+      display: none;
+      flex-direction: column;
+    }
+
+    .preview-modal-header {
+      height: 64px;
+      background: var(--bg-card);
+      border-bottom: 1.5px solid var(--border-color-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 24px;
+      z-index: 2010;
+    }
+
+    .preview-modal-body {
+      flex: 1;
+      background: var(--bg-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .preview-modal-canvas-wrapper {
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: width 0.3s ease;
+    }
+
+    .preview-canvas-card {
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
+      border: 1px solid var(--border-color-light);
+      border-radius: var(--radius-card);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+      overflow-y: auto;
+      transition: width 0.3s ease;
+    }
+
+    .preview-canvas-card.mobile-view {
+      width: 375px;
+      max-width: 375px;
+    }
+
+    /* Active Theme Customizer Section (Bottom) */
+    .customizer-section {
+      border-top: 1px solid var(--border-color-light);
+      padding-top: 40px;
+      margin-top: 20px;
+    }
+
+    .customizer-layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 32px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .customizer-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Customizer Left Tabs Panel */
+    .customizer-controls {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-color-light);
+      border-radius: var(--radius-card);
       padding: 20px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      flex-grow: 1;
+      gap: 20px;
+      height: fit-content;
+      box-shadow: var(--shadow-standard);
     }
 
-    /* Sliding customizer panel */
-    .customizer-drawer-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(10, 10, 26, 0.4);
-      -webkit-backdrop-filter: blur(8px);
-      backdrop-filter: blur(8px);
-      z-index: 1000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
+    .customizer-tabs-nav {
+      display: flex;
+      background: var(--bg-surface);
+      padding: 4px;
+      border-radius: 8px;
+      gap: 2px;
+      overflow-x: auto;
     }
 
-    .customizer-drawer-overlay.active {
-      opacity: 1;
-      pointer-events: all;
+    .customizer-tab-btn {
+      flex: 1;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 8px 0;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+      white-space: nowrap;
+      transition: all var(--transition-fast);
+      min-width: 55px;
     }
 
-    .customizer-drawer {
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 360px;
-      height: 100vh;
+    .customizer-tab-btn.active {
       background: var(--bg-card);
-      box-shadow: -8px 0 32px rgba(0, 0, 0, 0.1);
-      z-index: 1001;
-      -webkit-transform: translateX(100%);
-      transform: translateX(100%);
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      color: var(--color-primary);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .customizer-panel-body {
       display: flex;
       flex-direction: column;
+      gap: 20px;
     }
 
-    .customizer-drawer-overlay.active .customizer-drawer {
-      -webkit-transform: translateX(0);
-      transform: translateX(0);
+    .customizer-panel-pane {
+      display: none;
+      flex-direction: column;
+      gap: 16px;
     }
 
-    .drawer-header {
-      padding: 24px;
-      border-bottom: 1px solid var(--border-color-light);
+    .customizer-panel-pane.active {
+      display: flex;
+    }
+
+    /* Form specific styles */
+    .color-picker-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-    }
-
-    .drawer-body {
-      padding: 24px;
-      overflow-y: auto;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    .drawer-footer {
-      padding: 24px;
-      border-top: 1px solid var(--border-color-light);
-      display: flex;
-      gap: 12px;
-    }
-
-    .picker-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    /* Font pairings cards list */
-    .font-pairing-card {
-      border: 1px solid var(--border-color-light);
+      background: var(--bg-surface);
+      padding: 10px 14px;
       border-radius: var(--radius-standard);
-      padding: 12px;
+      border: 1px solid var(--border-color-light);
+    }
+
+    .color-picker-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .color-input-field {
+      border: none;
+      outline: none;
+      background: transparent;
+      width: 44px;
+      height: 32px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .font-pairing-card {
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border-color-light);
+      border-radius: var(--radius-standard);
+      padding: 12px 16px;
       cursor: pointer;
       display: flex;
       justify-content: space-between;
@@ -204,37 +420,344 @@
       transition: all var(--transition-fast);
     }
 
+    .font-pairing-card:hover {
+      border-color: var(--color-primary);
+    }
+
     .font-pairing-card.selected {
       border-color: var(--color-primary);
-      background: rgba(124, 58, 237, 0.03);
+      background: rgba(124, 58, 237, 0.04);
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
     }
 
-    /* Layout toggler */
-    .layout-toggle-group {
+    .nav-menu-list {
       display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 220px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .nav-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       background: var(--bg-surface);
-      padding: 4px;
-      border-radius: var(--radius-pill);
-    }
-
-    .layout-toggle-btn {
-      flex: 1;
-      border: none;
-      background: none;
-      padding: 8px 0;
-      font-family: var(--font-heading);
-      font-size: 0.85rem;
+      border: 1px solid var(--border-color-light);
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 0.8rem;
       font-weight: 600;
-      border-radius: var(--radius-pill);
-      cursor: pointer;
-      color: var(--text-muted);
-      text-align: center;
+      transition: margin-left 0.2s ease;
     }
 
-    .layout-toggle-btn.active {
-      background: var(--bg-card);
+    .nav-menu-item.nested {
+      margin-left: 20px;
+      border-left: 3px solid var(--color-primary);
+    }
+
+    .nav-menu-actions {
+      margin-left: auto;
+      display: flex;
+      gap: 4px;
+    }
+
+    .menu-action-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 2px 4px;
+      font-size: 0.85rem;
+      border-radius: 4px;
+    }
+
+    .menu-action-btn:hover {
+      color: var(--text-main);
+      background: var(--border-color-light);
+    }
+
+    .menu-action-btn.delete:hover {
+      color: var(--color-error);
+    }
+
+    /* Right Preview panel mock site layout */
+    .mock-preview-panel {
+      display: flex;
+      flex-direction: column;
+      height: 520px;
+    }
+
+    .mock-browser-chrome {
+      background: #1f2937;
+      border-radius: 12px 12px 0 0;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 8px;
+      position: relative;
+      user-select: none;
+    }
+
+    .browser-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .browser-address {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+      height: 22px;
+      flex-grow: 1;
+      max-width: 340px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #d1d5db;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .mock-canvas-container {
+      flex: 1;
+      border: 1.5px solid var(--border-color-light);
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      background: #ffffff;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    /* Mock Canvas layout structure styling */
+    .mock-header {
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      transition: all var(--transition-normal);
+    }
+
+    .mock-header.sticky {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .mock-header.transparent {
+      background: transparent;
+      border-bottom-color: transparent;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+    }
+
+    .mock-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      font-size: 1rem;
+      color: #111827;
+    }
+
+    .mock-logo-img {
+      height: 28px;
+      width: auto;
+      max-width: 80px;
+      object-fit: contain;
+    }
+
+    .mock-nav-links {
+      display: flex;
+      gap: 16px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #4b5563;
+      list-style: none;
+    }
+
+    .mock-nav-item {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .mock-nav-item:hover {
       color: var(--color-primary);
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .mock-dropdown {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 8px 0;
+      min-width: 120px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      list-style: none;
+      margin-top: 8px;
+    }
+
+    .mock-nav-item:hover .mock-dropdown {
+      display: block;
+    }
+
+    .mock-dropdown-item {
+      padding: 6px 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #4b5563;
+      white-space: nowrap;
+    }
+
+    .mock-dropdown-item:hover {
+      background: #f3f4f6;
+      color: var(--color-primary);
+    }
+
+    .mock-hero {
+      padding: 56px 24px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mock-hero-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #111827;
+      letter-spacing: -0.5px;
+    }
+
+    .mock-hero-subtitle {
+      font-size: 0.9rem;
+      color: #4b5563;
+      max-width: 440px;
+      line-height: 1.5;
+    }
+
+    .mock-btn {
+      padding: 8px 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      transition: opacity 0.15s ease;
+    }
+
+    .mock-btn-primary {
+      background-color: var(--color-primary);
+      color: #ffffff;
+    }
+
+    .mock-btn-secondary {
+      background-color: transparent;
+      border: 1.5px solid #d1d5db;
+      color: #4b5563;
+      margin-left: 8px;
+    }
+
+    .mock-content {
+      padding: 32px 24px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 600px) {
+      .mock-content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .mock-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 16px;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .mock-card-icon {
+      font-size: 1.25rem;
+    }
+
+    .mock-card-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .mock-card-desc {
+      font-size: 0.75rem;
+      color: #6b7280;
+      line-height: 1.4;
+    }
+
+    .mock-footer {
+      border-top: 1px solid #e5e7eb;
+      padding: 24px;
+      background: #fafafa;
+    }
+
+    .mock-footer-columns {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+      font-size: 0.75rem;
+    }
+
+    .mock-footer-col-title {
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      font-size: 0.65rem;
+      letter-spacing: 0.5px;
+    }
+
+    .mock-footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      color: #6b7280;
+      list-style: none;
+    }
+
+    .mock-footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 0.75rem;
+      color: #6b7280;
+    }
+
+    .mock-footer-socials {
+      display: flex;
+      gap: 10px;
+      font-size: 0.9rem;
     }
   </style>
 </head>
@@ -328,182 +851,391 @@
       </div>
     </aside>
 
-    <!-- Main Content Area -->
+    <!-- Main Content Pane -->
     <main class="alima-main-content page-fade-scale">
       
       <!-- Top header bar -->
-      <header style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color-light); padding-bottom: 16px;">
+      <header style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color-light); padding-bottom: 16px; margin-bottom: 24px; gap: 16px; flex-wrap: wrap;">
         <div>
           <h2 style="font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px;">Theme Library</h2>
-          <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">Select and configure templates for your virtual campuses.</p>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">Choose and customize visual layouts for your websites.</p>
         </div>
         
-        <div class="alima-input-group" style="width: auto; flex-direction: row; align-items: center; gap: 12px;">
-          <label class="alima-input-label" style="white-space: nowrap; margin-bottom: 0;">Customize Site:</label>
-          <select id="site-selector" class="alima-input" style="width: 200px; padding: 8px 12px; font-size: 0.85rem;" onchange="loadSiteTheme(this.value)"></select>
+        <div class="alima-input-group" style="width: auto; flex-direction: row; align-items: center; gap: 12px; margin-bottom: 0;">
+          <label class="alima-input-label" style="white-space: nowrap; margin-bottom: 0; font-weight: 700;">Active Website:</label>
+          <select id="site-selector" class="alima-input" style="width: 220px; padding: 8px 12px; font-size: 0.85rem;" onchange="loadSiteTheme(this.value)"></select>
         </div>
       </header>
 
-      <!-- Category Filter Tabs -->
-      <div class="filter-tabs">
-        <button class="filter-tab active" onclick="filterCategory('all', this)">All Templates</button>
-        <button class="filter-tab" onclick="filterCategory('education', this)">Education</button>
-        <button class="filter-tab" onclick="filterCategory('portfolio', this)">Portfolio</button>
-        <button class="filter-tab" onclick="filterCategory('business', this)">Business</button>
-        <button class="filter-tab" onclick="filterCategory('blog', this)">Blog</button>
+      <div class="themes-container">
+
+        <!-- THEME GALLERY (Top Section) -->
+        <section class="gallery-section">
+          <div class="section-header">
+            <h3 class="section-title">Choose Your Theme</h3>
+            <p class="section-desc">Select a starter layout to style your campus site.</p>
+          </div>
+
+          <div class="controls-bar">
+            <!-- Filter Tabs -->
+            <div class="filter-tabs">
+              <button class="filter-tab active" onclick="filterGalleryCategory('all', this)">All</button>
+              <button class="filter-tab" onclick="filterGalleryCategory('campus', this)">Campus</button>
+              <button class="filter-tab" onclick="filterGalleryCategory('portfolio', this)">Portfolio</button>
+              <button class="filter-tab" onclick="filterGalleryCategory('business', this)">Business</button>
+              <button class="filter-tab" onclick="filterGalleryCategory('blog', this)">Blog</button>
+              <button class="filter-tab" onclick="filterGalleryCategory('personal', this)">Personal</button>
+            </div>
+
+            <!-- Search input -->
+            <div class="search-input-wrapper">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="gallery-search" class="alima-input search-input" placeholder="Search themes..." oninput="handleGallerySearch(this.value)">
+            </div>
+          </div>
+
+          <!-- Themes responsive grid -->
+          <div class="themes-grid" id="gallery-grid">
+            <!-- Filled dynamically via Javascript with 12 theme cards -->
+          </div>
+        </section>
+
+        <!-- ACTIVE THEME CUSTOMIZER (Bottom Section) -->
+        <section class="customizer-section" id="customizer-wrapper">
+          <div class="section-header">
+            <h3 class="section-title" id="customizer-panel-title">Customize Active Theme</h3>
+            <p class="section-desc">Tailor visual styles, color palettes, and header/footer attributes. Changes render live instantly.</p>
+          </div>
+
+          <div class="customizer-layout">
+            <!-- Left Panel controls -->
+            <div class="customizer-controls">
+              <!-- Tabs Navigation -->
+              <div class="customizer-tabs-nav">
+                <button class="customizer-tab-btn active" onclick="switchCustomizerTab('colors', this)">Colors</button>
+                <button class="customizer-tab-btn" onclick="switchCustomizerTab('fonts', this)">Fonts</button>
+                <button class="customizer-tab-btn" onclick="switchCustomizerTab('layout', this)">Layout</button>
+                <button class="customizer-tab-btn" onclick="switchCustomizerTab('header', this)">Header</button>
+                <button class="customizer-tab-btn" onclick="switchCustomizerTab('footer', this)">Footer</button>
+              </div>
+
+              <!-- Panels body -->
+              <div class="customizer-panel-body">
+                
+                <!-- COLORS TAB -->
+                <div class="customizer-panel-pane active" id="pane-colors">
+                  <div class="color-picker-item">
+                    <span class="color-picker-label">Primary Accent</span>
+                    <input type="color" id="picker-primary" class="color-input-field" oninput="updateColorField('primary', this.value)">
+                  </div>
+                  <div class="color-picker-item">
+                    <span class="color-picker-label">Secondary Highlight</span>
+                    <input type="color" id="picker-secondary" class="color-input-field" oninput="updateColorField('secondary', this.value)">
+                  </div>
+                  <div class="color-picker-item">
+                    <span class="color-picker-label">Site Background</span>
+                    <input type="color" id="picker-bg" class="color-input-field" oninput="updateColorField('background', this.value)">
+                  </div>
+                  <div class="color-picker-item">
+                    <span class="color-picker-label">Body Text Color</span>
+                    <input type="color" id="picker-text" class="color-input-field" oninput="updateColorField('text', this.value)">
+                  </div>
+                </div>
+
+                <!-- FONTS TAB -->
+                <div class="customizer-panel-pane" id="pane-fonts">
+                  <div style="display:flex; flex-direction:column; gap:12px;">
+                    <!-- Classic -->
+                    <div class="font-pairing-card" id="pair-classic" onclick="updateFontPair('Playfair Display', 'Lato', 'classic')">
+                      <div>
+                        <div style="font-weight:800; font-family:'Playfair Display'; font-size:1rem; color:var(--text-main);">Classic</div>
+                        <div style="font-size:0.75rem; color:var(--text-muted); font-family:'Lato'; margin-top:2px;">Playfair Display + Lato</div>
+                      </div>
+                      <span style="font-size:1.4rem; font-family:'Playfair Display'; font-weight:700;">Aa</span>
+                    </div>
+
+                    <!-- Modern -->
+                    <div class="font-pairing-card" id="pair-modern" onclick="updateFontPair('Plus Jakarta Sans', 'Inter', 'modern')">
+                      <div>
+                        <div style="font-weight:800; font-family:'Plus Jakarta Sans'; font-size:1rem; color:var(--text-main);">Modern</div>
+                        <div style="font-size:0.75rem; color:var(--text-muted); font-family:'Inter'; margin-top:2px;">Jakarta + Inter</div>
+                      </div>
+                      <span style="font-size:1.4rem; font-family:'Plus Jakarta Sans'; font-weight:700;">Aa</span>
+                    </div>
+
+                    <!-- Minimal -->
+                    <div class="font-pairing-card" id="pair-minimal" onclick="updateFontPair('DM Sans', 'DM Sans', 'minimal')">
+                      <div>
+                        <div style="font-weight:800; font-family:'DM Sans'; font-size:1rem; color:var(--text-main);">Minimal</div>
+                        <div style="font-size:0.75rem; color:var(--text-muted); font-family:'DM Sans'; margin-top:2px;">DM Sans + DM Sans</div>
+                      </div>
+                      <span style="font-size:1.4rem; font-family:'DM Sans'; font-weight:700;">Aa</span>
+                    </div>
+
+                    <!-- Elegant -->
+                    <div class="font-pairing-card" id="pair-elegant" onclick="updateFontPair('Cormorant Garamond', 'Nunito', 'elegant')">
+                      <div>
+                        <div style="font-weight:800; font-family:'Cormorant Garamond'; font-size:1rem; color:var(--text-main);">Elegant</div>
+                        <div style="font-size:0.75rem; color:var(--text-muted); font-family:'Nunito'; margin-top:2px;">Cormorant + Nunito</div>
+                      </div>
+                      <span style="font-size:1.4rem; font-family:'Cormorant Garamond'; font-style:italic;">Aa</span>
+                    </div>
+
+                    <!-- Bold -->
+                    <div class="font-pairing-card" id="pair-bold" onclick="updateFontPair('Montserrat', 'Open Sans', 'bold')">
+                      <div>
+                        <div style="font-weight:800; font-family:'Montserrat'; font-size:1rem; color:var(--text-main);">Bold</div>
+                        <div style="font-size:0.75rem; color:var(--text-muted); font-family:'Open Sans'; margin-top:2px;">Montserrat + Open Sans</div>
+                      </div>
+                      <span style="font-size:1.4rem; font-family:'Montserrat'; font-weight:800;">Aa</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- LAYOUT TAB -->
+                <div class="customizer-panel-pane" id="pane-layout">
+                  <div class="alima-input-group">
+                    <label class="alima-input-label">Container Width</label>
+                    <select id="layout-width-select" class="alima-input" onchange="updateLayoutField('width', this.value)">
+                      <option value="full">Full Width</option>
+                      <option value="boxed">Boxed (1200px)</option>
+                      <option value="narrow">Narrow (960px)</option>
+                    </select>
+                  </div>
+                  <div class="alima-input-group">
+                    <label class="alima-input-label">Header Placement</label>
+                    <select id="layout-header-select" class="alima-input" onchange="updateLayoutField('headerStyle', this.value)">
+                      <option value="static">Static Header</option>
+                      <option value="fixed">Fixed (Sticky) Header</option>
+                      <option value="transparent">Transparent Overlay Header</option>
+                    </select>
+                  </div>
+                  <div class="alima-input-group">
+                    <label class="alima-input-label">Footer Variant</label>
+                    <select id="layout-footer-select" class="alima-input" onchange="updateLayoutField('footerStyle', this.value)">
+                      <option value="simple">Simple Layout</option>
+                      <option value="detailed">Detailed Multi-Column</option>
+                      <option value="minimal">Minimal Single line</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- HEADER TAB -->
+                <div class="customizer-panel-pane" id="pane-header">
+                  <!-- Logo Upload -->
+                  <div class="alima-input-group">
+                    <label class="alima-input-label">Header Logo Icon</label>
+                    <div style="display:flex; align-items:center; gap:12px;">
+                      <button class="alima-btn btn-ghost btn-sm" style="border: 1.5px solid var(--border-color-light); white-space:nowrap;" onclick="document.getElementById('logo-file-picker').click()">Upload File</button>
+                      <input type="file" id="logo-file-picker" accept="image/*" style="display:none;" onchange="uploadHeaderLogo(this)">
+                      <span id="logo-upload-status" style="font-size:0.75rem; color:var(--text-muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">No logo selected</span>
+                    </div>
+                  </div>
+
+                  <!-- Title Toggle -->
+                  <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-surface); padding:10px 14px; border-radius:var(--radius-standard); border:1px solid var(--border-color-light);">
+                    <span style="font-size:0.85rem; font-weight:600; color:var(--text-main);">Show Site Title</span>
+                    <input type="checkbox" id="header-show-title" style="width:18px; height:18px; cursor:pointer;" onchange="updateHeaderField('showTitle', this.checked)">
+                  </div>
+
+                  <!-- Navigation Links Menu Builder -->
+                  <div class="alima-input-group">
+                    <label class="alima-input-label" style="display:flex; justify-content:space-between;">
+                      <span>Navigation Menu Items</span>
+                    </label>
+                    
+                    <!-- Draggable menu links list -->
+                    <div class="nav-menu-list" id="menu-builder-list">
+                      <!-- Rendered dynamically via JS -->
+                    </div>
+
+                    <!-- Add Navigation Item Row -->
+                    <div style="margin-top:12px; display:flex; flex-direction:column; gap:8px; background:var(--bg-surface); padding:10px; border-radius:8px; border:1px solid var(--border-color-light);">
+                      <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Add Menu Link</span>
+                      
+                      <!-- Add Page Link -->
+                      <div style="display:flex; gap:8px;">
+                        <select id="menu-add-page-select" class="alima-input" style="height:32px; padding:0 8px; font-size:0.8rem; flex-grow:1;">
+                          <option value="home">Home Page</option>
+                          <option value="about">About Page</option>
+                          <option value="services">Services Page</option>
+                          <option value="contact">Contact Page</option>
+                        </select>
+                        <button class="alima-btn btn-primary btn-sm" style="padding:0 12px; height:32px; font-size:0.8rem;" onclick="addMenuLinkFromPage()">+ Add Page</button>
+                      </div>
+
+                      <!-- Add Custom Link -->
+                      <div style="display:flex; flex-direction:column; gap:6px; margin-top:4px; border-top:1px solid var(--border-color-light); padding-top:8px;">
+                        <input type="text" id="menu-custom-label" class="alima-input" style="height:28px; font-size:0.75rem; padding:0 8px;" placeholder="Link Label (e.g. Google)">
+                        <div style="display:flex; gap:8px;">
+                          <input type="text" id="menu-custom-url" class="alima-input" style="height:28px; font-size:0.75rem; padding:0 8px; flex-grow:1;" placeholder="URL (e.g. https://...)">
+                          <button class="alima-btn btn-ghost btn-sm" style="padding:0 12px; height:28px; font-size:0.75rem; border:1.5px solid var(--border-color-light);" onclick="addMenuLinkFromCustom()">+ Link</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- FOOTER TAB -->
+                <div class="customizer-panel-pane" id="pane-footer">
+                  <!-- Copyright input -->
+                  <div class="alima-input-group">
+                    <label class="alima-input-label">Copyright Text</label>
+                    <input type="text" id="footer-copyright-field" class="alima-input" oninput="updateFooterField('copyright', this.value)" placeholder="e.g. © 2026. All rights reserved.">
+                  </div>
+
+                  <!-- Footer Columns Switch -->
+                  <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-surface); padding:10px 14px; border-radius:var(--radius-standard); border:1px solid var(--border-color-light); margin-bottom:4px;">
+                    <span style="font-size:0.85rem; font-weight:600; color:var(--text-main);">Show Footer Columns</span>
+                    <input type="checkbox" id="footer-show-columns" style="width:18px; height:18px; cursor:pointer;" onchange="updateFooterField('showColumns', this.checked)">
+                  </div>
+
+                  <!-- Social links fields -->
+                  <div style="display:flex; flex-direction:column; gap:8px;">
+                    <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Social Handles URLs</span>
+                    <div class="alima-input-group" style="margin-bottom:0;">
+                      <input type="text" id="social-instagram" class="alima-input" style="height:32px; font-size:0.8rem; padding:0 10px;" placeholder="Instagram Link" oninput="updateFooterSocial('instagram', this.value)">
+                    </div>
+                    <div class="alima-input-group" style="margin-bottom:0;">
+                      <input type="text" id="social-twitter" class="alima-input" style="height:32px; font-size:0.8rem; padding:0 10px;" placeholder="Twitter Link" oninput="updateFooterSocial('twitter', this.value)">
+                    </div>
+                    <div class="alima-input-group" style="margin-bottom:0;">
+                      <input type="text" id="social-linkedin" class="alima-input" style="height:32px; font-size:0.8rem; padding:0 10px;" placeholder="LinkedIn Link" oninput="updateFooterSocial('linkedin', this.value)">
+                    </div>
+                    <div class="alima-input-group" style="margin-bottom:0;">
+                      <input type="text" id="social-youtube" class="alima-input" style="height:32px; font-size:0.8rem; padding:0 10px;" placeholder="YouTube Link" oninput="updateFooterSocial('youtube', this.value)">
+                    </div>
+                    <div class="alima-input-group" style="margin-bottom:0;">
+                      <input type="text" id="social-github" class="alima-input" style="height:32px; font-size:0.8rem; padding:0 10px;" placeholder="GitHub Link" oninput="updateFooterSocial('github', this.value)">
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Action button -->
+              <button class="alima-btn btn-primary" style="width:100%; font-weight:700; margin-top:12px;" onclick="saveBrandingCustomizations()">Save Changes</button>
+            </div>
+
+            <!-- Right Panel live mock preview -->
+            <div class="mock-preview-panel">
+              <!-- Browser Header -->
+              <div class="mock-browser-chrome">
+                <div style="display:flex; gap:6px;">
+                  <span class="browser-dot" style="background:#ef4444;"></span>
+                  <span class="browser-dot" style="background:#f59e0b;"></span>
+                  <span class="browser-dot" style="background:#10b981;"></span>
+                </div>
+                <div class="browser-address" id="mock-url-label">yoursite.alima.site</div>
+              </div>
+
+              <!-- Main Preview Canvas -->
+              <div class="mock-canvas-container" id="mock-canvas-scroll">
+                
+                <!-- Mock Header Navigation -->
+                <header class="mock-header" id="mock-site-header">
+                  <div class="mock-logo" id="mock-logo-wrapper">
+                    <!-- Loaded dynamically -->
+                  </div>
+                  <ul class="mock-nav-links" id="mock-menu-wrapper">
+                    <!-- Loaded dynamically -->
+                  </ul>
+                </header>
+
+                <!-- Mock Hero Banner -->
+                <section class="mock-hero" id="mock-site-hero">
+                  <h1 class="mock-hero-title" id="mock-hero-title">Mock Campus Header</h1>
+                  <p class="mock-hero-subtitle" id="mock-hero-desc">Experience fully responsive layouts, premium styles, and real-time customizable swatches instantly.</p>
+                  <div style="margin-top:8px;">
+                    <button class="mock-btn mock-btn-primary" id="mock-hero-btn-primary">Get Started</button>
+                    <button class="mock-btn mock-btn-secondary" id="mock-hero-btn-secondary">Learn More</button>
+                  </div>
+                </section>
+
+                <!-- Mock Cards content grid -->
+                <section class="mock-content">
+                  <div class="mock-card">
+                    <span class="mock-card-icon">⚡</span>
+                    <strong class="mock-card-title">Real-Time Sync</strong>
+                    <p class="mock-card-desc">Color adjustments reflect immediately in your canvas preview sheet.</p>
+                  </div>
+                  <div class="mock-card">
+                    <span class="mock-card-icon">🎓</span>
+                    <strong class="mock-card-title">Institutional Layouts</strong>
+                    <p class="mock-card-desc">Designed to fit modern school systems and resumes flawlessly.</p>
+                  </div>
+                  <div class="mock-card">
+                    <span class="mock-card-icon">🧩</span>
+                    <strong class="mock-card-title">Block Editor ready</strong>
+                    <p class="mock-card-desc">Custom settings are synchronized across your builder workspaces.</p>
+                  </div>
+                </section>
+
+                <!-- Mock Footer -->
+                <footer class="mock-footer" id="mock-site-footer">
+                  <div class="mock-footer-columns" id="mock-footer-cols-wrapper">
+                    <div class="mock-card" style="border:none; background:transparent; padding:0;">
+                      <span class="mock-footer-col-title">Department</span>
+                      <ul class="mock-footer-links">
+                        <li>Engineering</li>
+                        <li>Humanities</li>
+                        <li>Admissions</li>
+                      </ul>
+                    </div>
+                    <div class="mock-card" style="border:none; background:transparent; padding:0;">
+                      <span class="mock-footer-col-title">Resources</span>
+                      <ul class="mock-footer-links">
+                        <li>Library Hub</li>
+                        <li>Academics Calendar</li>
+                        <li>Student Portals</li>
+                      </ul>
+                    </div>
+                    <div class="mock-card" style="border:none; background:transparent; padding:0;">
+                      <span class="mock-footer-col-title">Contact</span>
+                      <ul class="mock-footer-links">
+                        <li>Support Helpdesk</li>
+                        <li>Campus Directory</li>
+                        <li>Security Office</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="mock-footer-bottom">
+                    <span id="mock-footer-copyright">© 2026 Alima. All rights reserved.</span>
+                    <div class="mock-footer-socials" id="mock-footer-socials-wrapper">
+                      <!-- Rendered dynamically -->
+                    </div>
+                  </div>
+                </footer>
+
+              </div>
+            </div>
+          </div>
+        </section>
+
       </div>
-
-      <!-- Themes Grid list -->
-      <section class="themes-grid" id="themes-grid-container">
-        <!-- 6 Theme cards dynamically filtered -->
-        <div class="theme-card" data-category="education" id="theme-AcademiaX">
-          <div class="theme-thumbnail" style="background: linear-gradient(135deg, #1e3a8a 0%, #d97706 100%);">AcademiaX</div>
-          <div class="theme-details">
-            <h4 style="font-size: 1.05rem; font-weight: 700;">AcademiaX</h4>
-            <p style="color: var(--text-muted); font-size: 0.825rem; line-height: 1.4;">Classy academic departmental layout featuring grid boards and amber borders.</p>
-            <div style="display:flex; gap:8px; margin-top:auto;">
-              <button class="alima-btn btn-ghost btn-sm" style="flex:1; border: 1.5px solid var(--border-color-light);" onclick="openDrawer('AcademiaX')">Customize</button>
-              <button class="alima-btn btn-primary btn-sm" style="flex:1.2;" onclick="useThemeTemplate('AcademiaX', '#1e3a8a', '#d97706')">Use Theme</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="theme-card" data-category="portfolio" id="theme-Folio">
-          <div class="theme-thumbnail" style="background: linear-gradient(135deg, #fef3c7 0%, #1f2937 100%);">Folio</div>
-          <div class="theme-details">
-            <h4 style="font-size: 1.05rem; font-weight: 700;">Folio</h4>
-            <p style="color: var(--text-muted); font-size: 0.825rem; line-height: 1.4;">Minimalist scholar CV portfolio using charcoal displays and cream cards.</p>
-            <div style="display:flex; gap:8px; margin-top:auto;">
-              <button class="alima-btn btn-ghost btn-sm" style="flex:1; border: 1.5px solid var(--border-color-light);" onclick="openDrawer('Folio')">Customize</button>
-              <button class="alima-btn btn-primary btn-sm" style="flex:1.2;" onclick="useThemeTemplate('Folio', '#fef3c7', '#1f2937')">Use Theme</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="theme-card" data-category="business" id="theme-LaunchPad">
-          <div class="theme-thumbnail" style="background: linear-gradient(135deg, #4c1d95 0%, #0891b2 100%);">LaunchPad</div>
-          <div class="theme-details">
-            <h4 style="font-size: 1.05rem; font-weight: 700;">LaunchPad</h4>
-            <p style="color: var(--text-muted); font-size: 0.825rem; line-height: 1.4;">Futuristic enterprise structure featuring neon glow and dark buttons.</p>
-            <div style="display:flex; gap:8px; margin-top:auto;">
-              <button class="alima-btn btn-ghost btn-sm" style="flex:1; border: 1.5px solid var(--border-color-light);" onclick="openDrawer('LaunchPad')">Customize</button>
-              <button class="alima-btn btn-primary btn-sm" style="flex:1.2;" onclick="useThemeTemplate('LaunchPad', '#4c1d95', '#0891b2')">Use Theme</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="theme-card" data-category="blog" id="theme-InkFlow">
-          <div class="theme-thumbnail" style="background: linear-gradient(135deg, #fafaf9 0%, #ea580c 100%);">InkFlow</div>
-          <div class="theme-details">
-            <h4 style="font-size: 1.05rem; font-weight: 700;">InkFlow</h4>
-            <p style="color: var(--text-muted); font-size: 0.825rem; line-height: 1.4;">Editorial layout prioritizing typography and department blogs.</p>
-            <div style="display:flex; gap:8px; margin-top:auto;">
-              <button class="alima-btn btn-ghost btn-sm" style="flex:1; border: 1.5px solid var(--border-color-light);" onclick="openDrawer('InkFlow')">Customize</button>
-              <button class="alima-btn btn-primary btn-sm" style="flex:1.2;" onclick="useThemeTemplate('InkFlow', '#fafaf9', '#ea580c')">Use Theme</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="theme-card" data-category="education" id="theme-CampusHub">
-          <div class="theme-thumbnail" style="background: linear-gradient(135deg, #064e3b 0%, #047857 100%);">CampusHub</div>
-          <div class="theme-details">
-            <h4 style="font-size: 1.05rem; font-weight: 700;">CampusHub</h4>
-            <p style="color: var(--text-muted); font-size: 0.825rem; line-height: 1.4;">Forest green layout highlighting classroom calendars and activities lists.</p>
-            <div style="display:flex; gap:8px; margin-top:auto;">
-              <button class="alima-btn btn-ghost btn-sm" style="flex:1; border: 1.5px solid var(--border-color-light);" onclick="openDrawer('CampusHub')">Customize</button>
-              <button class="alima-btn btn-primary btn-sm" style="flex:1.2;" onclick="useThemeTemplate('CampusHub', '#064e3b', '#047857')">Use Theme</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="theme-card" data-category="business" id="theme-NovaBiz">
-          <div class="theme-thumbnail" style="background: linear-gradient(135deg, #020617 0%, #2563eb 100%);">NovaBiz</div>
-          <div class="theme-details">
-            <h4 style="font-size: 1.05rem; font-weight: 700;">NovaBiz</h4>
-            <p style="color: var(--text-muted); font-size: 0.825rem; line-height: 1.4;">Midnight tech interface with high-contrast layouts and sharp nodes.</p>
-            <div style="display:flex; gap:8px; margin-top:auto;">
-              <button class="alima-btn btn-ghost btn-sm" style="flex:1; border: 1.5px solid var(--border-color-light);" onclick="openDrawer('NovaBiz')">Customize</button>
-              <button class="alima-btn btn-primary btn-sm" style="flex:1.2;" onclick="useThemeTemplate('NovaBiz', '#020617', '#2563eb')">Use Theme</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
     </main>
 
   </div>
 
-  <!-- Customizer Drawer Panel -->
-  <div class="customizer-drawer-overlay" id="customizer-overlay" onclick="closeDrawer()">
-    <div class="customizer-drawer" onclick="event.stopPropagation()">
-      <div class="drawer-header">
-        <h3 id="customizer-title" style="font-family: var(--font-heading); font-size: 1.2rem; font-weight: 700;">Customize Theme</h3>
-        <button class="modal-close" style="font-size: 1.8rem;" onclick="closeDrawer()">&times;</button>
+  <!-- THEME PREVIEW FULLSCREEN MODAL -->
+  <div class="preview-modal" id="theme-fullscreen-modal">
+    <div class="preview-modal-header">
+      <div style="display:flex; align-items:center; gap:16px;">
+        <h4 id="preview-modal-title" style="font-family:var(--font-heading); font-weight:800; font-size:1.15rem; color:var(--text-main);">Theme Preview</h4>
+        <!-- Desktop / Mobile Viewport Switcher -->
+        <div style="display:flex; background:var(--bg-surface); padding:2px; border-radius:6px; border:1px solid var(--border-color-light);">
+          <button id="modal-vp-desktop" class="alima-btn btn-ghost btn-sm active" style="padding:4px 8px; font-size:0.75rem; border:none; background:var(--bg-card);" onclick="switchPreviewModalViewport('desktop')">🖥 Desktop</button>
+          <button id="modal-vp-mobile" class="alima-btn btn-ghost btn-sm" style="padding:4px 8px; font-size:0.75rem; border:none;" onclick="switchPreviewModalViewport('mobile')">📱 Mobile</button>
+        </div>
       </div>
-
-      <div class="drawer-body">
-        
-        <!-- Color segment pickers -->
-        <div style="display:flex; flex-direction:column; gap:16px;">
-          <h4 class="alima-input-label" style="text-transform:uppercase; font-size:0.75rem;">Color Scheme</h4>
-          
-          <div class="picker-row">
-            <span style="font-size:0.85rem; font-weight:600;">Primary Swatch</span>
-            <input type="color" id="pick-primary" value="#7c3aed" class="alima-input" style="width:48px; height:36px; padding:2px; cursor:pointer;">
-          </div>
-          <div class="picker-row">
-            <span style="font-size:0.85rem; font-weight:600;">Accent Color</span>
-            <input type="color" id="pick-accent" value="#06b6d4" class="alima-input" style="width:48px; height:36px; padding:2px; cursor:pointer;">
-          </div>
-        </div>
-
-        <hr style="border:none; border-top:1px solid var(--border-color-light);">
-
-        <!-- Typography Segment pairings -->
-        <div style="display:flex; flex-direction:column; gap:12px;">
-          <h4 class="alima-input-label" style="text-transform:uppercase; font-size:0.75rem;">Typography pair</h4>
-          
-          <div class="font-pairing-card selected" id="pair-1" onclick="selectPairing('Plus Jakarta Sans', 'Inter', 'pair-1')">
-            <div>
-              <div style="font-weight:700; font-family:'Plus Jakarta Sans'; font-size:0.95rem;">Plus Jakarta Sans</div>
-              <div style="font-size:0.75rem; color:var(--text-muted); font-family:'Inter'; margin-top:2px;">Body font: Inter</div>
-            </div>
-            <span style="font-size:1.5rem; font-family:'Plus Jakarta Sans'; font-weight:700;">Aa</span>
-          </div>
-
-          <div class="font-pairing-card" id="pair-2" onclick="selectPairing('Outfit', 'Inter', 'pair-2')">
-            <div>
-              <div style="font-weight:700; font-family:'Outfit'; font-size:0.95rem;">Outfit Display</div>
-              <div style="font-size:0.75rem; color:var(--text-muted); font-family:'Inter'; margin-top:2px;">Body font: Inter</div>
-            </div>
-            <span style="font-size:1.5rem; font-family:'Outfit'; font-weight:700;">Aa</span>
-          </div>
-
-          <div class="font-pairing-card" id="pair-3" onclick="selectPairing('Lora', 'Inter', 'pair-3')">
-            <div>
-              <div style="font-weight:700; font-family:'Lora'; font-size:0.95rem; font-style:italic;">Lora Serif</div>
-              <div style="font-size:0.75rem; color:var(--text-muted); font-family:'Inter'; margin-top:2px;">Body font: Inter</div>
-            </div>
-            <span style="font-size:1.5rem; font-family:'Lora'; font-style:italic;">Aa</span>
-          </div>
-        </div>
-
-        <hr style="border:none; border-top:1px solid var(--border-color-light);">
-
-        <!-- Layout Mode -->
-        <div style="display:flex; flex-direction:column; gap:12px;">
-          <h4 class="alima-input-label" style="text-transform:uppercase; font-size:0.75rem;">Layout Mode</h4>
-          <div class="layout-toggle-group">
-            <button class="layout-toggle-btn active" id="lay-wide" onclick="setLayoutModeOption('wide')">Wide (100%)</button>
-            <button class="layout-toggle-btn" id="lay-boxed" onclick="setLayoutModeOption('boxed')">Boxed Grid</button>
-          </div>
-        </div>
-
+      <div style="display:flex; gap:12px; align-items:center;">
+        <button class="alima-btn btn-ghost" onclick="closeThemeFullscreenModal()">Close Preview</button>
+        <button class="alima-btn btn-primary" id="preview-modal-activate-btn">Activate This Theme</button>
       </div>
-
-      <div class="drawer-footer">
-        <button class="alima-btn btn-ghost" style="flex:1;" onclick="closeDrawer()">Cancel</button>
-        <button class="alima-btn btn-primary" style="flex:1.5;" onclick="applyCustomThemeSettings()">Apply Theme</button>
+    </div>
+    <div class="preview-modal-body">
+      <div class="preview-modal-canvas-wrapper" id="preview-modal-canvas-container">
+        <!-- Rendered dynamically in card layout inside -->
       </div>
     </div>
   </div>
@@ -514,238 +1246,816 @@
   <!-- Firebase configuration import -->
   <script type="module" src="firebase.js"></script>
 
+  <!-- Main logic module script -->
   <script type="module">
-    import { auth, db } from "./firebase.js";
-    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+    import { auth, db, storage } from "./firebase.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
     import { collection, query, where, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+    import { ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-storage.js";
 
-    let activeWebsites = [];
+    // 12 WordPress-style template definitions
+    const galleryThemes = [
+      // CAMPUS
+      { name: "AcademiaX", category: "campus", rating: 4.9, bg: "linear-gradient(135deg, #1e3a8a 0%, #d97706 100%)", colors: { primary: "#1e3a8a", secondary: "#d97706", background: "#f8f9fa", text: "#1e293b" }, fonts: { headings: "Playfair Display", body: "Lato" }, desc: "Elegant dark blue & gold design designed for historical academic departments." },
+      { name: "CampusHub", category: "campus", rating: 4.8, bg: "linear-gradient(135deg, #0f766e 0%, #10b981 100%)", colors: { primary: "#0f766e", secondary: "#10b981", background: "#f0fdf4", text: "#111827" }, fonts: { headings: "Plus Jakarta Sans", body: "Inter" }, desc: "Modern green & emerald styling centering dynamic calendar lists." },
+      { name: "EduFlow", category: "campus", rating: 4.7, bg: "linear-gradient(135deg, #ffffff 0%, #7c3aed 100%)", colors: { primary: "#7c3aed", secondary: "#a78bfa", background: "#ffffff", text: "#1f2937" }, fonts: { headings: "DM Sans", body: "DM Sans" }, desc: "Clean white layout focusing on course boards and student submissions." },
+      
+      // PORTFOLIO
+      { name: "Folio", category: "portfolio", rating: 4.8, bg: "linear-gradient(135deg, #fef3c7 0%, #1f2937 100%)", colors: { primary: "#374151", secondary: "#d97706", background: "#fefcbf", text: "#111827" }, fonts: { headings: "Lora", body: "Inter" }, desc: "Warm cream & charcoal layout optimized for professional resumes." },
+      { name: "CreativePro", category: "portfolio", rating: 4.9, bg: "linear-gradient(135deg, #09090b 0%, #ec4899 100%)", colors: { primary: "#ec4899", secondary: "#f43f5e", background: "#09090b", text: "#f4f4f5" }, fonts: { headings: "Montserrat", body: "Open Sans" }, desc: "Futuristic neon theme matching agency grids and portfolios." },
+      { name: "SnapGrid", category: "portfolio", rating: 4.6, bg: "linear-gradient(135deg, #111827 0%, #ffffff 100%)", colors: { primary: "#111827", secondary: "#4b5563", background: "#f9fafb", text: "#111827" }, fonts: { headings: "Plus Jakarta Sans", body: "Inter" }, desc: "Bold minimal gallery designed around snap grids and creative images." },
+
+      // BUSINESS
+      { name: "LaunchPad", category: "business", rating: 4.9, bg: "linear-gradient(135deg, #4c1d95 0%, #0891b2 100%)", colors: { primary: "#6d28d9", secondary: "#06b6d4", background: "#0f172a", text: "#f8fafc" }, fonts: { headings: "Montserrat", body: "Open Sans" }, desc: "Deep purple & cyan startup layout prioritizing visual product features." },
+      { name: "CorpBlue", category: "business", rating: 4.5, bg: "linear-gradient(135deg, #1e40af 0%, #ffffff 100%)", colors: { primary: "#1e40af", secondary: "#3b82f6", background: "#ffffff", text: "#1e293b" }, fonts: { headings: "Plus Jakarta Sans", body: "Inter" }, desc: "Classic navy corporate outline serving professional landing cards." },
+      { name: "NovaBiz", category: "business", rating: 4.7, bg: "linear-gradient(135deg, #020617 0%, #2563eb 100%)", colors: { primary: "#2563eb", secondary: "#60a5fa", background: "#0b0f19", text: "#e2e8f0" }, fonts: { headings: "Plus Jakarta Sans", body: "Inter" }, desc: "Midnight blue tech style centering dynamic dashboard cards." },
+
+      // BLOG
+      { name: "InkFlow", category: "blog", rating: 4.8, bg: "linear-gradient(135deg, #fafaf9 0%, #ea580c 100%)", colors: { primary: "#ea580c", secondary: "#f97316", background: "#fffaf0", text: "#292524" }, fonts: { headings: "Playfair Display", body: "Lato" }, desc: "Warmer tones focusing on publications and storytelling articles." },
+      { name: "StoryLine", category: "blog", rating: 4.7, bg: "linear-gradient(135deg, #ffffff 0%, #111827 100%)", colors: { primary: "#111827", secondary: "#6b7280", background: "#ffffff", text: "#111827" }, fonts: { headings: "DM Sans", body: "DM Sans" }, desc: "High contrast layout optimized for long narrative publications." },
+      { name: "NightWrite", category: "blog", rating: 4.9, bg: "linear-gradient(135deg, #0f172a 0%, #8b5cf6 100%)", colors: { primary: "#8b5cf6", secondary: "#ec4899", background: "#0f172a", text: "#f8fafc" }, fonts: { headings: "Plus Jakarta Sans", body: "Inter" }, desc: "Premium dark mode layout displaying publications and Accents." }
+    ];
+
+    let userWebsites = [];
     let selectedWebsiteId = null;
-    let selectedThemeName = '';
-    
-    // Customizer temporary state variables
-    let tempPrimary = '#7c3aed';
-    let tempAccent = '#06b6d4';
-    let tempHeadingsFont = 'Plus Jakarta Sans';
-    let tempBodyFont = 'Inter';
-    let tempLayoutMode = 'wide';
 
+    // Temporary Customizer structures
+    let activeThemeName = "AcademiaX";
+    let tempColors = { primary: "#1e3a8a", secondary: "#d97706", background: "#ffffff", text: "#111827" };
+    let tempFonts = { headings: "Playfair Display", body: "Lato" };
+    let tempLayout = { width: "boxed", headerStyle: "static", footerStyle: "simple" };
+    let tempHeader = { logoUrl: "", showTitle: true, menu: [] };
+    let tempFooter = { copyright: "", socials: { instagram: "", twitter: "", linkedin: "", youtube: "", github: "" }, showColumns: true };
+
+    // Search and filters
+    let currentFilter = "all";
+    let currentSearch = "";
+
+    // Auth state hook
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
         window.location.href = "login.html";
         return;
       }
 
+      // Sidebar info
       const name = user.displayName || user.email;
       document.getElementById('sidebar-username').textContent = name;
       document.getElementById('sidebar-avatar').textContent = name.slice(0, 2).toUpperCase();
 
-      // Populate websites selector list
-      await populateWebsitesList(user.uid);
+      // Retrieve websites lists
+      await fetchUserWebsites(user.uid);
+      
+      // Render marketplace gallery list
+      renderThemeGallery();
     });
 
-    async function populateWebsitesList(uid) {
+    // Fetch user websites
+    async function fetchUserWebsites(uid) {
       try {
         const q = query(collection(db, "websites"), where("ownerUid", "==", uid));
         const snap = await getDocs(q);
         const selector = document.getElementById('site-selector');
         selector.innerHTML = '';
-        activeWebsites = [];
+        userWebsites = [];
 
         if (snap.empty) {
-          selector.innerHTML = `<option value="">No Sites Found</option>`;
-          AlimaToast.show("No Sites", "Please initialize a digital campus site on the dashboard page first.", "warning");
+          selector.innerHTML = `<option value="">No Sites Configured</option>`;
+          AlimaToast.show("No Sites Found", "Please initialize a site via wizard dashboard page first.", "warning");
           return;
         }
 
         snap.forEach(d => {
-          activeWebsites.push({ id: d.id, ...d.data() });
+          userWebsites.push({ id: d.id, ...d.data() });
           const opt = document.createElement('option');
           opt.value = d.id;
-          opt.textContent = `${d.data().subdomain}.alima.site`;
+          opt.textContent = `${d.data().subdomain}.alima.site (${d.data().name})`;
           selector.appendChild(opt);
         });
 
-        // Set default loaded site
-        selectedWebsiteId = activeWebsites[0].id;
-        loadSiteTheme(selectedWebsiteId);
+        // Load active selector website configurations
+        selectedWebsiteId = userWebsites[0].id;
+        loadActiveThemeState();
 
       } catch (err) {
-        console.error("Failed to query sites:", err);
+        console.error("Failed to query user websites list:", err);
       }
     }
 
-    function loadSiteTheme(webId) {
-      if (!webId) return;
-      selectedWebsiteId = webId;
-      const web = activeWebsites.find(w => w.id === webId);
-      if (!web || !web.theme) return;
+    // Load theme configuration details for chosen website
+    function loadActiveThemeState() {
+      if (!selectedWebsiteId) return;
+      const web = userWebsites.find(w => w.id === selectedWebsiteId);
+      if (!web) return;
 
-      selectedThemeName = web.theme.name || 'AcademiaX';
+      const mockUrl = document.getElementById('mock-url-label');
+      mockUrl.textContent = `${web.subdomain}.alima.site`;
+
+      // Fallback variables if no theme overrides saved
+      const savedTheme = web.theme || {};
       
-      // Update customizer inputs
-      tempPrimary = web.theme.primary || '#7c3aed';
-      tempAccent = web.theme.accent || '#06b6d4';
-      tempHeadingsFont = web.theme.headingsFont || 'Plus Jakarta Sans';
-      tempBodyFont = web.theme.bodyFont || 'Inter';
-      tempLayoutMode = web.theme.layoutMode || 'wide';
-
-      document.getElementById('pick-primary').value = tempPrimary;
-      document.getElementById('pick-accent').value = tempAccent;
+      activeThemeName = savedTheme.name || "AcademiaX";
       
-      // Sync card highlights
-      const cards = document.querySelectorAll('.theme-card');
-      cards.forEach(c => c.classList.remove('active-theme'));
-      const activeCard = document.getElementById(`theme-${selectedThemeName}`);
-      if (activeCard) activeCard.classList.add('active-theme');
+      // Load colors
+      tempColors = savedTheme.colors || { 
+        primary: "#1e3a8a", 
+        secondary: "#d97706", 
+        background: "#ffffff", 
+        text: "#111827" 
+      };
 
-      // Sync font cards
-      const pairCards = document.querySelectorAll('.font-pairing-card');
-      pairCards.forEach(pc => pc.classList.remove('selected'));
-      if (tempHeadingsFont === 'Plus Jakarta Sans') document.getElementById('pair-1').classList.add('selected');
-      else if (tempHeadingsFont === 'Outfit') document.getElementById('pair-2').classList.add('selected');
-      else if (tempHeadingsFont === 'Lora') document.getElementById('pair-3').classList.add('selected');
+      // Load fonts
+      tempFonts = savedTheme.fonts || { 
+        headings: "Playfair Display", 
+        body: "Lato" 
+      };
 
-      // Sync layout
-      setLayoutModeOption(tempLayoutMode);
+      // Load layouts
+      tempLayout = savedTheme.layout || { 
+        width: "boxed", 
+        headerStyle: "static", 
+        footerStyle: "simple" 
+      };
+
+      // Load headers
+      tempHeader = savedTheme.header || { 
+        logoUrl: "", 
+        showTitle: true, 
+        menu: [
+          { id: "m1", label: "Home", link: "#", nested: false },
+          { id: "m2", label: "Academics", link: "#", nested: false },
+          { id: "m3", label: "Admissions", link: "#", nested: true },
+          { id: "m4", label: "Contact", link: "#", nested: false }
+        ] 
+      };
+
+      // Load footers
+      tempFooter = savedTheme.footer || { 
+        copyright: `© ${new Date().getFullYear()} ${web.name}. All rights reserved.`, 
+        socials: { instagram: "", twitter: "", linkedin: "", youtube: "", github: "" }, 
+        showColumns: true 
+      };
+
+      // Sync color input pickers
+      document.getElementById('picker-primary').value = tempColors.primary;
+      document.getElementById('picker-secondary').value = tempColors.secondary;
+      document.getElementById('picker-bg').value = tempColors.background;
+      document.getElementById('picker-text').value = tempColors.text;
+
+      // Sync font cards highlight
+      syncFontCardHighlight();
+
+      // Sync Layout selects
+      document.getElementById('layout-width-select').value = tempLayout.width;
+      document.getElementById('layout-header-select').value = tempLayout.headerStyle;
+      document.getElementById('layout-footer-select').value = tempLayout.footerStyle;
+
+      // Sync Header title check & status label
+      document.getElementById('header-show-title').checked = tempHeader.showTitle;
+      const statusLabel = document.getElementById('logo-upload-status');
+      statusLabel.textContent = tempHeader.logoUrl ? "Logo image active" : "No logo uploaded";
+
+      // Sync Footer inputs
+      document.getElementById('footer-copyright-field').value = tempFooter.copyright;
+      document.getElementById('footer-show-columns').checked = tempFooter.showColumns;
+      document.getElementById('social-instagram').value = tempFooter.socials.instagram || "";
+      document.getElementById('social-twitter').value = tempFooter.socials.twitter || "";
+      document.getElementById('social-linkedin').value = tempFooter.socials.linkedin || "";
+      document.getElementById('social-youtube').value = tempFooter.socials.youtube || "";
+      document.getElementById('social-github').value = tempFooter.socials.github || "";
+
+      // Sync Customizer title text
+      document.getElementById('customizer-panel-title').textContent = `Customize: ${activeThemeName}`;
+
+      // Refresh gallery grid state highlights
+      renderThemeGallery();
+
+      // Refresh draggable menu list
+      renderDraggableMenuList();
+
+      // Refresh live preview
+      updateLivePreview();
+    }
+    window.loadSiteTheme = loadActiveThemeState;
+
+    // RENDER THEME GALLERY
+    function renderThemeGallery() {
+      const grid = document.getElementById('gallery-grid');
+      grid.innerHTML = '';
+
+      galleryThemes.forEach((theme) => {
+        // Filter handles
+        const matchesCategory = currentFilter === 'all' || theme.category === currentFilter;
+        const matchesSearch = theme.name.toLowerCase().includes(currentSearch.toLowerCase()) || 
+                             theme.desc.toLowerCase().includes(currentSearch.toLowerCase());
+
+        if (!matchesCategory || !matchesSearch) return;
+
+        const isActive = activeThemeName === theme.name;
+
+        const card = document.createElement('div');
+        card.className = `theme-card ${isActive ? 'active-theme' : ''}`;
+        
+        // Stars generator
+        let starsHtml = '';
+        const floor = Math.floor(theme.rating);
+        for (let i = 0; i < 5; i++) {
+          if (i < floor) starsHtml += '★';
+          else if (i === floor && theme.rating % 1 !== 0) starsHtml += '½';
+          else starsHtml += '☆';
+        }
+
+        card.innerHTML = `
+          ${isActive ? '<span class="active-badge">✓ Active</span>' : ''}
+          <div class="theme-thumbnail" style="background: ${theme.bg};">
+            <span>${theme.name}</span>
+          </div>
+          <div class="theme-details">
+            <div class="theme-meta-row">
+              <span class="theme-badge">${theme.category}</span>
+              <span class="theme-rating" title="Rating: ${theme.rating}">${starsHtml} <span style="color:var(--text-muted); font-size:0.75rem;">${theme.rating}</span></span>
+            </div>
+            <h4 class="theme-name">${theme.name}</h4>
+            <p class="theme-desc">${theme.desc}</p>
+            <div class="theme-actions">
+              <button class="alima-btn btn-ghost btn-sm" style="flex:1; border:1.5px solid var(--border-color-light);" onclick="previewThemeMarket('${theme.name}')">Preview</button>
+              <button class="alima-btn btn-primary btn-sm" style="flex:1;" onclick="activateThemeMarket('${theme.name}')" ${isActive ? 'disabled' : ''}>Activate</button>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
     }
 
-    async function useThemeTemplate(themeName, defaultPrimary, defaultAccent) {
-      if (!selectedWebsiteId) {
-        AlimaToast.show("Select Site", "Please select a website to apply theme.", "warning");
+    // Search and filters handlers
+    function filterGalleryCategory(category, element) {
+      currentFilter = category;
+      const tabs = document.querySelectorAll('.filter-tab');
+      tabs.forEach(t => t.classList.remove('active'));
+      element.classList.add('active');
+      renderThemeGallery();
+    }
+    window.filterGalleryCategory = filterGalleryCategory;
+
+    function handleGallerySearch(val) {
+      currentSearch = val;
+      renderThemeGallery();
+    }
+    window.handleGallerySearch = handleGallerySearch;
+
+    // ACTIVATE THEME
+    async function activateThemeMarket(themeName) {
+      if (!selectedWebsiteId) return;
+      const targetTheme = galleryThemes.find(t => t.name === themeName);
+      if (!targetTheme) return;
+
+      try {
+        const ref = doc(db, "websites", selectedWebsiteId);
+        
+        // Assemble config overrides from selected template defaults
+        const updatedTheme = {
+          name: targetTheme.name,
+          colors: JSON.parse(JSON.stringify(targetTheme.colors)),
+          fonts: JSON.parse(JSON.stringify(targetTheme.fonts)),
+          layout: { width: "boxed", headerStyle: "static", footerStyle: "simple" },
+          header: { logoUrl: "", showTitle: true, menu: [
+            { id: "m1", label: "Home", link: "#", nested: false },
+            { id: "m2", label: "Academics", link: "#", nested: false },
+            { id: "m3", label: "Admissions", link: "#", nested: true },
+            { id: "m4", label: "Contact", link: "#", nested: false }
+          ]},
+          footer: { copyright: `© ${new Date().getFullYear()}. All rights reserved.`, socials: { instagram: "", twitter: "", linkedin: "", youtube: "", github: "" }, showColumns: true }
+        };
+
+        await updateDoc(ref, {
+          theme: updatedTheme,
+          updatedAt: new Date().toISOString()
+        });
+
+        // Update active cache
+        const idx = userWebsites.findIndex(w => w.id === selectedWebsiteId);
+        if (idx !== -1) userWebsites[idx].theme = updatedTheme;
+
+        // Reload customizer
+        loadActiveThemeState();
+
+        await window.logActivity(`Activated theme "${themeName}"`);
+        AlimaToast.show("🎉 Theme Activated!", `Successfully applied ${themeName} theme layout.`, "success");
+
+      } catch (err) {
+        console.error(err);
+        AlimaToast.show("Activation Failed", "Could not apply layout.", "error");
+      }
+    }
+    window.activateThemeMarket = activateThemeMarket;
+
+    // FULL SCREEN PREVIEW MODAL
+    function previewThemeMarket(themeName) {
+      const targetTheme = galleryThemes.find(t => t.name === themeName);
+      if (!targetTheme) return;
+
+      const modal = document.getElementById('theme-fullscreen-modal');
+      const title = document.getElementById('preview-modal-title');
+      const container = document.getElementById('preview-modal-canvas-container');
+
+      title.textContent = `Live Theme Preview: ${targetTheme.name}`;
+      
+      // Render high fidelity preview template
+      renderThemePreviewMarkup(container, targetTheme);
+
+      // Bind select button
+      const activateBtn = document.getElementById('preview-modal-activate-btn');
+      activateBtn.onclick = () => {
+        activateThemeMarket(targetTheme.name);
+        closeThemeFullscreenModal();
+      };
+
+      modal.style.display = 'flex';
+    }
+    window.previewThemeMarket = previewThemeMarket;
+
+    function closeThemeFullscreenModal() {
+      document.getElementById('theme-fullscreen-modal').style.display = 'none';
+    }
+    window.closeThemeFullscreenModal = closeThemeFullscreenModal;
+
+    function switchPreviewModalViewport(mode) {
+      const canvas = document.getElementById('modal-preview-canvas');
+      const deskBtn = document.getElementById('modal-vp-desktop');
+      const mobBtn = document.getElementById('modal-vp-mobile');
+
+      deskBtn.classList.remove('active');
+      mobBtn.classList.remove('active');
+      deskBtn.style.background = '';
+      mobBtn.style.background = '';
+
+      if (mode === 'desktop') {
+        canvas.classList.remove('mobile-view');
+        deskBtn.classList.add('active');
+        deskBtn.style.background = 'var(--bg-card)';
+      } else {
+        canvas.classList.add('mobile-view');
+        mobBtn.classList.add('active');
+        mobBtn.style.background = 'var(--bg-card)';
+      }
+    }
+    window.switchPreviewModalViewport = switchPreviewModalViewport;
+
+    // Customizer panel tab switcher
+    function switchCustomizerTab(tabId, element) {
+      const tabBtns = document.querySelectorAll('.customizer-tab-btn');
+      tabBtns.forEach(btn => btn.classList.remove('active'));
+      element.classList.add('active');
+
+      const panes = document.querySelectorAll('.customizer-panel-pane');
+      panes.forEach(pane => pane.classList.remove('active'));
+
+      document.getElementById(`pane-${tabId}`).classList.add('active');
+    }
+    window.switchCustomizerTab = switchCustomizerTab;
+
+    // COLOR UPDATES
+    function updateColorField(key, value) {
+      tempColors[key] = value;
+      updateLivePreview();
+    }
+    window.updateColorField = updateColorField;
+
+    // FONTS UPDATES
+    function updateFontPair(headings, body, variant) {
+      tempFonts.headings = headings;
+      tempFonts.body = body;
+      syncFontCardHighlight();
+      updateLivePreview();
+    }
+    window.updateFontPair = updateFontPair;
+
+    function syncFontCardHighlight() {
+      const cards = document.querySelectorAll('.font-pairing-card');
+      cards.forEach(c => c.classList.remove('selected'));
+
+      if (tempFonts.headings === 'Playfair Display') document.getElementById('pair-classic').classList.add('selected');
+      else if (tempFonts.headings === 'Plus Jakarta Sans') document.getElementById('pair-modern').classList.add('selected');
+      else if (tempFonts.headings === 'DM Sans') document.getElementById('pair-minimal').classList.add('selected');
+      else if (tempFonts.headings === 'Cormorant Garamond') document.getElementById('pair-elegant').classList.add('selected');
+      else if (tempFonts.headings === 'Montserrat') document.getElementById('pair-bold').classList.add('selected');
+    }
+
+    // LAYOUT UPDATES
+    function updateLayoutField(key, value) {
+      tempLayout[key] = value;
+      updateLivePreview();
+    }
+    window.updateLayoutField = updateLayoutField;
+
+    // HEADER UPDATES
+    function updateHeaderField(key, value) {
+      tempHeader[key] = value;
+      updateLivePreview();
+    }
+    window.updateHeaderField = updateHeaderField;
+
+    // LOGO UPLOAD FILE TO STORAGE
+    async function uploadHeaderLogo(el) {
+      const file = el.files[0];
+      if (!file || !selectedWebsiteId) return;
+
+      const label = document.getElementById('logo-upload-status');
+      label.textContent = "Uploading image...";
+
+      try {
+        const storageRef = ref(storage, `logos/${selectedWebsiteId}/${Date.now()}_${file.name}`);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
+        uploadTask.on('state_changed', null, (err) => {
+          console.error(err);
+          AlimaToast.show("Upload Failed", "Could not submit file to Storage bucket.", "error");
+          label.textContent = "Upload failed";
+        }, async () => {
+          const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
+          tempHeader.logoUrl = downloadUrl;
+          label.textContent = "Logo uploaded successfully";
+          AlimaToast.show("Logo Updated", "Header logo applied in live preview.", "success");
+          updateLivePreview();
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    window.uploadHeaderLogo = uploadHeaderLogo;
+
+    // DRAGGABLE MENU BUILDER
+    function renderDraggableMenuList() {
+      const list = document.getElementById('menu-builder-list');
+      list.innerHTML = '';
+
+      if (tempHeader.menu.length === 0) {
+        list.innerHTML = `<div style="text-align:center; padding:12px; color:var(--text-muted); font-size:0.75rem;">No navigation links added.</div>`;
         return;
       }
 
-      try {
-        const ref = doc(db, "websites", selectedWebsiteId);
-        const updatedTheme = {
-          name: themeName,
-          primary: defaultPrimary,
-          accent: defaultAccent,
-          headingsFont: 'Plus Jakarta Sans',
-          bodyFont: 'Inter',
-          layoutMode: 'wide'
-        };
-
-        await updateDoc(ref, {
-          theme: updatedTheme,
-          updatedAt: new Date().toISOString()
-        });
-
-        // Update active list state
-        const idx = activeWebsites.findIndex(w => w.id === selectedWebsiteId);
-        if (idx !== -1) activeWebsites[idx].theme = updatedTheme;
-
-        // Re-load to apply card highlight
-        loadSiteTheme(selectedWebsiteId);
-
-        await window.logActivity(`Selected theme "${themeName}"`);
-        AlimaToast.show("Theme Applied", `Default settings for "${themeName}" saved to site database.`, "success");
-
-      } catch (err) {
-        AlimaToast.show("Apply Error", "Failed to update theme configurations.", "error");
-      }
-    }
-
-    // Customizer Drawer controls
-    function openDrawer(themeName) {
-      selectedThemeName = themeName;
-      document.getElementById('customizer-title').textContent = `Customize ${themeName}`;
-      document.getElementById('customizer-overlay').classList.add('active');
-    }
-
-    function closeDrawer() {
-      document.getElementById('customizer-overlay').classList.remove('active');
-    }
-
-    function selectPairing(headings, body, cardId) {
-      tempHeadingsFont = headings;
-      tempBodyFont = body;
-      const pairCards = document.querySelectorAll('.font-pairing-card');
-      pairCards.forEach(c => c.classList.remove('selected'));
-      document.getElementById(cardId).classList.add('selected');
-    }
-
-    function setLayoutModeOption(mode) {
-      tempLayoutMode = mode;
-      document.getElementById('lay-wide').classList.remove('active');
-      document.getElementById('lay-boxed').classList.remove('active');
-      
-      if (mode === 'wide') {
-        document.getElementById('lay-wide').classList.add('active');
-      } else {
-        document.getElementById('lay-boxed').classList.add('active');
-      }
-    }
-
-    async function applyCustomThemeSettings() {
-      if (!selectedWebsiteId) return;
-      
-      tempPrimary = document.getElementById('pick-primary').value;
-      tempAccent = document.getElementById('pick-accent').value;
-
-      try {
-        const ref = doc(db, "websites", selectedWebsiteId);
-        const updatedTheme = {
-          name: selectedThemeName,
-          primary: tempPrimary,
-          accent: tempAccent,
-          headingsFont: tempHeadingsFont,
-          bodyFont: tempBodyFont,
-          layoutMode: tempLayoutMode
-        };
-
-        await updateDoc(ref, {
-          theme: updatedTheme,
-          updatedAt: new Date().toISOString()
-        });
-
-        const idx = activeWebsites.findIndex(w => w.id === selectedWebsiteId);
-        if (idx !== -1) activeWebsites[idx].theme = updatedTheme;
-
-        loadSiteTheme(selectedWebsiteId);
-        closeDrawer();
+      tempHeader.menu.forEach((item, idx) => {
+        const row = document.createElement('div');
+        row.className = `nav-menu-item ${item.nested ? 'nested' : ''}`;
         
-        await window.logActivity(`Customized theme "${selectedThemeName}"`);
-        AlimaToast.show("Applied Successfully", "Custom styles applied to website settings.", "success");
-
-      } catch (err) {
-        AlimaToast.show("Apply Error", "Could not submit theme settings.", "error");
-      }
+        row.innerHTML = `
+          <span>${item.nested ? '↳ ' : ''}${item.label} (${item.link})</span>
+          <div class="nav-menu-actions">
+            <!-- Nesting -->
+            <button class="menu-action-btn" title="Toggle Indentation" onclick="toggleMenuItemNest(${idx})">⇄</button>
+            <!-- Sorting -->
+            <button class="menu-action-btn" title="Move Up" onclick="moveMenuItem(${idx}, -1)">▲</button>
+            <button class="menu-action-btn" title="Move Down" onclick="moveMenuItem(${idx}, 1)">▼</button>
+            <!-- Delete -->
+            <button class="menu-action-btn delete" title="Delete Link" onclick="deleteMenuItem(${idx})">×</button>
+          </div>
+        `;
+        list.appendChild(row);
+      });
     }
 
-    function filterCategory(category, tabBtn) {
-      const tabs = document.querySelectorAll('.filter-tab');
-      tabs.forEach(t => t.classList.remove('active'));
-      tabBtn.classList.add('active');
+    function moveMenuItem(index, dir) {
+      const target = index + dir;
+      if (target < 0 || target >= tempHeader.menu.length) return;
 
-      const cards = document.querySelectorAll('.theme-card');
-      cards.forEach(c => {
-        if (category === 'all' || c.getAttribute('data-category') === category) {
-          c.style.display = 'flex';
+      const item = tempHeader.menu.splice(index, 1)[0];
+      tempHeader.menu.splice(target, 0, item);
+      
+      renderDraggableMenuList();
+      updateLivePreview();
+    }
+    window.moveMenuItem = moveMenuItem;
+
+    function toggleMenuItemNest(index) {
+      tempHeader.menu[index].nested = !tempHeader.menu[index].nested;
+      renderDraggableMenuList();
+      updateLivePreview();
+    }
+    window.toggleMenuItemNest = toggleMenuItemNest;
+
+    function deleteMenuItem(index) {
+      tempHeader.menu.splice(index, 1);
+      renderDraggableMenuList();
+      updateLivePreview();
+    }
+    window.deleteMenuItem = deleteMenuItem;
+
+    function addMenuLinkFromPage() {
+      const sel = document.getElementById('menu-add-page-select');
+      const label = sel.options[sel.selectedIndex].text;
+      const slug = sel.value;
+
+      tempHeader.menu.push({
+        id: `m_${Date.now()}`,
+        label: label,
+        link: slug === 'home' ? '/' : `/${slug}`,
+        nested: false
+      });
+
+      renderDraggableMenuList();
+      updateLivePreview();
+    }
+    window.addMenuLinkFromPage = addMenuLinkFromPage;
+
+    function addMenuLinkFromCustom() {
+      const labelEl = document.getElementById('menu-custom-label');
+      const urlEl = document.getElementById('menu-custom-url');
+      const label = labelEl.value.trim();
+      const url = urlEl.value.trim();
+
+      if (!label || !url) {
+        alert("Please provide both Link label and URL parameters.");
+        return;
+      }
+
+      tempHeader.menu.push({
+        id: `m_${Date.now()}`,
+        label: label,
+        link: url,
+        nested: false
+      });
+
+      labelEl.value = '';
+      urlEl.value = '';
+      renderDraggableMenuList();
+      updateLivePreview();
+    }
+    window.addMenuLinkFromCustom = addMenuLinkFromCustom;
+
+    // FOOTER UPDATES
+    function updateFooterField(key, value) {
+      tempFooter[key] = value;
+      updateLivePreview();
+    }
+    window.updateFooterField = updateFooterField;
+
+    function updateFooterSocial(key, value) {
+      tempFooter.socials[key] = value;
+      updateLivePreview();
+    }
+    window.updateFooterSocial = updateFooterSocial;
+
+    // LIVE PREVIEW RENDER HANDLERS
+    function updateLivePreview() {
+      // 1. Color and Font variables sync in container
+      const container = document.getElementById('mock-canvas-scroll');
+      container.style.backgroundColor = tempColors.background;
+      container.style.color = tempColors.text;
+      container.style.fontFamily = `"${tempFonts.body}", sans-serif`;
+
+      // Set titles styling
+      const headings = container.querySelectorAll('.mock-hero-title, .mock-card-title, .mock-footer-col-title');
+      headings.forEach(h => {
+        h.style.fontFamily = `"${tempFonts.headings}", sans-serif`;
+      });
+
+      // Apply primary styling (accent buttons & outlines)
+      const priButtons = container.querySelectorAll('.mock-btn-primary');
+      priButtons.forEach(btn => {
+        btn.style.backgroundColor = tempColors.primary;
+        btn.style.color = getContrastColor(tempColors.primary);
+      });
+
+      const secButtons = container.querySelectorAll('.mock-btn-secondary');
+      secButtons.forEach(btn => {
+        btn.style.borderColor = tempColors.secondary;
+        btn.style.color = tempColors.secondary;
+      });
+
+      // 2. Container width options
+      const header = document.getElementById('mock-site-header');
+      const hero = document.getElementById('mock-site-hero');
+      const content = container.querySelector('.mock-content');
+      const footer = document.getElementById('mock-site-footer');
+
+      [header, hero, content, footer].forEach(sec => {
+        if (!sec) return;
+        sec.style.maxWidth = '';
+        sec.style.margin = '';
+        
+        if (tempLayout.width === 'boxed') {
+          sec.style.maxWidth = '600px'; // scaled down boxed size for browser mock layout
+          sec.style.margin = '0 auto';
+        } else if (tempLayout.width === 'narrow') {
+          sec.style.maxWidth = '480px'; // scaled down narrow size
+          sec.style.margin = '0 auto';
+        }
+      });
+
+      // 3. Header styles
+      header.className = 'mock-header';
+      if (tempLayout.headerStyle === 'fixed') {
+        header.classList.add('sticky');
+      } else if (tempLayout.headerStyle === 'transparent') {
+        header.classList.add('transparent');
+        // Transparent header overlaps hero section: add extra top padding to hero mock
+        hero.style.paddingTop = '80px';
+      } else {
+        hero.style.paddingTop = '56px';
+      }
+
+      // 4. Logo & Site Title rendering
+      const logoWrapper = document.getElementById('mock-logo-wrapper');
+      logoWrapper.innerHTML = '';
+      if (tempHeader.logoUrl) {
+        logoWrapper.innerHTML += `<img src="${tempHeader.logoUrl}" class="mock-logo-img" alt="logo">`;
+      } else {
+        // Fallback placeholder icon
+        logoWrapper.innerHTML += `<span style="font-size:1.15rem; color:${tempColors.primary};">🎓</span>`;
+      }
+
+      if (tempHeader.showTitle) {
+        const webName = document.getElementById('site-selector').options[document.getElementById('site-selector').selectedIndex]?.text.split('(')[1]?.replace(')', '') || "Alima Portal";
+        logoWrapper.innerHTML += `<span style="color:${tempColors.text}; font-family:'${tempFonts.headings}';">${webName}</span>`;
+      }
+
+      // 5. Navigation Links Builder
+      const menuWrapper = document.getElementById('mock-menu-wrapper');
+      menuWrapper.innerHTML = '';
+
+      // We group nested items into the preceding item
+      const topMenuItems = [];
+      tempHeader.menu.forEach((item) => {
+        if (!item.nested) {
+          topMenuItems.push({ ...item, dropdown: [] });
         } else {
-          c.style.display = 'none';
+          // If nested, push to the children of the last top element
+          if (topMenuItems.length > 0) {
+            topMenuItems[topMenuItems.length - 1].dropdown.push(item);
+          } else {
+            // Fallback if the first element is nested
+            topMenuItems.push({ ...item, dropdown: [] });
+          }
+        }
+      });
+
+      topMenuItems.forEach((item) => {
+        const li = document.createElement('li');
+        li.className = 'mock-nav-item';
+        li.style.color = tempColors.text;
+        
+        if (item.dropdown.length > 0) {
+          li.innerHTML = `
+            <span>${item.label} ▾</span>
+            <ul class="mock-dropdown">
+              ${item.dropdown.map(d => `<li class="mock-dropdown-item">${d.label}</li>`).join('')}
+            </ul>
+          `;
+        } else {
+          li.textContent = item.label;
+        }
+        menuWrapper.appendChild(li);
+      });
+
+      // 6. Footer Layout rendering
+      const footerCols = document.getElementById('mock-footer-cols-wrapper');
+      const footerCopyright = document.getElementById('mock-footer-copyright');
+      const footerSocials = document.getElementById('mock-footer-socials-wrapper');
+
+      footerCols.style.display = tempFooter.showColumns ? 'grid' : 'none';
+      footerCopyright.textContent = tempFooter.copyright || `© ${new Date().getFullYear()} Alima. All rights reserved.`;
+
+      // Footer variation styles
+      if (tempLayout.footerStyle === 'minimal') {
+        footerCols.style.display = 'none';
+        footerSocials.style.display = 'none';
+        footer.style.textAlign = 'center';
+        footerCopyright.style.display = 'block';
+        footerCopyright.style.width = '100%';
+      } else {
+        footer.style.textAlign = '';
+        footerSocials.style.display = 'flex';
+      }
+
+      // Social URLs indicators
+      footerSocials.innerHTML = '';
+      const socialsIcons = { instagram: "📸", twitter: "🐦", linkedin: "💼", youtube: "📺", github: "🐙" };
+      Object.keys(socialsIcons).forEach((key) => {
+        if (tempFooter.socials[key]) {
+          footerSocials.innerHTML += `<span title="${key}" style="cursor:pointer; font-size:1.05rem;">${socialsIcons[key]}</span>`;
         }
       });
     }
 
+    // Contrast text helper
+    function getContrastColor(hexColor) {
+      if (!hexColor.startsWith('#')) return '#ffffff';
+      const r = parseInt(hexColor.slice(1, 3), 16);
+      const g = parseInt(hexColor.slice(3, 5), 16);
+      const b = parseInt(hexColor.slice(5, 7), 16);
+      const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+      return (yiq >= 128) ? '#111827' : '#ffffff';
+    }
+
+    // SAVE CUSTOMIZATIONS TO FIRESTORE
+    async function saveBrandingCustomizations() {
+      if (!selectedWebsiteId) return;
+
+      try {
+        const ref = doc(db, "websites", selectedWebsiteId);
+        
+        const customizedTheme = {
+          name: activeThemeName,
+          colors: tempColors,
+          fonts: tempFonts,
+          layout: tempLayout,
+          header: tempHeader,
+          footer: tempFooter
+        };
+
+        await updateDoc(ref, {
+          theme: customizedTheme,
+          updatedAt: new Date().toISOString()
+        });
+
+        // Update local memory list cache
+        const idx = userWebsites.findIndex(w => w.id === selectedWebsiteId);
+        if (idx !== -1) userWebsites[idx].theme = customizedTheme;
+
+        await window.logActivity(`Saved custom brand configurations for theme "${activeThemeName}"`);
+        AlimaToast.show("🎉 Changes Saved", "Branding adjustments successfully saved to Firestore.", "success");
+
+      } catch (err) {
+        console.error(err);
+        AlimaToast.show("Save Failed", "Could not submit theme settings to Firestore database.", "error");
+      }
+    }
+    window.saveBrandingCustomizations = saveBrandingCustomizations;
+
+    // RENDER MARK-UP MODAL PREVIEWS
+    function renderThemePreviewMarkup(target, theme) {
+      target.innerHTML = `
+        <div class="preview-canvas-card" id="modal-preview-canvas" style="font-family:'${theme.fonts.body}', sans-serif; background-color:${theme.colors.background}; color:${theme.colors.text}; display:flex; flex-direction:column; min-height:440px;">
+          <!-- Navbar -->
+          <div style="background:#ffffff; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between; align-items:center; padding:16px 24px;">
+            <div style="font-weight:800; font-family:'${theme.fonts.headings}'; display:flex; align-items:center; gap:8px; color:#111827;">
+              <span style="font-size:1.15rem; color:${theme.colors.primary};">🎓</span>
+              <span>${theme.name} Portal</span>
+            </div>
+            <ul style="display:flex; gap:16px; font-size:0.8rem; font-weight:700; color:#4b5563; list-style:none;">
+              <li>Home</li>
+              <li>Courses</li>
+              <li>Faculty</li>
+              <li>Contact</li>
+            </ul>
+          </div>
+
+          <!-- Hero banner -->
+          <div style="padding:60px 24px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:12px;">
+            <span style="background:${theme.colors.primary}1A; color:${theme.colors.primary}; font-size:0.7rem; font-weight:700; padding:4px 10px; border-radius:50px; text-transform:uppercase;">Starter Theme Pattern</span>
+            <h1 style="font-family:'${theme.fonts.headings}'; font-size:2rem; font-weight:800; color:#111827; letter-spacing:-0.5px;">Custom Visual Branding</h1>
+            <p style="font-size:0.85rem; color:#4b5563; max-width:440px; line-height:1.5;">This live sandbox shows the pre-designed style layout matching "${theme.name}". Fully customizable across palettes, menu navigation lines, and typography pairings.</p>
+            <div style="margin-top:8px;">
+              <button class="mock-btn" style="background:${theme.colors.primary}; color:${getContrastColor(theme.colors.primary)};">Explore Site</button>
+              <button class="mock-btn" style="background:transparent; border:1.5px solid ${theme.colors.secondary}; color:${theme.colors.secondary}; margin-left:8px;">Read More</button>
+            </div>
+          </div>
+
+          <!-- Grid items -->
+          <div style="padding:24px; display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; margin-top:auto;">
+            <div style="border:1px solid #e5e7eb; border-radius:8px; padding:16px; background:#ffffff; display:flex; flex-direction:column; gap:6px;">
+              <span style="font-size:1.2rem;">🎨</span>
+              <strong style="font-size:0.8rem; font-weight:700; color:#111827; font-family:'${theme.fonts.headings}';">Colors Accents</strong>
+              <p style="font-size:0.7rem; color:#6b7280; line-height:1.4;">Custom swatches apply across headers and cards automatically.</p>
+            </div>
+            <div style="border:1px solid #e5e7eb; border-radius:8px; padding:16px; background:#ffffff; display:flex; flex-direction:column; gap:6px;">
+              <span style="font-size:1.2rem;">✍️</span>
+              <strong style="font-size:0.8rem; font-weight:700; color:#111827; font-family:'${theme.fonts.headings}';">Fluid Fonts</strong>
+              <p style="font-size:0.7rem; color:#6b7280; line-height:1.4;">Premium visual pairings render text elements clearly.</p>
+            </div>
+            <div style="border:1px solid #e5e7eb; border-radius:8px; padding:16px; background:#ffffff; display:flex; flex-direction:column; gap:6px;">
+              <span style="font-size:1.2rem;">📱</span>
+              <strong style="font-size:0.8rem; font-weight:700; color:#111827; font-family:'${theme.fonts.headings}';">Responsive viewport</strong>
+              <p style="font-size:0.7rem; color:#6b7280; line-height:1.4;">Layout adjustments fit desktop, tablet and mobile displays.</p>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div style="border-top:1px solid #e5e7eb; padding:20px; background:#fafafa; text-align:center; font-size:0.75rem; color:#6b7280;">
+            <span>© 2026 ${theme.name} Theme. Built using Alima CMS.</span>
+          </div>
+        </div>
+      `;
+    }
+
+    // Sign out routine
     async function handleSignOutAction() {
       if (confirm("Are you sure you want to sign out?")) {
+        await window.logActivity("Signed out");
         signOut(auth).then(() => {
           window.location.href = "login.html";
         });
       }
     }
-
-    window.loadSiteTheme = loadSiteTheme;
-    window.useThemeTemplate = useThemeTemplate;
-    window.openDrawer = openDrawer;
-    window.closeDrawer = closeDrawer;
-    window.selectPairing = selectPairing;
-    window.setLayoutModeOption = setLayoutModeOption;
-    window.applyCustomThemeSettings = applyCustomThemeSettings;
-    window.filterCategory = filterCategory;
     window.handleSignOutAction = handleSignOutAction;
+
+    // Esc handle
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeThemeFullscreenModal();
+      }
+    });
+
   </script>
 </body>
 </html>
