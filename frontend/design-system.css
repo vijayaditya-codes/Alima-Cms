@@ -759,6 +759,15 @@ html.dark .profile-dropdown-item:hover {
   100% { background-position: -200% 0; }
 }
 
+/* Ensure page headers wrap cleanly on mobile to avoid horizontal clipping */
+.alima-main-content > header {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 16px !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
 /* Card shake animation on error */
 .shake-error {
   animation: shake 0.4s ease;

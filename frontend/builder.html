@@ -271,6 +271,61 @@
       font-size: 0.85rem;
       border: 1px dashed var(--border-color-light);
     }
+
+    /* Page Builder Mobile Responsiveness Override */
+    @media (max-width: 768px) {
+      .builder-topbar {
+        height: auto !important;
+        flex-direction: column !important;
+        padding: 12px !important;
+        gap: 12px !important;
+        align-items: stretch !important;
+      }
+      .page-title-editor {
+        justify-content: space-between !important;
+        width: 100% !important;
+      }
+      .page-title-input {
+        flex-grow: 1 !important;
+        width: auto !important;
+      }
+      .builder-topbar > div:last-child {
+        display: flex !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+      }
+      
+      .builder-workspace {
+        flex-direction: column !important;
+        overflow-y: auto !important;
+      }
+      .builder-panel {
+        width: 100% !important;
+        border-right: none !important;
+        border-bottom: 1px solid var(--border-color-light) !important;
+        flex-shrink: 0 !important;
+        overflow-y: visible !important;
+      }
+      .builder-panel.right-properties {
+        width: 100% !important;
+        border-left: none !important;
+        border-top: 1px solid var(--border-color-light) !important;
+      }
+      .builder-canvas-wrapper {
+        width: 100% !important;
+        padding: 12px !important;
+        align-items: stretch !important;
+        overflow-y: visible !important;
+      }
+      .builder-canvas {
+        width: 100% !important;
+        min-height: 400px !important;
+        padding: 16px !important;
+      }
+      .canvas-toolbar {
+        display: none !important;
+      }
+    }
   </style>
 </head>
 <body>
