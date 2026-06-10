@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <!-- Inline Head Theme Script to prevent flash -->
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('alima-theme') || 'dark';
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alima CMS - Create Website Wizard</title>
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+  
+  <!-- Shared Design System CSS -->
+  <link rel="stylesheet" href="design-system.css">
+  
+  <style>
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      transition: background-color var(--transition-normal), color var(--transition-normal);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .wizard-navbar {
+      height: 70px;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-color-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 5%;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .wizard-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .wizard-brand-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--gradient-primary);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.25rem;
+    }
+
+    .wizard-brand-text {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: -0.5px;
+    }
+
+    .wizard-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color-light);
+      border-radius: var(--radius-card);
+      padding: 40px;
+      box-shadow: var(--shadow-standard);
+      max-width: 720px;
+      width: 90%;
+      margin: 40px auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      position: relative;
+    }
+
+    /* Progress bar styling */
+    .progress-container {
+      width: 100%;
+    }
+
+    .progress-bar-wrapper {
+      width: 100%;
+      height: 6px;
+      background: var(--bg-surface);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 25%;
+      background: var(--gradient-primary);
+      border-radius: 3px;
+      transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .progress-text-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .step-indicator-active {
+      color: var(--color-primary);
+    }
+
+    /* Steps wrapper and left-slide transitions */
+    .steps-container {
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .wizard-step {
+      display: none;
+      opacity: 0;
+      -webkit-transform: translateX(30px);
+      transform: translateX(30px);
+      -webkit-transition: opacity 0.4s ease, -webkit-transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .wizard-step.active {
+      display: flex;
+      flex-direction: column;
+      opacity: 1;
+      -webkit-transform: translateX(0);
+      transform: translateX(0);
+    }
+
+    .step-title {
+      font-family: var(--font-heading);
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+
+    .step-subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    /* STEP 1: Purpose selection cards */
+    .purpose-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 580px) {
+      .purpose-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .purpose-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-color-light);
+      border-radius: var(--radius-standard);
+      padding: 20px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      position: relative;
+      transition: all var(--transition-fast);
+    }
+
+    .purpose-card:hover {
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-standard);
+      -webkit-transform: translateY(-2px);
+      transform: translateY(-2px);
+    }
+
+    .purpose-card.selected {
+      border-color: var(--color-primary);
+      background: rgba(124, 58, 237, 0.04);
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+    }
+
+    .purpose-card-checkmark {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      opacity: 0;
+      -webkit-transform: scale(0.5);
+      transform: scale(0.5);
+      transition: all var(--transition-fast);
+    }
+
+    .purpose-card.selected .purpose-card-checkmark {
+      opacity: 1;
+      -webkit-transform: scale(1);
+      transform: scale(1);
+    }
+
+    .purpose-icon {
+      font-size: 2rem;
+    }
+
+    .purpose-title {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--text-main);
+    }
+
+    .purpose-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* STEP 2: Input custom URL prefix/suffix styles */
+    .url-input-container {
+      display: flex;
+      align-items: center;
+      border: 1.5px solid var(--border-color-light);
+      border-radius: var(--radius-standard);
+      background: var(--bg-card);
+      overflow: hidden;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .url-input-container:focus-within {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.15);
+    }
+
+    .url-prefix, .url-suffix {
+      background: var(--bg-surface);
+      color: var(--text-muted);
+      padding: 0 16px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      font-size: 0.95rem;
+      user-select: none;
+      font-weight: 600;
+    }
+
+    .url-prefix {
+      border-right: 1.5px solid var(--border-color-light);
+    }
+
+    .url-suffix {
+      border-left: 1.5px solid var(--border-color-light);
+    }
+
+    .url-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      padding: 0 16px;
+      height: 48px;
+      font-size: 1rem;
+      color: var(--text-main);
+      font-weight: 500;
+      width: 100%;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    /* STEP 3: Themes list previews */
+    .themes-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 580px) {
+      .themes-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .theme-preview-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-color-light);
+      border-radius: var(--radius-standard);
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: all var(--transition-fast);
+    }
+
+    .theme-preview-card:hover {
+      border-color: var(--color-primary);
+      -webkit-transform: translateY(-2px);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-standard);
+    }
+
+    .theme-preview-card.selected {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+    }
+
+    .theme-card-thumbnail {
+      height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border-bottom: 1.5px solid var(--border-color-light);
+      color: #ffffff;
+      font-weight: 800;
+      font-family: var(--font-heading);
+      letter-spacing: 0.5px;
+      position: relative;
+    }
+
+    .theme-card-details {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .theme-card-name {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text-main);
+    }
+
+    .theme-card-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .theme-card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .theme-select-checkmark {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      opacity: 0;
+      -webkit-transform: scale(0.5);
+      transform: scale(0.5);
+      transition: all var(--transition-fast);
+      z-index: 10;
+    }
+
+    .theme-preview-card.selected .theme-select-checkmark {
+      opacity: 1;
+      -webkit-transform: scale(1);
+      transform: scale(1);
+    }
+
+    /* Full screen theme preview modal */
+    .theme-preview-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 10, 26, 0.85);
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+      z-index: 3000;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+    }
+
+    .theme-preview-modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color-light);
+      border-radius: var(--radius-card);
+      width: 90%;
+      max-width: 960px;
+      height: 85vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .theme-preview-modal-header {
+      height: 60px;
+      background: var(--bg-surface);
+      border-bottom: 1.5px solid var(--border-color-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 24px;
+    }
+
+    .theme-preview-modal-body {
+      flex: 1;
+      overflow-y: auto;
+      background: var(--bg-main);
+      padding: 0;
+    }
+
+    /* STEP 4: Review summary card */
+    .summary-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color-light);
+      border-radius: var(--radius-standard);
+      padding: 24px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 480px) {
+      .summary-card {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .summary-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .summary-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .summary-value {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .summary-url {
+      color: var(--color-primary);
+      text-decoration: none;
+    }
+
+    /* Wizard footer navigation buttons row */
+    .wizard-buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 32px;
+      border-top: 1px solid var(--border-color-light);
+      padding-top: 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Wizard Top Header Bar -->
+  <header class="wizard-navbar">
+    <a href="dashboard.html" class="wizard-brand">
+      <div class="wizard-brand-icon">A</div>
+      <span class="wizard-brand-text">Alima CMS</span>
+    </a>
+
+    <!-- Theme Toggle Trigger -->
+    <button class="theme-toggle-btn" id="theme-toggle" style="width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--border-color-light); background: var(--bg-card); color: var(--text-main); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease;">
+      <svg id="moon-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      <svg id="sun-icon" style="display:none;" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+    </button>
+  </header>
+
+  <!-- Centered Wizard Card -->
+  <main class="wizard-card">
+    
+    <!-- Progress Indicator header -->
+    <div class="progress-container">
+      <div class="progress-text-row">
+        <span id="current-step-label">Step 1 of 4</span>
+        <span id="progress-percent">25% Complete</span>
+      </div>
+      <div class="progress-bar-wrapper">
+        <div id="progress-fill" class="progress-bar-fill"></div>
+      </div>
+    </div>
+
+    <!-- Steps Stack -->
+    <div class="steps-container">
+
+      <!-- STEP 1: Website Purpose -->
+      <section class="wizard-step active" id="step-1">
+        <h3 class="step-title">What kind of website are you building?</h3>
+        <p class="step-subtitle">Select a category that best describes your website project.</p>
+        
+        <div class="purpose-grid">
+          <!-- Campus Website -->
+          <div class="purpose-card" onclick="selectPurpose('campus')">
+            <span class="purpose-card-checkmark">✓</span>
+            <span class="purpose-icon">🎓</span>
+            <h4 class="purpose-title">Campus Website</h4>
+            <p class="purpose-desc">For schools, colleges, and university departments.</p>
+          </div>
+          
+          <!-- Portfolio -->
+          <div class="purpose-card" onclick="selectPurpose('portfolio')">
+            <span class="purpose-card-checkmark">✓</span>
+            <span class="purpose-icon">💼</span>
+            <h4 class="purpose-title">Portfolio</h4>
+            <p class="purpose-desc">Showcase your professional work, skills, and resume.</p>
+          </div>
+
+          <!-- Blog -->
+          <div class="purpose-card" onclick="selectPurpose('blog')">
+            <span class="purpose-card-checkmark">✓</span>
+            <span class="purpose-icon">📝</span>
+            <h4 class="purpose-title">Blog</h4>
+            <p class="purpose-desc">Share articles, stories, publications, and thoughts.</p>
+          </div>
+
+          <!-- Business -->
+          <div class="purpose-card" onclick="selectPurpose('business')">
+            <span class="purpose-card-checkmark">✓</span>
+            <span class="purpose-icon">🏢</span>
+            <h4 class="purpose-title">Business</h4>
+            <p class="purpose-desc">For startups, consultant agencies, or campus companies.</p>
+          </div>
+
+          <!-- Photography -->
+          <div class="purpose-card" onclick="selectPurpose('photography')">
+            <span class="purpose-card-checkmark">✓</span>
+            <span class="purpose-icon">📸</span>
+            <h4 class="purpose-title">Photography</h4>
+            <p class="purpose-desc">Exhibit photos, design mockups, and creative grids.</p>
+          </div>
+
+          <!-- Personal -->
+          <div class="purpose-card" onclick="selectPurpose('personal')">
+            <span class="purpose-card-checkmark">✓</span>
+            <span class="purpose-icon">🎯</span>
+            <h4 class="purpose-title">Personal</h4>
+            <p class="purpose-desc">Your own customizable space on the web.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEP 2: Website details -->
+      <section class="wizard-step" id="step-2">
+        <h3 class="step-title">Tell us about your website</h3>
+        <p class="step-subtitle">Provide some initial branding parameters and address prefixes.</p>
+
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          <!-- Name Input -->
+          <div class="alima-input-group">
+            <label class="alima-input-label" style="font-weight: 700;">Website Name (Required)</label>
+            <input type="text" id="wizard-name-input" class="alima-input" placeholder="e.g. My Scholar Portfolio" oninput="validateStep2()">
+          </div>
+
+          <!-- Tagline Input -->
+          <div class="alima-input-group">
+            <label class="alima-input-label" style="font-weight: 700;">Tagline (Optional)</label>
+            <input type="text" id="wizard-tagline-input" class="alima-input" placeholder="e.g. Creative developer from Chennai">
+          </div>
+
+          <!-- Subdomain Input -->
+          <div class="alima-input-group">
+            <label class="alima-input-label" style="font-weight: 700;">Custom URL prefix</label>
+            <div class="url-input-container">
+              <span class="url-prefix">https://</span>
+              <input type="text" id="wizard-url-input" class="url-input" placeholder="type your preferred name" oninput="handleSubdomainInput()" maxlength="30" autocomplete="off">
+              <span class="url-suffix">.alima.site</span>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; flex-wrap: wrap; gap: 8px;">
+              <div class="url-preview-box" style="margin-top: 0;">
+                <span>Live Preview:</span>
+                <strong id="wizard-url-preview" style="color: var(--color-primary);">yourname.alima.site</strong>
+              </div>
+              <div id="wizard-url-status" class="status-badge"></div>
+            </div>
+          </div>
+
+          <!-- Language Dropdown -->
+          <div class="alima-input-group">
+            <label class="alima-input-label" style="font-weight: 700;">Default Site Language</label>
+            <select id="wizard-lang-select" class="alima-input" style="cursor: pointer;">
+              <option value="en">English</option>
+              <option value="ta">Tamil (தமிழ்)</option>
+              <option value="hi">Hindi (हिन्दी)</option>
+              <option value="te">Telugu (తెలుగు)</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEP 3: Choose starter theme -->
+      <section class="wizard-step" id="step-3">
+        <h3 class="step-title">Pick a design to start with</h3>
+        <p class="step-subtitle">Select a visual theme starting layout. You can customize everything later.</p>
+
+        <div class="themes-grid" id="themes-grid-container">
+          <!-- Filled dynamically via JS based on selected category -->
+        </div>
+      </section>
+
+      <!-- STEP 4: Review & Launch -->
+      <section class="wizard-step" id="step-4">
+        <h3 class="step-title">Your website is ready to launch!</h3>
+        <p class="step-subtitle">Review your campus site parameters before initializing directories.</p>
+
+        <div class="summary-card">
+          <div class="summary-item">
+            <span class="summary-label">Website Name</span>
+            <span class="summary-value" id="summary-name">My Scholar Portfolio</span>
+          </div>
+
+          <div class="summary-item">
+            <span class="summary-label">Category Type</span>
+            <span class="summary-value" id="summary-type">Portfolio</span>
+          </div>
+
+          <div class="summary-item">
+            <span class="summary-label">Starter Theme</span>
+            <span class="summary-value" id="summary-theme">Aura</span>
+          </div>
+
+          <div class="summary-item">
+            <span class="summary-label">Default Language</span>
+            <span class="summary-value" id="summary-lang">English</span>
+          </div>
+
+          <div class="summary-item" style="grid-column: 1 / -1;">
+            <span class="summary-label">Subdomain URL</span>
+            <span class="summary-value">
+              <a href="#" id="summary-url" class="summary-url" target="_blank">mysite.alima.site</a>
+            </span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Step Navigation Buttons -->
+    <div class="wizard-buttons">
+      <!-- Back button -->
+      <button id="wizard-back-btn" class="alima-btn btn-ghost" style="visibility: hidden; font-weight: 700;" onclick="navigateBack()">
+        <span>❮ Back</span>
+      </button>
+
+      <!-- Next / Launch button -->
+      <button id="wizard-next-btn" class="alima-btn btn-primary" style="font-weight: 700;" onclick="navigateNext()" disabled>
+        <span id="next-btn-text">Next ➔</span>
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Full screen theme preview modal -->
+  <div class="theme-preview-modal" id="theme-preview-modal">
+    <div class="theme-preview-modal-content">
+      <div class="theme-preview-modal-header">
+        <h4 id="preview-modal-title" style="font-family: var(--font-heading); font-weight: 800; font-size: 1.15rem; color: var(--text-main);">Theme Preview</h4>
+        <button class="modal-close" style="font-size: 1.5rem;" onclick="closeThemePreviewModal()">&times;</button>
+      </div>
+      <div class="theme-preview-modal-body" id="preview-modal-body-container">
+        <!-- High-fidelity responsive preview template will be rendered here -->
+      </div>
+      <div class="modal-footer" style="padding: 16px 24px; border-top: 1.5px solid var(--border-color-light); display: flex; justify-content: flex-end; gap: 12px; background: var(--bg-surface);">
+        <button class="alima-btn btn-ghost" onclick="closeThemePreviewModal()">Close Preview</button>
+        <button class="alima-btn btn-primary" id="preview-select-btn">Select Theme & Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shared JS Utilities -->
+  <script src="shared.js"></script>
+
+  <!-- Firebase configuration import -->
+  <script type="module" src="firebase.js"></script>
+
+  <!-- Main scripting -->
+  <script type="module">
+    import { auth, db } from "./firebase.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+    import { collection, query, where, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+    // Themes selection list database based on category selected
+    const themesData = {
+      campus: [
+        { name: "AcademiaX", desc: "Modern Academic Portal", bg: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)", primary: "#3b82f6", accent: "#f59e0b", category: "Campus Website" },
+        { name: "CampusHub", desc: "Student & Faculty Center", bg: "linear-gradient(135deg, #0f766e 0%, #14b8a6 100%)", primary: "#14b8a6", accent: "#f43f5e", category: "Campus Website" },
+        { name: "EduPulse", desc: "Research & Department Showcase", bg: "linear-gradient(135deg, #581c87 0%, #8b5cf6 100%)", primary: "#8b5cf6", accent: "#10b981", category: "Campus Website" },
+        { name: "UniWest", desc: "Classic University Layout", bg: "linear-gradient(135deg, #7c2d12 0%, #ea580c 100%)", primary: "#ea580c", accent: "#06b6d4", category: "Campus Website" },
+        { name: "ScholarLink", desc: "Academic Network Theme", bg: "linear-gradient(135deg, #111827 0%, #374151 100%)", primary: "#374151", accent: "#8b5cf6", category: "Campus Website" },
+        { name: "ClassroomPro", desc: "Course & Lecture Portal", bg: "linear-gradient(135deg, #0369a1 0%, #0ea5e9 100%)", primary: "#0ea5e9", accent: "#eab308", category: "Campus Website" }
+      ],
+      portfolio: [
+        { name: "Folio", desc: "Minimalist Showcase", bg: "linear-gradient(135deg, #111111 0%, #333333 100%)", primary: "#7c3aed", accent: "#06b6d4", category: "Portfolio" },
+        { name: "CreativeCV", desc: "Visual Interactive CV", bg: "linear-gradient(135deg, #831843 0%, #db2777 100%)", primary: "#db2777", accent: "#f59e0b", category: "Portfolio" },
+        { name: "DevCraft", desc: "Developer Focus Theme", bg: "linear-gradient(135deg, #064e3b 0%, #059669 100%)", primary: "#059669", accent: "#a78bfa", category: "Portfolio" },
+        { name: "Aura", desc: "Elegant Design Portfolio", bg: "linear-gradient(135deg, #4c1d95 0%, #7c3aed 100%)", primary: "#7c3aed", accent: "#10b981", category: "Portfolio" },
+        { name: "GridWork", desc: "Grid-based Gallery", bg: "linear-gradient(135deg, #312e81 0%, #4f46e5 100%)", primary: "#4f46e5", accent: "#f43f5e", category: "Portfolio" },
+        { name: "BoldMinimal", desc: "Typography-Focused CV", bg: "linear-gradient(135deg, #1f2937 0%, #4b5563 100%)", primary: "#111827", accent: "#10b981", category: "Portfolio" }
+      ],
+      blog: [
+        { name: "InkFlow", desc: "Modern Narrative Layout", bg: "linear-gradient(135deg, #12122a 0%, #1e1e38 100%)", primary: "#7c3aed", accent: "#06b6d4", category: "Blog" },
+        { name: "Chronicle", desc: "Newspaper Style Grid", bg: "linear-gradient(135deg, #78350f 0%, #d97706 100%)", primary: "#d97706", accent: "#4f46e5", category: "Blog" },
+        { name: "MindShare", desc: "Personal Thought Stream", bg: "linear-gradient(135deg, #0369a1 0%, #0ea5e9 100%)", primary: "#0ea5e9", accent: "#ec4899", category: "Blog" },
+        { name: "TechTalk", desc: "Technical Publication", bg: "linear-gradient(135deg, #0f172a 0%, #334155 100%)", primary: "#6366f1", accent: "#10b981", category: "Blog" },
+        { name: "LifeStyle", desc: "Visual Magazine Layout", bg: "linear-gradient(135deg, #4d7c0f 0%, #84cc16 100%)", primary: "#84cc16", accent: "#a855f7", category: "Blog" },
+        { name: "MinimalRead", desc: "Focused Typography Reader", bg: "linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)", primary: "#111827", accent: "#6b7280", category: "Blog" }
+      ],
+      business: [
+        { name: "LaunchPad", desc: "SaaS & Startup Landing", bg: "linear-gradient(135deg, #4c1d95 0%, #6d28d9 100%)", primary: "#7c3aed", accent: "#06b6d4", category: "Business" },
+        { name: "NovaBiz", desc: "Corporate Services Portal", bg: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)", primary: "#2563eb", accent: "#f59e0b", category: "Business" },
+        { name: "ApexConsult", desc: "Professional Consulting Agency", bg: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)", primary: "#3b82f6", accent: "#10b981", category: "Business" },
+        { name: "Venture", desc: "Modern Investment Firm", bg: "linear-gradient(135deg, #065f46 0%, #047857 100%)", primary: "#047857", accent: "#f59e0b", category: "Business" },
+        { name: "GrowFast", desc: "Product-Centric Template", bg: "linear-gradient(135deg, #991b1b 0%, #dc2626 100%)", primary: "#dc2626", accent: "#10b981", category: "Business" },
+        { name: "TrustFlow", desc: "Local Business Landing", bg: "linear-gradient(135deg, #075e54 0%, #128c7e 100%)", primary: "#128c7e", accent: "#34b7f1", category: "Business" }
+      ],
+      photography: [
+        { name: "LensCraft", desc: "Dark Mode Grid Gallery", bg: "linear-gradient(135deg, #09090b 0%, #18181b 100%)", primary: "#f4f4f5", accent: "#a855f7", category: "Photography" },
+        { name: "Focus", desc: "Full-Width Photo Slider", bg: "linear-gradient(135deg, #1c1917 0%, #44403c 100%)", primary: "#f59e0b", accent: "#10b981", category: "Photography" },
+        { name: "Aperture", desc: "Minimalist Masonry Portfolio", bg: "linear-gradient(135deg, #022c22 0%, #065f46 100%)", primary: "#10b981", accent: "#ec4899", category: "Photography" },
+        { name: "Exposition", desc: "Horizontal Scrolling Gallery", bg: "linear-gradient(135deg, #311042 0%, #581c87 100%)", primary: "#d946ef", accent: "#06b6d4", category: "Photography" },
+        { name: "Contrast", desc: "High-Contrast Image Grids", bg: "linear-gradient(135deg, #000000 0%, #1c1c1c 100%)", primary: "#ffffff", accent: "#ff0055", category: "Photography" },
+        { name: "Prism", desc: "Clean Editorial Layout", bg: "linear-gradient(135deg, #172554 0%, #1e3a8a 100%)", primary: "#3b82f6", accent: "#f59e0b", category: "Photography" }
+      ],
+      personal: [
+        { name: "AuraPersonal", desc: "Elegant Personal Bio", bg: "linear-gradient(135deg, #581c87 0%, #7e22ce 100%)", primary: "#a855f7", accent: "#06b6d4", category: "Personal Space" },
+        { name: "DailyLog", desc: "Microblogging Layout", bg: "linear-gradient(135deg, #1e293b 0%, #334155 100%)", primary: "#3b82f6", accent: "#f59e0b", category: "Personal Space" },
+        { name: "SinglePage", desc: "Clean Single-Page Card", bg: "linear-gradient(135deg, #0369a1 0%, #0284c7 100%)", primary: "#0ea5e9", accent: "#10b981", category: "Personal Space" },
+        { name: "ModernCV", desc: "Personal Profile Page", bg: "linear-gradient(135deg, #064e3b 0%, #065f46 100%)", primary: "#10b981", accent: "#ea580c", category: "Personal Space" },
+        { name: "MySpace", desc: "Creative Personal Landing", bg: "linear-gradient(135deg, #881337 0%, #9f1239 100%)", primary: "#f43f5e", accent: "#eab308", category: "Personal Space" },
+        { name: "Niche", desc: "Custom Topic Landing", bg: "linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)", primary: "#6366f1", accent: "#10b981", category: "Personal Space" }
+      ]
+    };
+
+    let currentStep = 1;
+    let selectedPurpose = "";
+    let selectedTheme = "";
+    let isSubdomainValid = false;
+    let urlCheckTimeout = null;
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+    });
+
+    // STEP 1 Actions
+    function selectPurpose(purpose) {
+      selectedPurpose = purpose;
+      
+      // Update visual cards active state
+      const cards = document.querySelectorAll('.purpose-card');
+      cards.forEach(card => {
+        card.classList.remove('selected');
+      });
+      
+      // Add selected class to the clicked card based on click or match
+      const cardIndex = {
+        'campus': 0, 'portfolio': 1, 'blog': 2, 'business': 3, 'photography': 4, 'personal': 5
+      }[purpose];
+      
+      if (cards[cardIndex]) {
+        cards[cardIndex].classList.add('selected');
+      }
+
+      // Populate themes for Step 3 based on selection
+      populateThemes(purpose);
+      
+      validateStep1();
+    }
+    window.selectPurpose = selectPurpose;
+
+    function validateStep1() {
+      const nextBtn = document.getElementById('wizard-next-btn');
+      nextBtn.disabled = !selectedPurpose;
+    }
+
+    // STEP 2 Actions
+    function handleSubdomainInput() {
+      const inputEl = document.getElementById('wizard-url-input');
+      let rawVal = inputEl.value;
+      rawVal = rawVal.replace(/\s+/g, '-');
+      let cleanVal = rawVal.toLowerCase().replace(/[^a-z0-9-]/g, '');
+      if (inputEl.value !== cleanVal) {
+        inputEl.value = cleanVal;
+      }
+
+      const previewEl = document.getElementById('wizard-url-preview');
+      const statusEl = document.getElementById('wizard-url-status');
+      
+      if (cleanVal.length === 0) {
+        previewEl.textContent = 'yourname.alima.site';
+        statusEl.innerHTML = '';
+        isSubdomainValid = false;
+        validateStep2();
+        return;
+      }
+
+      previewEl.textContent = `${cleanVal}.alima.site`;
+
+      if (cleanVal.length < 3 || cleanVal.length > 30) {
+        statusEl.innerHTML = `<span style="color: var(--color-error); font-weight:600;">❌ Length must be 3-30 characters</span>`;
+        isSubdomainValid = false;
+        validateStep2();
+        return;
+      }
+
+      statusEl.innerHTML = `<span style="color: var(--text-muted); font-weight:600;">⏳ Checking...</span>`;
+      isSubdomainValid = false;
+      validateStep2();
+
+      clearTimeout(urlCheckTimeout);
+      urlCheckTimeout = setTimeout(async () => {
+        try {
+          const q = query(collection(db, "websites"), where("subdomain", "==", cleanVal));
+          const snap = await getDocs(q);
+          if (snap.empty) {
+            statusEl.innerHTML = `<span style="color: var(--color-success); font-weight:600;">✅ Available</span>`;
+            isSubdomainValid = true;
+          } else {
+            statusEl.innerHTML = `<span style="color: var(--color-error); font-weight:600;">❌ Already taken</span>`;
+            isSubdomainValid = false;
+          }
+        } catch (err) {
+          console.error(err);
+          statusEl.innerHTML = `<span style="color: var(--color-error); font-weight:600;">❌ Verification failed</span>`;
+          isSubdomainValid = false;
+        }
+        validateStep2();
+      }, 300);
+    }
+    window.handleSubdomainInput = handleSubdomainInput;
+
+    function validateStep2() {
+      const name = document.getElementById('wizard-name-input').value.trim();
+      const nextBtn = document.getElementById('wizard-next-btn');
+      nextBtn.disabled = !(name.length > 0 && isSubdomainValid);
+    }
+    window.validateStep2 = validateStep2;
+
+    // STEP 3 Actions: Theme picker rendering
+    function populateThemes(category) {
+      const themes = themesData[category] || [];
+      const container = document.getElementById('themes-grid-container');
+      container.innerHTML = '';
+
+      themes.forEach((theme, idx) => {
+        const card = document.createElement('div');
+        card.className = 'theme-preview-card';
+        card.id = `theme-card-${theme.name}`;
+        card.onclick = (e) => {
+          // If clicking preview button, don't select the theme card
+          if (e.target.closest('.btn-preview-theme')) return;
+          selectTheme(theme.name);
+        };
+
+        card.innerHTML = `
+          <div class="theme-select-checkmark">✓</div>
+          <div class="theme-card-thumbnail" style="background: ${theme.bg};">
+            <span style="font-size: 1.3rem;">${theme.name}</span>
+          </div>
+          <div class="theme-card-details">
+            <h4 class="theme-card-name">${theme.name}</h4>
+            <p class="theme-card-desc">${theme.desc}</p>
+            <div class="theme-card-actions">
+              <button class="alima-btn btn-ghost btn-sm btn-preview-theme" style="width: 100%; border: 1.5px solid var(--border-color-light);" onclick="previewTheme('${category}', ${idx})">Preview Theme</button>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      selectedTheme = "";
+      validateStep3();
+    }
+
+    function selectTheme(themeName) {
+      selectedTheme = themeName;
+      
+      const cards = document.querySelectorAll('.theme-preview-card');
+      cards.forEach(c => c.classList.remove('selected'));
+
+      const selectedCard = document.getElementById(`theme-card-${themeName}`);
+      if (selectedCard) {
+        selectedCard.classList.add('selected');
+      }
+
+      validateStep3();
+    }
+    window.selectTheme = selectTheme;
+
+    function validateStep3() {
+      const nextBtn = document.getElementById('wizard-next-btn');
+      nextBtn.disabled = !selectedTheme;
+    }
+
+    // High fidelity Theme Preview Modal triggers
+    function previewTheme(category, index) {
+      const theme = themesData[category][index];
+      if (!theme) return;
+
+      const modal = document.getElementById('theme-preview-modal');
+      const title = document.getElementById('preview-modal-title');
+      const body = document.getElementById('preview-modal-body-container');
+
+      title.textContent = `Starter Theme Preview: ${theme.name}`;
+      
+      // Render dynamic mock page style of target theme
+      body.innerHTML = `
+        <div style="font-family: var(--font-body); background: var(--bg-main); color: var(--text-main); min-height: 100%; display: flex; flex-direction: column;">
+          
+          <!-- Mock Navbar -->
+          <div style="height: 60px; background: rgba(10, 10, 26, 0.4); border-bottom: 1px solid var(--border-color-light); display: flex; justify-content: space-between; align-items: center; padding: 0 24px; font-weight: 700;">
+            <span style="color: ${theme.primary}; font-family: var(--font-heading); font-size: 1.1rem;">${theme.name} Preview</span>
+            <div style="display: flex; gap: 16px; font-size: 0.85rem; color: var(--text-muted);">
+              <span>Home</span>
+              <span>About</span>
+              <span>Projects</span>
+              <span>Contact</span>
+            </div>
+          </div>
+
+          <!-- Mock Hero Banner -->
+          <div style="background: ${theme.bg}; padding: 64px 32px; text-align: center; color: white; display: flex; flex-direction: column; align-items: center; gap: 16px;">
+            <span style="background: rgba(255, 255, 255, 0.15); padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.5px;">${theme.category.toUpperCase()}</span>
+            <h1 style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 800; letter-spacing: -1px; text-shadow: 0 2px 10px rgba(0,0,0,0.15);">Inspiring Digital Presence</h1>
+            <p style="font-size: 0.95rem; max-width: 500px; opacity: 0.9; line-height: 1.5;">This is a mock layout of the "${theme.name}" design pattern. Built for responsiveness, layout speeds, and elegant glassmorphism effects.</p>
+            <button class="alima-btn btn-sm" style="background: white; color: #111111; font-weight: 700; border: none; margin-top: 8px;">Explore Details</button>
+          </div>
+
+          <!-- Mock Content grid -->
+          <div style="padding: 40px 24px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+            <div style="background: var(--bg-card); border: 1px solid var(--border-color-light); padding: 20px; border-radius: 12px; display: flex; flex-direction: column; gap: 8px;">
+              <span style="font-size: 1.5rem;">⚡</span>
+              <strong style="font-weight:700;">Blazing Performance</strong>
+              <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;">Optimized specifically for speedy device layouts, WebKit engines, and instant loading constraints.</p>
+            </div>
+            
+            <div style="background: var(--bg-card); border: 1px solid var(--border-color-light); padding: 20px; border-radius: 12px; display: flex; flex-direction: column; gap: 8px;">
+              <span style="font-size: 1.5rem;">🎨</span>
+              <strong style="font-weight:700;">Dynamic Theme Palette</strong>
+              <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;">Tailored around signature accent colors (${theme.primary}) and secondary indicators (${theme.accent}) to stand out.</p>
+            </div>
+
+            <div style="background: var(--bg-card); border: 1px solid var(--border-color-light); padding: 20px; border-radius: 12px; display: flex; flex-direction: column; gap: 8px;">
+              <span style="font-size: 1.5rem;">📱</span>
+              <strong style="font-weight:700;">Fully Responsive</strong>
+              <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;">Adapts flawlessly to viewport scales matching desktops, tablets, and mobile smartphones.</p>
+            </div>
+          </div>
+
+        </div>
+      `;
+
+      // Configure select theme button action inside modal
+      const selectBtn = document.getElementById('preview-select-btn');
+      selectBtn.onclick = () => {
+        selectTheme(theme.name);
+        closeThemePreviewModal();
+        navigateNext(); // Advance to Step 4 automatically!
+      };
+
+      modal.style.display = 'flex';
+    }
+    window.previewTheme = previewTheme;
+
+    function closeThemePreviewModal() {
+      document.getElementById('theme-preview-modal').style.display = 'none';
+    }
+    window.closeThemePreviewModal = closeThemePreviewModal;
+
+    // STEP 4 Actions: Summary rendering
+    function populateSummary() {
+      const nameVal = document.getElementById('wizard-name-input').value.trim();
+      const urlPrefix = document.getElementById('wizard-url-input').value.trim();
+      const langVal = document.getElementById('wizard-lang-select').options[document.getElementById('wizard-lang-select').selectedIndex].text;
+
+      const purposeName = {
+        campus: "Campus Website",
+        portfolio: "Portfolio",
+        blog: "Blog",
+        business: "Business",
+        photography: "Photography",
+        personal: "Personal"
+      }[selectedPurpose] || "Portfolio";
+
+      document.getElementById('summary-name').textContent = nameVal;
+      document.getElementById('summary-type').textContent = purposeName;
+      document.getElementById('summary-theme').textContent = selectedTheme;
+      document.getElementById('summary-lang').textContent = langVal;
+      
+      const link = document.getElementById('summary-url');
+      link.textContent = `${urlPrefix}.alima.site`;
+      link.href = `https://${urlPrefix}.alima.site`;
+    }
+
+    // COMPLETE Action (Save to Firestore)
+    async function completeLaunchWizard() {
+      const name = document.getElementById('wizard-name-input').value.trim();
+      const tagline = document.getElementById('wizard-tagline-input').value.trim();
+      const subdomain = document.getElementById('wizard-url-input').value.trim();
+      const language = document.getElementById('wizard-lang-select').value;
+
+      const nextBtn = document.getElementById('wizard-next-btn');
+      nextBtn.disabled = true;
+      nextBtn.textContent = "Launching...";
+
+      try {
+        const user = auth.currentUser;
+        if (!user) throw new Error("No active user credentials found.");
+
+        const newWebsite = {
+          ownerUid: user.uid,
+          name: name,
+          tagline: tagline,
+          subdomain: subdomain,
+          type: selectedPurpose,
+          theme: selectedTheme,
+          language: language,
+          status: "draft",
+          createdAt: new Date().toISOString(),
+          pages: [],
+          customDomain: null,
+          plugins: {
+            analytics: { enabled: false, trackingId: "" },
+            disqus: { enabled: false, shortname: "" },
+            whatsapp: { enabled: false, phone: "", message: "" },
+            newsletter: { enabled: false, title: "", successMsg: "" }
+          }
+        };
+
+        // Write document to websites collection
+        const docRef = await addDoc(collection(db, "websites"), newWebsite);
+        const websiteId = docRef.id;
+
+        // Auto initialize default Home page layout
+        const newPage = {
+          websiteId: websiteId,
+          title: "Home",
+          slug: "home",
+          blocks: [
+            { id: "hero-1", type: "hero", content: { title: name, subtitle: tagline || "Welcome to my official digital website portal.", btnText: "Explore More" } }
+          ],
+          status: "draft",
+          seo: {
+            title: `${name} | Home`,
+            description: tagline || "Powered by Alima CMS",
+            ogImage: ""
+          },
+          updatedAt: new Date().toISOString()
+        };
+        await addDoc(collection(db, "pages"), newPage);
+
+        // Activity log
+        await window.logActivity(`Launched new site "${name}" via Creation Wizard`);
+
+        AlimaToast.show("🎉 Your website is created!", `${subdomain}.alima.site is ready`, "success");
+
+        setTimeout(() => {
+          window.location.href = `builder.html?id=${websiteId}`;
+        }, 1500);
+
+      } catch (err) {
+        console.error("Failed to compile website configs:", err);
+        AlimaToast.show("Creation Failed", "Could not write configurations to Firestore database.", "error");
+        nextBtn.disabled = false;
+        nextBtn.innerHTML = `<span>Start Building ➔</span>`;
+      }
+    }
+    window.completeLaunchWizard = completeLaunchWizard;
+
+    // STEP NAVIGATION CONTROLS
+    function updateProgressUI() {
+      const progressFill = document.getElementById('progress-fill');
+      const progressPercent = document.getElementById('progress-percent');
+      const currentStepLabel = document.getElementById('current-step-label');
+      const backBtn = document.getElementById('wizard-back-btn');
+      const nextBtn = document.getElementById('wizard-next-btn');
+      const nextBtnText = document.getElementById('next-btn-text');
+
+      const percent = currentStep * 25;
+      progressFill.style.width = `${percent}%`;
+      progressPercent.textContent = `${percent}% Complete`;
+      currentStepLabel.textContent = `Step ${currentStep} of 4`;
+
+      // Back button visibility
+      backBtn.style.visibility = (currentStep > 1) ? 'visible' : 'hidden';
+
+      // Next / Submit button config
+      if (currentStep === 4) {
+        nextBtnText.textContent = "Start Building ➔";
+        nextBtn.className = "alima-btn btn-primary";
+        nextBtn.disabled = false;
+        
+        // Setup customize later button
+        let custBtn = document.getElementById('wizard-customize-later-btn');
+        if (!custBtn) {
+          custBtn = document.createElement('button');
+          custBtn.id = 'wizard-customize-later-btn';
+          custBtn.className = 'alima-btn btn-ghost';
+          custBtn.style.fontWeight = '700';
+          custBtn.style.marginRight = 'auto';
+          custBtn.innerHTML = '<span>I\'ll customize later</span>';
+          custBtn.onclick = () => {
+            completeLaunchWizard();
+          };
+          const footerRow = document.querySelector('.wizard-buttons');
+          footerRow.insertBefore(custBtn, nextBtn);
+        } else {
+          custBtn.style.display = 'inline-flex';
+        }
+      } else {
+        nextBtnText.textContent = "Next ➔";
+        nextBtn.className = "alima-btn btn-primary";
+        
+        // Hide customize later button if present
+        const custBtn = document.getElementById('wizard-customize-later-btn');
+        if (custBtn) custBtn.style.display = 'none';
+
+        // Re-evaluate validation rules for next page activation
+        if (currentStep === 1) validateStep1();
+        else if (currentStep === 2) validateStep2();
+        else if (currentStep === 3) validateStep3();
+      }
+    }
+
+    function navigateNext() {
+      if (currentStep === 4) {
+        completeLaunchWizard();
+        return;
+      }
+
+      const currentStepEl = document.getElementById(`step-${currentStep}`);
+      currentStepEl.classList.remove('active');
+
+      currentStep++;
+
+      const nextStepEl = document.getElementById(`step-${currentStep}`);
+      nextStepEl.classList.add('active');
+
+      if (currentStep === 4) {
+        populateSummary();
+      }
+
+      updateProgressUI();
+    }
+    window.navigateNext = navigateNext;
+
+    function navigateBack() {
+      if (currentStep === 1) return;
+
+      const currentStepEl = document.getElementById(`step-${currentStep}`);
+      currentStepEl.classList.remove('active');
+
+      currentStep--;
+
+      const prevStepEl = document.getElementById(`step-${currentStep}`);
+      prevStepEl.classList.add('active');
+
+      updateProgressUI();
+    }
+    window.navigateBack = navigateBack;
+
+    // Load URL params to check if a specific purpose card should be pre-selected
+    document.addEventListener("DOMContentLoaded", () => {
+      const params = new URLSearchParams(window.location.search);
+      const category = params.get('category');
+      if (category) {
+        selectPurpose(category);
+      }
+    });
+
+  </script>
+</body>
+</html>
