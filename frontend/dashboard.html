@@ -432,12 +432,7 @@
             <span>Media Library</span>
           </a>
         </li>
-        <li class="menu-item">
-          <a href="forms.html" class="menu-link">
-            <i>📋</i>
-            <span>Forms</span>
-          </a>
-        </li>
+
         <li class="menu-item">
           <a href="seo.html" class="menu-link">
             <i>🌐</i>
@@ -508,11 +503,7 @@
           <span class="stat-label">Media Files</span>
           <span class="stat-value" id="stat-media">-</span>
         </div>
-        <!-- Submissions count -->
-        <div class="stat-card border-orange">
-          <span class="stat-label">Form Submissions</span>
-          <span class="stat-value" id="stat-submissions">-</span>
-        </div>
+
       </section>
 
       <!-- Digital Campus sites section -->
@@ -641,7 +632,6 @@
         const websiteSnap = await getDocs(query(collection(db, "websites"), where("ownerUid", "==", uid)));
         const pageSnap = await getDocs(query(collection(db, "pages"), where("status", "==", "published")));
         const mediaSnap = await getDocs(query(collection(db, "media"), where("ownerUid", "==", uid)));
-        const submissionSnap = await getDocs(collection(db, "submissions")); // Global form submissions count
 
         // Counts
         const websiteCount = websiteSnap.docs.length;
@@ -651,13 +641,11 @@
           return webIds.includes(d.data().websiteId);
         }).length;
         const mediaCount = mediaSnap.docs.length;
-        const submissionCount = submissionSnap.docs.length;
 
         // Animate stats
         animateStatValue(document.getElementById('stat-websites'), websiteCount);
         animateStatValue(document.getElementById('stat-pages'), pageCount);
         animateStatValue(document.getElementById('stat-media'), mediaCount);
-        animateStatValue(document.getElementById('stat-submissions'), submissionCount);
 
         // Populate websites list
         renderWebsites(websiteSnap.docs);
@@ -812,7 +800,8 @@
       const twitterBtn = document.getElementById('share-twitter');
       const linkedinBtn = document.getElementById('share-linkedin');
 
-      const pageUrl = `${window.location.origin}/frontend/site.html?u=${subdomain}`;
+      const pathPrefix = window.location.pathname.includes('/frontend/') ? '/frontend' : '';
+      const pageUrl = `${window.location.origin}${pathPrefix}/site.html?u=${subdomain}`;
       urlText.textContent = `${subdomain}.alima.site`;
 
       whatsappBtn.href = `https://api.whatsapp.com/send?text=${encodeURIComponent("Check out my website: " + pageUrl)}`;
@@ -880,7 +869,8 @@
 
     function copyShareLink() {
       const subdomain = document.getElementById('share-url-text').textContent.replace('.alima.site', '');
-      const pageUrl = `${window.location.origin}/frontend/site.html?u=${subdomain}`;
+      const pathPrefix = window.location.pathname.includes('/frontend/') ? '/frontend' : '';
+      const pageUrl = `${window.location.origin}${pathPrefix}/site.html?u=${subdomain}`;
       navigator.clipboard.writeText(pageUrl).then(() => {
         AlimaToast.show("URL Copied", "Link successfully saved to clipboard.", "success");
       }).catch(err => console.error(err));

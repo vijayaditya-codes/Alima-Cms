@@ -1,0 +1,17 @@
+{
+  "name": "alima-cms",
+  "version": "1.0.0",
+  "description": "Alima CMS - A serverless static content management system built with vanilla HTML/CSS/JS",
+  "scripts": {
+    "dev": "python3 -m http.server 8081",
+    "start": "python3 -m http.server 8081"
+  },
+  "keywords": [
+    "cms",
+    "vanilla",
+    "static",
+    "firebase"
+  ],
+  "author": "",
+  "license": "ISC"
+}

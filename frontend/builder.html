@@ -2772,7 +2772,8 @@
     window.closeSuccessCard = closeSuccessCard;
 
     function copySuccessLink() {
-      const pageUrl = `${window.location.origin}/frontend/site.html?u=${websiteSubdomain}${activePageSlug !== 'home' ? '&p=' + activePageSlug : ''}`;
+      const pathPrefix = window.location.pathname.includes('/frontend/') ? '/frontend' : '';
+      const pageUrl = `${window.location.origin}${pathPrefix}/site.html?u=${websiteSubdomain}${activePageSlug !== 'home' ? '&p=' + activePageSlug : ''}`;
       navigator.clipboard.writeText(pageUrl).then(() => {
         AlimaToast.show("Link Copied", "Copied page URL to clipboard.", "success");
       }).catch(err => {
@@ -2864,7 +2865,8 @@
         const successViewBtn = document.getElementById('success-view-site-btn');
         const successWhatsApp = document.getElementById('success-whatsapp-share');
 
-        const pageUrl = `${window.location.origin}/frontend/site.html?u=${websiteSubdomain}${activePageSlug !== 'home' ? '&p=' + activePageSlug : ''}`;
+        const pathPrefix = window.location.pathname.includes('/frontend/') ? '/frontend' : '';
+        const pageUrl = `${window.location.origin}${pathPrefix}/site.html?u=${websiteSubdomain}${activePageSlug !== 'home' ? '&p=' + activePageSlug : ''}`;
 
         if (successMsg) {
           successMsg.textContent = targetStatus === 'scheduled' 
