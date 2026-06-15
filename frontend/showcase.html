@@ -3,14 +3,7 @@
 <head>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <!-- Inline Head Theme Script to prevent flash -->
-  <script>
-    (function() {
-      localStorage.setItem('alima-theme', 'light');
-      document.documentElement.classList.remove('dark');
-      document.documentElement.classList.add('light');
-    })();
-  </script>
+  <!-- Permanent Light Theme Locked -->
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -406,20 +399,7 @@
   <!-- Design System JS utilities -->
   <script src="shared.js"></script>
   <script>
-    // Theme toggler logic
-    const themeBtn = document.getElementById('theme-toggle');
-    themeBtn.addEventListener('click', () => {
-      const isDark = document.body.getAttribute('data-theme') === 'dark';
-      if (isDark) {
-        document.body.removeAttribute('data-theme');
-        themeBtn.innerHTML = '🌙 Toggle Dark Mode';
-        AlimaToast.show('Theme Updated', 'Main content area switched to Light mode.', 'info');
-      } else {
-        document.body.setAttribute('data-theme', 'dark');
-        themeBtn.innerHTML = '☀️ Toggle Light Mode';
-        AlimaToast.show('Theme Updated', 'Main content area switched to Dark mode.', 'success');
-      }
-    });
+    // Theme toggler logic (Removed for permanent white theme)
 
     // Modal triggers
     const openModalBtn = document.getElementById('open-modal-btn');

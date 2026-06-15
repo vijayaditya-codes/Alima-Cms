@@ -20,25 +20,25 @@
   /* Gradients */
   --gradient-primary: linear-gradient(135deg, #7c3aed 0%, #06b6d4 100%);
   --gradient-primary-hover: linear-gradient(135deg, #9061f9 0%, #22d3ee 100%);
-  --gradient-dark: linear-gradient(135deg, #0a0a1a 0%, #12122a 100%);
-  --gradient-card-border: linear-gradient(135deg, rgba(124, 58, 237, 0.2) 0%, rgba(6, 182, 212, 0.2) 100%);
+  --gradient-dark: linear-gradient(135deg, #ffffff 0%, #f8f9fc 100%);
+  --gradient-card-border: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
 
   /* Layout / Backgrounds */
-  --bg-main: #f8f9fc;
-  --bg-sidebar: #0a0a1a;
+  --bg-main: #ffffff;
+  --bg-sidebar: #ffffff;
   --bg-card: #ffffff;
-  --bg-surface: #f1f3f9;
+  --bg-surface: #f8f9fc;
   
   /* Text Colors */
   --text-main: #111827;
   --text-muted: #6b7280;
   --text-light: #9ca3af;
-  --text-on-dark: #ffffff;
-  --text-on-dark-muted: #94a3b8;
+  --text-on-dark: #111827;
+  --text-on-dark-muted: #6b7280;
 
   /* Borders & Shadows */
   --border-color-light: #e5e7eb;
-  --border-color-dark: rgba(255, 255, 255, 0.08);
+  --border-color-dark: #e5e7eb;
   --shadow-standard: 0 4px 24px rgba(124, 58, 237, 0.05);
   --shadow-hover: 0 12px 32px rgba(124, 58, 237, 0.1);
   --shadow-toast: 0 10px 30px rgba(0, 0, 0, 0.15);
@@ -58,31 +58,10 @@
   --sidebar-collapsed-width: 80px;
 
   /* Navigation Specific default (Light Mode) */
-  --nav-bg: rgba(248, 249, 252, 0.7);
+  --nav-bg: rgba(255, 255, 255, 0.7);
   --nav-border: rgba(17, 24, 39, 0.05);
   --blob-opacity: 0.04;
   --particle-color: rgba(124, 58, 237, 0.15);
-}
-
-html.dark {
-  --bg-main: #0a0a1a;
-  --bg-sidebar: #0d0d1f;
-  --bg-card: #0d0d1f;
-  --bg-surface: #12122a;
-  
-  --text-main: #ffffff;
-  --text-muted: #94a3b8;
-  --text-light: #64748b;
-  
-  --border-color-light: rgba(255, 255, 255, 0.08);
-  --shadow-standard: 0 4px 24px rgba(0, 0, 0, 0.3);
-  --shadow-hover: 0 10px 32px rgba(124, 58, 237, 0.15);
-
-  /* Overrides for dark theme elements */
-  --nav-bg: rgba(10, 10, 26, 0.7);
-  --nav-border: rgba(255, 255, 255, 0.08);
-  --blob-opacity: 0.12;
-  --particle-color: rgba(255, 255, 255, 0.3);
 }
 
 /* Base resets */
@@ -254,15 +233,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .menu-link:hover {
-  color: var(--text-on-dark);
-  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--text-main);
+  background-color: var(--bg-surface);
   -webkit-transform: translateX(4px);
   transform: translateX(4px);
 }
 
 .menu-item.active .menu-link {
-  color: var(--text-on-dark);
-  background: rgba(124, 58, 237, 0.15);
+  color: var(--color-primary);
+  background: rgba(124, 58, 237, 0.08);
   font-weight: 600;
 }
 
@@ -301,7 +280,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .sidebar-footer:hover {
-  background-color: rgba(255, 255, 255, 0.04);
+  background-color: var(--bg-surface);
 }
 
 .profile-dropdown {
@@ -355,19 +334,6 @@ h1, h2, h3, h4, h5, h6 {
 
 .profile-dropdown.active {
   display: flex;
-}
-
-/* Light glassmorphism overrides in dark mode */
-html.dark .profile-dropdown {
-  background: rgba(255, 255, 255, 0.18) !important;
-  backdrop-filter: blur(24px) !important;
-  -webkit-backdrop-filter: blur(24px) !important;
-  border-color: rgba(255, 255, 255, 0.25) !important;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
-}
-
-html.dark .profile-dropdown-item:hover {
-  background-color: rgba(255, 255, 255, 0.12) !important;
 }
 
 .profile-dropdown-item {
