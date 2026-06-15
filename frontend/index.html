@@ -31,7 +31,7 @@
       --color-warning: #f59e0b;
       --color-error: #ef4444;
 
-      --bg-main: #ffffff;
+      --bg-main: #f8f9fc;
       --text-main: #111827;
       --text-muted: #6b7280;
       
@@ -53,7 +53,7 @@
       --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    html.dark-disabled {
+    html.dark {
       --bg-main: #0a0a1a;
       --text-main: #ffffff;
       --text-muted: #94a3b8;
@@ -209,7 +209,27 @@
       color: var(--text-main);
     }
 
+    /* Theme Toggle */
+    .theme-toggle-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1.5px solid var(--card-border);
+      background: var(--card-bg);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
 
+    .theme-toggle-btn:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      -webkit-transform: scale(1.05);
+      transform: scale(1.05);
+    }
 
     /* Hero Section */
     .hero-section {
@@ -902,7 +922,12 @@
     
     <div class="nav-actions">
       <!-- Dark/Light Mode Trigger -->
-      
+      <button class="theme-toggle-btn" onclick="toggleTheme()" id="theme-btn">
+        <!-- Moon Icon (Default for dark theme) -->
+        <svg id="moon-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        <!-- Sun Icon -->
+        <svg id="sun-icon" style="display:none;" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+      </button>
 
       <div class="nav-buttons-container" id="nav-buttons">
         <a href="login.html" class="alima-btn btn-link-action">Sign in</a>
@@ -1168,18 +1193,28 @@
 
     // 3. Theme toggle functions
     function updateThemeIcon() {
+      const isDark = document.documentElement.classList.contains('dark');
       const moon = document.getElementById('moon-icon');
       const sun = document.getElementById('sun-icon');
-      if (moon) moon.style.display = 'none';
-      if (sun) sun.style.display = 'block';
+      if (isDark) {
+        moon.style.display = 'block';
+        sun.style.display = 'none';
+      } else {
+        moon.style.display = 'none';
+        sun.style.display = 'block';
+      }
     }
     updateThemeIcon();
 
     function toggleTheme() {
-      localStorage.setItem('alima-theme', 'light');
-      document.documentElement.classList.remove('dark');
-      document.documentElement.classList.add('light');
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('alima-theme', isDark ? 'dark' : 'light');
       updateThemeIcon();
+      
+      // Update canvas particle settings dynamically on theme change
+      if (window.initCanvasParticles) {
+        window.initCanvasParticles();
+      }
     }
 
     // 4. Scroll Reveal Animations (Intersection Observer)
@@ -1259,7 +1294,7 @@
 
     function animateParticles() {
       const isDark = document.documentElement.classList.contains('dark');
-      ctx.fillStyle = isDark ? '#0a0a1a' : '#ffffff';
+      ctx.fillStyle = isDark ? '#0a0a1a' : '#f8f9fc';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       particles.forEach(p => {

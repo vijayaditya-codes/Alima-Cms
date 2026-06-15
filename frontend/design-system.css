@@ -24,7 +24,7 @@
   --gradient-card-border: linear-gradient(135deg, rgba(124, 58, 237, 0.2) 0%, rgba(6, 182, 212, 0.2) 100%);
 
   /* Layout / Backgrounds */
-  --bg-main: #ffffff;
+  --bg-main: #f8f9fc;
   --bg-sidebar: #0a0a1a;
   --bg-card: #ffffff;
   --bg-surface: #f1f3f9;
@@ -64,7 +64,7 @@
   --particle-color: rgba(124, 58, 237, 0.15);
 }
 
-html.dark-disabled {
+html.dark {
   --bg-main: #0a0a1a;
   --bg-sidebar: #0d0d1f;
   --bg-card: #0d0d1f;
@@ -358,7 +358,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Light glassmorphism overrides in dark mode */
-html.dark-disabled .profile-dropdown {
+html.dark .profile-dropdown {
   background: rgba(255, 255, 255, 0.18) !important;
   backdrop-filter: blur(24px) !important;
   -webkit-backdrop-filter: blur(24px) !important;
@@ -366,7 +366,7 @@ html.dark-disabled .profile-dropdown {
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
 }
 
-html.dark-disabled .profile-dropdown-item:hover {
+html.dark .profile-dropdown-item:hover {
   background-color: rgba(255, 255, 255, 0.12) !important;
 }
 
@@ -845,9 +845,4 @@ html.dark-disabled .profile-dropdown-item:hover {
     -webkit-backdrop-filter: blur(6px) !important;
     backdrop-filter: blur(6px) !important;
   }
-}
-
-/* Disable and hide all theme toggles */
-.theme-toggle-btn, #theme-btn, #theme-toggle, .theme-toggle {
-  display: none !important;
 }
