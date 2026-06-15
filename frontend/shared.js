@@ -190,49 +190,34 @@ async function logActivity(action) {
 window.logActivity = logActivity;
 
 /**
- * 4. Theme System Management
+ * 4. Theme System Management (Forced Light Mode Only)
  */
 function initThemeToggle() {
-  const toggleBtns = document.querySelectorAll('.theme-toggle-btn, #theme-btn, #theme-toggle');
-  
-  // Set initial icon state on all buttons
+  localStorage.setItem('alima-theme', 'light');
+  document.documentElement.classList.remove('dark');
+  document.documentElement.classList.add('light');
   updateThemeIcon();
-
-  toggleBtns.forEach(btn => {
-    // Avoid double bindings
-    if (btn.dataset.themeBound) return;
-    btn.dataset.themeBound = 'true';
-    
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      toggleTheme();
-    });
-  });
 }
 
 function toggleTheme() {
-  const isDark = document.documentElement.classList.toggle('dark');
-  localStorage.setItem('alima-theme', isDark ? 'dark' : 'light');
+  // Theme toggling is disabled. System is locked to Light Mode.
+  localStorage.setItem('alima-theme', 'light');
+  document.documentElement.classList.remove('dark');
+  document.documentElement.classList.add('light');
   updateThemeIcon();
-  
-  // Update canvas particles if they exist
-  if (window.initCanvasParticles) {
-    window.initCanvasParticles();
-  }
 }
 
 function updateThemeIcon() {
-  const isDark = document.documentElement.classList.contains('dark');
-  
+  // Always hide moon icon and display sun icon
   const moonIcons = document.querySelectorAll('#moon-icon, .moon-icon');
   const sunIcons = document.querySelectorAll('#sun-icon, .sun-icon');
   
   moonIcons.forEach(icon => {
-    icon.style.display = isDark ? 'block' : 'none';
+    icon.style.display = 'none';
   });
   
   sunIcons.forEach(icon => {
-    icon.style.display = isDark ? 'none' : 'block';
+    icon.style.display = 'block';
   });
 }
 

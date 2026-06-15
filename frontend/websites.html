@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="light">
 <head>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -10,12 +10,9 @@
   <!-- Inline Head Theme Script to prevent flash -->
   <script>
     (function() {
-      const savedTheme = localStorage.getItem('alima-theme') || 'dark';
-      if (savedTheme === 'dark') {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
+      localStorage.setItem('alima-theme', 'light');
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
     })();
   </script>
 
@@ -223,13 +220,7 @@
           <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">Deploy, design, and configure your digital campus websites.</p>
         </div>
         <div style="display: flex; align-items: center; gap: 16px;">
-          <!-- Theme Toggle Button -->
-          <button class="theme-toggle-btn" id="theme-toggle" style="width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--border-color-light); background: var(--bg-card); color: var(--text-main); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease;">
-            <!-- Moon Icon (Default for dark theme) -->
-            <svg id="moon-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-            <!-- Sun Icon -->
-            <svg id="sun-icon" style="display:none;" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-          </button>
+          
           <button class="alima-btn btn-primary" onclick="window.location.href='wizard.html'">+ Create Website</button>
         </div>
       </header>

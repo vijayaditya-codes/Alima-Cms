@@ -1,17 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="light">
 <head>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <!-- Inline Head Theme Script to prevent flash -->
   <script>
     (function() {
-      const savedTheme = localStorage.getItem('alima-theme') || 'dark';
-      if (savedTheme === 'dark') {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
+      localStorage.setItem('alima-theme', 'light');
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
     })();
   </script>
 
@@ -198,9 +195,7 @@
         </div>
         
         <!-- Light / Dark toggle -->
-        <button class="theme-toggle-btn" id="theme-toggle">
-          <span>🌙</span> Toggle Dark Mode
-        </button>
+        
       </div>
 
       <!-- Section: Numerical Stats with Count-Up Animations -->
@@ -411,20 +406,7 @@
   <!-- Design System JS utilities -->
   <script src="shared.js"></script>
   <script>
-    // Theme toggler logic
-    const themeBtn = document.getElementById('theme-toggle');
-    themeBtn.addEventListener('click', () => {
-      const isDark = document.body.getAttribute('data-theme') === 'dark';
-      if (isDark) {
-        document.body.removeAttribute('data-theme');
-        themeBtn.innerHTML = '🌙 Toggle Dark Mode';
-        AlimaToast.show('Theme Updated', 'Main content area switched to Light mode.', 'info');
-      } else {
-        document.body.setAttribute('data-theme', 'dark');
-        themeBtn.innerHTML = '☀️ Toggle Light Mode';
-        AlimaToast.show('Theme Updated', 'Main content area switched to Dark mode.', 'success');
-      }
-    });
+
 
     // Modal triggers
     const openModalBtn = document.getElementById('open-modal-btn');
