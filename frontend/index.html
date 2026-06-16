@@ -1209,13 +1209,13 @@
     const canvas = document.getElementById('hero-canvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
-    let numParticles = window.innerWidth <= 768 ? 30 : 80;
+    let numParticles = window.innerWidth <= 768 ? 50 : 120;
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       
-      const newNum = window.innerWidth <= 768 ? 30 : 80;
+      const newNum = window.innerWidth <= 768 ? 50 : 120;
       if (newNum !== numParticles) {
         numParticles = newNum;
         initCanvasParticles();
@@ -1226,15 +1226,15 @@
 
     class Particle {
       constructor() {
-        this.radius = Math.random() * 2 + 3; // 3px to 5px radius
+        this.radius = 1.5; // 1.5px radius
         this.x = Math.random() * (canvas.width - this.radius * 2) + this.radius;
         this.y = Math.random() * (canvas.height - this.radius * 2) + this.radius;
         
-        // Slow random floating movement
-        this.vx = (Math.random() - 0.5) * 0.4;
-        if (Math.abs(this.vx) < 0.1) this.vx += this.vx < 0 ? -0.1 : 0.1;
-        this.vy = (Math.random() - 0.5) * 0.4;
-        if (Math.abs(this.vy) < 0.1) this.vy += this.vy < 0 ? -0.1 : 0.1;
+        // Very slow smooth floating movement
+        this.vx = (Math.random() - 0.5) * 0.15;
+        if (Math.abs(this.vx) < 0.03) this.vx += this.vx < 0 ? -0.03 : 0.03;
+        this.vy = (Math.random() - 0.5) * 0.15;
+        if (Math.abs(this.vy) < 0.03) this.vy += this.vy < 0 ? -0.03 : 0.03;
       }
 
       update() {
@@ -1263,8 +1263,8 @@
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         
-        ctx.fillStyle = '#7c3aed'; // Purple dots
-        ctx.globalAlpha = 0.6; // Opacity 0.6
+        ctx.fillStyle = '#000000'; // Black dots
+        ctx.globalAlpha = 0.4; // Opacity 0.4
         ctx.fill();
         ctx.globalAlpha = 1.0;
       }
@@ -1280,7 +1280,7 @@
     initCanvasParticles();
 
     function animateParticles() {
-      // Clear canvas so the white background of the hero section shows through
+      // Clear canvas so the background shows through
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       particles.forEach(p => {
@@ -1288,7 +1288,7 @@
         p.draw();
       });
 
-      // Connections lines draw within 120px of each other
+      // Connections lines draw within 100px of each other
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const p1 = particles[i];
@@ -1297,13 +1297,13 @@
           const dy = p1.y - p2.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 120) {
+          if (dist < 100) {
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(p2.x, p2.y);
-            const lineOpacity = (1 - dist / 120) * 0.15; // Opacity 0.15 max
-            ctx.strokeStyle = `rgba(124, 58, 237, ${lineOpacity})`;
-            ctx.lineWidth = 0.75;
+            const lineOpacity = (1 - dist / 100) * 0.08; // Opacity 0.08 max
+            ctx.strokeStyle = `rgba(0, 0, 0, ${lineOpacity})`;
+            ctx.lineWidth = 0.5;
             ctx.stroke();
           }
         }
