@@ -1206,45 +1206,65 @@
     });
 
     // 5. Hero Particle Constellation Loop
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     const canvas = document.getElementById('hero-canvas');
-    const ctx = canvas.getContext('2d', { alpha: false, desynchronized: true });
+    const ctx = canvas.getContext('2d');
     let particles = [];
-    const numParticles = isIOS ? 25 : 120;
+    let numParticles = window.innerWidth <= 768 ? 30 : 80;
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      
+      const newNum = window.innerWidth <= 768 ? 30 : 80;
+      if (newNum !== numParticles) {
+        numParticles = newNum;
+        initCanvasParticles();
+      }
     }
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
     class Particle {
       constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.radius = Math.random() * 2 + 0.5;
-        this.vx = (Math.random() - 0.5) * 0.25;
-        this.vy = (Math.random() - 0.5) * 0.25;
-        this.alpha = Math.random() * 0.5 + 0.3;
+        this.radius = Math.random() * 2 + 3; // 3px to 5px radius
+        this.x = Math.random() * (canvas.width - this.radius * 2) + this.radius;
+        this.y = Math.random() * (canvas.height - this.radius * 2) + this.radius;
+        
+        // Slow random floating movement
+        this.vx = (Math.random() - 0.5) * 0.4;
+        if (Math.abs(this.vx) < 0.1) this.vx += this.vx < 0 ? -0.1 : 0.1;
+        this.vy = (Math.random() - 0.5) * 0.4;
+        if (Math.abs(this.vy) < 0.1) this.vy += this.vy < 0 ? -0.1 : 0.1;
       }
 
       update() {
         this.x += this.vx;
         this.y += this.vy;
 
-        if (this.x < 0) this.x = canvas.width;
-        if (this.x > canvas.width) this.x = 0;
-        if (this.y < 0) this.y = canvas.height;
-        if (this.y > canvas.height) this.y = 0;
+        // Bounce softly off canvas edges
+        if (this.x < this.radius) {
+          this.x = this.radius;
+          this.vx = -this.vx;
+        } else if (this.x > canvas.width - this.radius) {
+          this.x = canvas.width - this.radius;
+          this.vx = -this.vx;
+        }
+
+        if (this.y < this.radius) {
+          this.y = this.radius;
+          this.vy = -this.vy;
+        } else if (this.y > canvas.height - this.radius) {
+          this.y = canvas.height - this.radius;
+          this.vy = -this.vy;
+        }
       }
 
       draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         
-        ctx.fillStyle = '#7c3aed';
-        ctx.globalAlpha = this.alpha * 0.3;
+        ctx.fillStyle = '#7c3aed'; // Purple dots
+        ctx.globalAlpha = 0.6; // Opacity 0.6
         ctx.fill();
         ctx.globalAlpha = 1.0;
       }
@@ -1260,33 +1280,31 @@
     initCanvasParticles();
 
     function animateParticles() {
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // Clear canvas so the white background of the hero section shows through
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       particles.forEach(p => {
         p.update();
         p.draw();
       });
 
-      // Connections lines draw
-      if (!isIOS) {
-        for (let i = 0; i < particles.length; i++) {
-          for (let j = i + 1; j < particles.length; j++) {
-            const p1 = particles[i];
-            const p2 = particles[j];
-            const dx = p1.x - p2.x;
-            const dy = p1.y - p2.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
+      // Connections lines draw within 120px of each other
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const p1 = particles[i];
+          const p2 = particles[j];
+          const dx = p1.x - p2.x;
+          const dy = p1.y - p2.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
 
-            if (dist < 110) {
-              ctx.beginPath();
-              ctx.moveTo(p1.x, p1.y);
-              ctx.lineTo(p2.x, p2.y);
-              const lineOpacity = (1 - dist / 110) * 0.12 * Math.min(p1.alpha, p2.alpha);
-              ctx.strokeStyle = `rgba(124, 58, 237, ${lineOpacity})`;
-              ctx.lineWidth = 0.5;
-              ctx.stroke();
-            }
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            const lineOpacity = (1 - dist / 120) * 0.15; // Opacity 0.15 max
+            ctx.strokeStyle = `rgba(124, 58, 237, ${lineOpacity})`;
+            ctx.lineWidth = 0.75;
+            ctx.stroke();
           }
         }
       }
