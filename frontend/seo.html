@@ -132,6 +132,43 @@
       opacity: 0.5;
       cursor: not-allowed;
     }
+
+    @media (max-width: 480px) {
+      .custom-url-card {
+        padding: 20px !important;
+        margin: 20px auto !important;
+        width: 95% !important;
+      }
+      .url-input-container {
+        flex-wrap: wrap !important;
+        height: auto !important;
+      }
+      .url-prefix, .url-suffix {
+        flex-grow: 1 !important;
+        width: 50% !important;
+        justify-content: center !important;
+        height: 40px !important;
+        font-size: 0.8rem !important;
+        padding: 0 8px !important;
+        border: none !important;
+      }
+      .url-prefix {
+        border-bottom: 1.5px solid var(--border-color-light) !important;
+        border-right: 1.5px solid var(--border-color-light) !important;
+      }
+      .url-suffix {
+        border-bottom: 1.5px solid var(--border-color-light) !important;
+      }
+      .url-input {
+        width: 100% !important;
+        height: 44px !important;
+        text-align: center !important;
+        border-bottom: 1px solid var(--border-color-light) !important;
+        order: -1 !important; /* Put the input at the top when wrapping, or keep it in middle. Keeping it at order -1 puts it at the top, but prefix first, suffix last is standard. Actually, if they wrap, prefix-input-suffix stack. Let's just make the input full width, and prefix/suffix sit side-by-side below it. */
+        flex: none !important;
+        width: 100% !important;
+      }
+    }
   </style>
 </head>
 <body>

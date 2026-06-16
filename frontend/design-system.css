@@ -812,3 +812,56 @@ h1, h2, h3, h4, h5, h6 {
     backdrop-filter: blur(6px) !important;
   }
 }
+
+/* Global Mobile Responsiveness Helper Rules */
+@media (max-width: 768px) {
+  .table-container table,
+  .submissions-table,
+  .content-table {
+    min-width: 600px !important;
+  }
+  
+  .websites-grid,
+  .themes-grid,
+  .plugins-grid,
+  .showcase-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .alima-main-content {
+    padding: 16px !important;
+    gap: 20px !important;
+  }
+  
+  .alima-main-content > header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+  
+  .alima-main-content > header > div {
+    width: 100% !important;
+  }
+  
+  .alima-main-content > header input,
+  .alima-main-content > header button,
+  .alima-main-content > header .alima-btn {
+    width: 100% !important;
+  }
+  
+  .alima-card {
+    padding: 16px !important;
+  }
+  
+  .alima-modal {
+    padding: 20px !important;
+    max-width: calc(100% - 10px) !important;
+    width: auto !important;
+  }
+
+  .stats-summary-grid {
+    grid-template-columns: 1fr !important;
+  }
+}

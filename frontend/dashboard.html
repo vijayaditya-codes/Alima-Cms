@@ -369,6 +369,13 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
+
+    @media (max-width: 480px) {
+      .stats-summary-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+      }
+    }
   </style>
   <!-- QR Code generation -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>

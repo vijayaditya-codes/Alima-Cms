@@ -496,6 +496,38 @@
       border-top: 1px solid var(--border-color-light);
       padding-top: 24px;
     }
+
+    @media (max-width: 480px) {
+      .wizard-card {
+        padding: 20px !important;
+        margin: 20px auto !important;
+        width: 95% !important;
+      }
+      .wizard-buttons {
+        flex-direction: column-reverse !important;
+        gap: 12px !important;
+        margin-top: 24px !important;
+        padding-top: 16px !important;
+      }
+      .wizard-buttons button,
+      .wizard-buttons a {
+        width: 100% !important;
+      }
+    }
+
+    .mock-content-grid {
+      padding: 40px 24px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .mock-content-grid {
+        grid-template-columns: 1fr !important;
+        padding: 24px 16px !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -974,7 +1006,7 @@
           </div>
 
           <!-- Mock Content grid -->
-          <div style="padding: 40px 24px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+          <div class="mock-content-grid">
             <div style="background: var(--bg-card); border: 1px solid var(--border-color-light); padding: 20px; border-radius: 12px; display: flex; flex-direction: column; gap: 8px;">
               <span style="font-size: 1.5rem;">⚡</span>
               <strong style="font-weight:700;">Blazing Performance</strong>

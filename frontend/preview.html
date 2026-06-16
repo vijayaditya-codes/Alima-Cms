@@ -279,6 +279,25 @@
       color: #6b7280;
       margin-bottom: 24px;
     }
+
+    @media (max-width: 600px) {
+      /* Stack 2col block columns */
+      div[style*="grid-template-columns:1fr 1fr"],
+      div[style*="grid-template-columns: 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+      }
+      /* Stack 3col block columns */
+      div[style*="grid-template-columns:repeat(3, 1fr)"] {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+      }
+      /* Stack gallery columns to 2 on mobile */
+      div[style*="grid-template-columns:repeat("] {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 8px !important;
+      }
+    }
   </style>
 </head>
 <body>

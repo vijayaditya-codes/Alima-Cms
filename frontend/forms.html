@@ -216,6 +216,14 @@
       border-radius: var(--radius-card);
       width: 100%;
     }
+
+    @media (max-width: 480px) {
+      .field-card > div[style*="display: grid"] {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+        align-items: flex-start !important;
+      }
+    }
   </style>
 </head>
 <body>

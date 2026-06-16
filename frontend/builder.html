@@ -690,6 +690,70 @@
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
+
+    @media (max-width: 768px) {
+      .app-viewport {
+        height: auto !important;
+        overflow-y: auto !important;
+      }
+      .builder-toolbar {
+        height: auto !important;
+        padding: 12px !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+        align-items: stretch !important;
+      }
+      .website-name-editor, .viewport-toggle-row, .builder-toolbar > div:last-child {
+        justify-content: center !important;
+        display: flex !important;
+        width: 100% !important;
+      }
+      .builder-workspace {
+        flex-direction: column !important;
+        height: auto !important;
+        overflow: visible !important;
+      }
+      .builder-panel {
+        width: 100% !important;
+        height: 350px !important;
+        border-right: none !important;
+        border-bottom: 1.5px solid var(--border-color-light) !important;
+      }
+      .builder-panel.right-settings {
+        width: 100% !important;
+        height: 350px !important;
+        border-left: none !important;
+        border-top: 1.5px solid var(--border-color-light) !important;
+      }
+      .canvas-scroll-wrapper {
+        overflow: auto !important;
+        padding: 20px 10px !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 500px;
+      }
+      .builder-canvas-zone {
+        padding: 30px 16px !important;
+      }
+      .builder-canvas-zone.tablet-mode {
+        width: 100% !important;
+        min-width: 600px;
+      }
+      .builder-canvas-zone.desktop-mode {
+        width: 100% !important;
+        min-width: 600px;
+      }
+      .publish-dropdown-panel {
+        width: calc(100% - 32px) !important;
+        right: 16px !important;
+        left: 16px !important;
+      }
+      .success-slide-up-card {
+        width: calc(100% - 32px) !important;
+        right: 16px !important;
+        left: 16px !important;
+      }
+    }
   </style>
 </head>
 <body>
