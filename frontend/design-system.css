@@ -28,7 +28,7 @@
   --bg-sidebar: #ffffff;
   --bg-card: #ffffff;
   --bg-surface: #f8f9fc;
-  
+
   /* Text Colors */
   --text-main: #111827;
   --text-muted: #6b7280;
@@ -83,7 +83,12 @@ body {
   transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-heading);
   font-weight: 700;
   color: inherit;
@@ -103,6 +108,7 @@ h1, h2, h3, h4, h5, h6 {
     -webkit-transform: scale(0.98);
     transform: scale(0.98);
   }
+
   to {
     opacity: 1;
     -webkit-transform: scale(1);
@@ -116,6 +122,7 @@ h1, h2, h3, h4, h5, h6 {
     -webkit-transform: scale(0.98);
     transform: scale(0.98);
   }
+
   to {
     opacity: 1;
     -webkit-transform: scale(1);
@@ -323,13 +330,27 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @-webkit-keyframes popUp {
-  from { transform: translateY(10px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @keyframes popUp {
-  from { transform: translateY(10px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .profile-dropdown.active {
@@ -387,7 +408,7 @@ h1, h2, h3, h4, h5, h6 {
   color: white;
   font-weight: 600;
   flex-shrink: 0;
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(245, 242, 242, 0.472);
 }
 
 .user-info {
@@ -468,15 +489,18 @@ h1, h2, h3, h4, h5, h6 {
     transform: translateX(-100%);
     width: var(--sidebar-width) !important;
   }
+
   .alima-sidebar.mobile-open {
     -webkit-transform: translateX(0);
     transform: translateX(0);
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
   }
+
   .alima-main-content {
     margin-left: 0 !important;
     padding: 24px;
   }
+
   .sidebar-toggle {
     display: none;
   }
@@ -716,10 +740,21 @@ h1, h2, h3, h4, h5, h6 {
   transition: transform var(--transition-normal), opacity var(--transition-normal);
 }
 
-.toast-success { border-left-color: var(--color-success); }
-.toast-warning { border-left-color: var(--color-warning); }
-.toast-error { border-left-color: var(--color-error); }
-.toast-info { border-left-color: var(--color-accent); }
+.toast-success {
+  border-left-color: var(--color-success);
+}
+
+.toast-warning {
+  border-left-color: var(--color-warning);
+}
+
+.toast-error {
+  border-left-color: var(--color-error);
+}
+
+.toast-info {
+  border-left-color: var(--color-accent);
+}
 
 .toast-icon {
   font-size: 1.25rem;
@@ -759,17 +794,27 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @-webkit-keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 @keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 /* Ensure page headers wrap cleanly on mobile to avoid horizontal clipping */
-.alima-main-content > header {
+.alima-main-content>header {
   display: flex !important;
   flex-wrap: wrap !important;
   gap: 16px !important;
@@ -784,20 +829,56 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @-webkit-keyframes shake {
-  10%, 90% { transform: translate3d(-2px, 0, 0); }
-  20%, 80% { transform: translate3d(4px, 0, 0); }
-  30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
-  40%, 60% { transform: translate3d(6px, 0, 0); }
+
+  10%,
+  90% {
+    transform: translate3d(-2px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(4px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-6px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(6px, 0, 0);
+  }
 }
 
 @keyframes shake {
-  10%, 90% { transform: translate3d(-2px, 0, 0); }
-  20%, 80% { transform: translate3d(4px, 0, 0); }
-  30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
-  40%, 60% { transform: translate3d(6px, 0, 0); }
+
+  10%,
+  90% {
+    transform: translate3d(-2px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(4px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-6px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(6px, 0, 0);
+  }
 }
+
 /* iPhone/mobile glassmorphism blur limits (max 6px) */
 @media (max-width: 768px) {
+
   .profile-dropdown,
   .alima-modal-overlay,
   .glass-card-v2,
@@ -815,12 +896,13 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Global Mobile Responsiveness Helper Rules */
 @media (max-width: 768px) {
+
   .table-container table,
   .submissions-table,
   .content-table {
     min-width: 600px !important;
   }
-  
+
   .websites-grid,
   .themes-grid,
   .plugins-grid,
@@ -834,27 +916,27 @@ h1, h2, h3, h4, h5, h6 {
     padding: 16px !important;
     gap: 20px !important;
   }
-  
-  .alima-main-content > header {
+
+  .alima-main-content>header {
     flex-direction: column !important;
     align-items: stretch !important;
     gap: 12px !important;
   }
-  
-  .alima-main-content > header > div {
+
+  .alima-main-content>header>div {
     width: 100% !important;
   }
-  
-  .alima-main-content > header input,
-  .alima-main-content > header button,
-  .alima-main-content > header .alima-btn {
+
+  .alima-main-content>header input,
+  .alima-main-content>header button,
+  .alima-main-content>header .alima-btn {
     width: 100% !important;
   }
-  
+
   .alima-card {
     padding: 16px !important;
   }
-  
+
   .alima-modal {
     padding: 20px !important;
     max-width: calc(100% - 10px) !important;
