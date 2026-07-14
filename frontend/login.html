@@ -925,7 +925,7 @@
 
   <script type="module">
     import { auth, db, googleProvider } from "./firebase.js";
-    import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signInWithPopup, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+    import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signInWithPopup, signInWithRedirect, getRedirectResult, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
     import { setDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
     // 1. Particle System animation
@@ -1027,8 +1027,7 @@
             ctx.lineTo(p2.x, p2.y);
             const lineOpacity = (1 - dist / 100) * 0.3; 
             const isDark = document.documentElement.classList.contains('dark');
-            ctx.strokeStyle = isDark ? `rgba(255, 255, 255, ${lineOpacity})` : `rgba(0, 0, 0, ${lineOpacity})`;
-            ctx.lineWidth = 0.5;
+            ctx.strokeStyle = isDark ? `rgba(255, 255, 255, ${lineOpacity})` : `rgba(0, 0, 0, ${lineOpacity})`;            ctx.lineWidth = 0.5;
             ctx.stroke();
           }
         }
@@ -1038,9 +1037,45 @@
     }
     animateParticles();
 
-    let isAuthenticating = false;
+    // 2. Auth state observer & redirect handling
+    let isAuthenticating = true; // Start as true to prevent onAuthStateChanged from redirecting immediately during initial load/redirect check
 
-    // 2. Auth state observer
+    // Check if user returned from Google Redirect Sign-In
+    getRedirectResult(auth)
+      .then(async (result) => {
+        if (result) {
+          const user = result.user;
+          const card = document.getElementById('auth-card');
+          const submitBtn = document.querySelector('#login-form button[type="submit"]');
+          try {
+            await setDoc(doc(db, "users", user.uid), {
+              uid: user.uid,
+              displayName: user.displayName || user.email.split('@')[0],
+              email: user.email,
+              createdAt: new Date().toISOString()
+            }, { merge: true });
+
+            await window.logActivity("Signed in with Google");
+            triggerSuccessState(card, submitBtn);
+          } catch (e) {
+            console.error("Firestore user creation failed after redirect", e);
+            // Fallback: Proceed to dashboard anyway
+            window.location.href = "dashboard.html";
+          }
+        } else {
+          isAuthenticating = false;
+          // If already logged in (but not from a fresh redirect return), redirect to dashboard
+          if (auth.currentUser) {
+            window.location.href = "dashboard.html";
+          }
+        }
+      })
+      .catch((err) => {
+        isAuthenticating = false;
+        console.error("Google redirect sign-in error:", err);
+        AlimaToast.show("Google Sign In Failed", err.message || "Could not complete authentication with Google.", "error");
+      });
+
     onAuthStateChanged(auth, (user) => {
       if (user && !isAuthenticating) {
         window.location.href = "dashboard.html";
@@ -1187,19 +1222,27 @@
       const card = document.getElementById('auth-card');
       try {
         isAuthenticating = true;
-        const result = await signInWithPopup(auth, googleProvider);
-        const user = result.user;
 
-        await setDoc(doc(db, "users", user.uid), {
-          uid: user.uid,
-          displayName: user.displayName || user.email.split('@')[0],
-          email: user.email,
-          createdAt: new Date().toISOString()
-        }, { merge: true });
+        // Detect mobile browsers to choose signInWithRedirect instead of signInWithPopup
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-        await window.logActivity("Signed in with Google");
+        if (isMobile) {
+          await signInWithRedirect(auth, googleProvider);
+        } else {
+          const result = await signInWithPopup(auth, googleProvider);
+          const user = result.user;
 
-        triggerSuccessState(card, document.querySelector('#login-form button[type="submit"]'));
+          await setDoc(doc(db, "users", user.uid), {
+            uid: user.uid,
+            displayName: user.displayName || user.email.split('@')[0],
+            email: user.email,
+            createdAt: new Date().toISOString()
+          }, { merge: true });
+
+          await window.logActivity("Signed in with Google");
+
+          triggerSuccessState(card, document.querySelector('#login-form button[type="submit"]'));
+        }
       } catch (err) {
         isAuthenticating = false;
         shakeCard(card);

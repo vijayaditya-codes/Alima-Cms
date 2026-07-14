@@ -37,7 +37,8 @@ service cloud.firestore {
 
     // Activity log rules
     match /activity/{activityId} {
-      allow create, read: if isAuthenticated() && isOwner(request.resource.data.ownerUid);
+      allow create: if isAuthenticated() && isOwner(request.resource.data.ownerUid);
+      allow read: if isAuthenticated() && isOwner(resource.data.ownerUid);
     }
     
     // User profile rules
