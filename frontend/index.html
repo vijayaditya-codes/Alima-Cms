@@ -11,7 +11,19 @@
   <!-- Google Fonts -->
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
-  <!-- Permanent Light Theme Locked -->
+  <!-- Inline Head Theme Script to prevent flash -->
+  <script>
+    (function() {
+      const theme = localStorage.getItem('alima-theme') || 'light';
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+      } else {
+        document.documentElement.classList.add('light');
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
 
   <style>
     /* Styling variables */
@@ -1040,6 +1052,14 @@
     </a>
 
     <div class="nav-actions">
+      <!-- Dark/Light Mode Trigger -->
+      <button class="theme-toggle-btn" onclick="toggleTheme()" id="theme-btn">
+        <!-- Moon Icon (Default for dark theme) -->
+        <svg id="moon-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        <!-- Sun Icon -->
+        <svg id="sun-icon" style="display:none;" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+      </button>
+
       <div class="nav-buttons-container" id="nav-buttons">
         <a href="login.html" class="alima-btn btn-link-action">Sign in</a>
         <a href="login.html" class="alima-btn btn-primary">Get Started</a>
@@ -1314,7 +1334,33 @@
       document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
     }
 
-    // 3. Theme toggle functions (Removed for permanent white theme)
+    // 3. Theme toggle functions
+    function updateThemeIcon() {
+      const isDark = document.documentElement.classList.contains('dark');
+      const moon = document.getElementById('moon-icon');
+      const sun = document.getElementById('sun-icon');
+      if (moon && sun) {
+        if (isDark) {
+          moon.style.display = 'block';
+          sun.style.display = 'none';
+        } else {
+          moon.style.display = 'none';
+          sun.style.display = 'block';
+        }
+      }
+    }
+    updateThemeIcon();
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('alima-theme', isDark ? 'dark' : 'light');
+      updateThemeIcon();
+      
+      // Update canvas particle settings dynamically on theme change
+      if (window.initCanvasParticles) {
+        window.initCanvasParticles();
+      }
+    }
 
     // 4. Scroll Reveal Animations (Intersection Observer)
     const revealOptions = {
@@ -1393,8 +1439,9 @@
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
 
-        ctx.fillStyle = '#000000'; // Black dots
-        ctx.globalAlpha = 0.4; // Opacity 0.4
+        const isDark = document.documentElement.classList.contains('dark');
+        ctx.fillStyle = isDark ? '#ffffff' : '#000000'; 
+        ctx.globalAlpha = isDark ? 0.6 : 0.4;
         ctx.fill();
         ctx.globalAlpha = 1.0;
       }
@@ -1431,9 +1478,10 @@
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(p2.x, p2.y);
-            const lineOpacity = (1 - dist / 100) * 0.1; // Opacity 0.08 max
-            ctx.strokeStyle = `rgba(0, 0, 0, ${lineOpacity})`;
-            ctx.lineWidth = 1.5;
+            const lineOpacity = (1 - dist / 100) * 0.08; 
+            const isDark = document.documentElement.classList.contains('dark');
+            ctx.strokeStyle = isDark ? `rgba(255, 255, 255, ${lineOpacity})` : `rgba(0, 0, 0, ${lineOpacity})`;
+            ctx.lineWidth = 0.5;
             ctx.stroke();
           }
         }

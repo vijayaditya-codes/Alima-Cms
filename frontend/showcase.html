@@ -3,7 +3,19 @@
 <head>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <!-- Permanent Light Theme Locked -->
+  <!-- Inline Head Theme Script to prevent flash -->
+  <script>
+    (function() {
+      const theme = localStorage.getItem('alima-theme') || 'light';
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+      } else {
+        document.documentElement.classList.add('light');
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -194,7 +206,7 @@
         </div>
         
         <!-- Light / Dark toggle -->
-        
+        <button class="theme-toggle-btn" id="theme-toggle">🌙 Toggle Dark Mode</button>
       </div>
 
       <!-- Section: Numerical Stats with Count-Up Animations -->
@@ -405,7 +417,25 @@
   <!-- Design System JS utilities -->
   <script src="shared.js"></script>
   <script>
-    // Theme toggler logic (Removed for permanent white theme)
+    // Theme toggler logic
+    const themeBtn = document.getElementById('theme-toggle');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', () => {
+        setTimeout(() => {
+          const isDark = document.documentElement.classList.contains('dark');
+          if (isDark) {
+            themeBtn.innerHTML = '☀️ Toggle Light Mode';
+            AlimaToast.show('Theme Updated', 'Main content area switched to Dark mode.', 'success');
+          } else {
+            themeBtn.innerHTML = '🌙 Toggle Dark Mode';
+            AlimaToast.show('Theme Updated', 'Main content area switched to Light mode.', 'info');
+          }
+        }, 50);
+      });
+      // Initial text setup
+      const isDark = document.documentElement.classList.contains('dark');
+      themeBtn.innerHTML = isDark ? '☀️ Toggle Light Mode' : '🌙 Toggle Dark Mode';
+    }
 
     // Modal triggers
     const openModalBtn = document.getElementById('open-modal-btn');
