@@ -1203,7 +1203,8 @@
       } catch (err) {
         isAuthenticating = false;
         shakeCard(card);
-        AlimaToast.show("Google Sign In Failed", "Could not complete authentication with Google.", "error");
+        console.error("Google sign-in error details:", err);
+        AlimaToast.show("Google Sign In Failed", err.message || "Could not complete authentication with Google.", "error");
       }
     }
 
