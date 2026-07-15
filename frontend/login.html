@@ -814,6 +814,11 @@
           </div>
         </div>
 
+        <!-- In-App Browser Warning Banner -->
+        <div id="webview-warning" style="display: none; padding: 12px; background: rgba(220, 38, 38, 0.08); border: 1px solid rgba(220, 38, 38, 0.15); border-radius: 8px; margin-bottom: 20px; font-size: 0.8rem; line-height: 1.4; color: var(--color-error); text-align: left;">
+          <strong>⚠️ Security Notice:</strong> Google Sign-In is blocked inside this app's browser (e.g. WhatsApp, Slack). Please tap the menu/share button and choose <strong>"Open in Safari"</strong> or <strong>"Open in Chrome"</strong> to log in.
+        </div>
+
         <!-- Switch Tab Nav -->
         <div class="tabs-v2">
           <button class="tab-btn-v2 active" id="tab-login" onclick="switchFormTab('login')">Sign In</button>
@@ -927,6 +932,16 @@
     import { auth, db, googleProvider } from "./firebase.js";
     import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signInWithPopup, signInWithRedirect, getRedirectResult, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
     import { setDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+    // 0. In-App Browser detection
+    const isWebView = /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(navigator.userAgent) || 
+                      /wv|FBAN|FBAV|Instagram|WhatsApp|Line/i.test(navigator.userAgent);
+    if (isWebView) {
+      const warningEl = document.getElementById('webview-warning');
+      if (warningEl) {
+        warningEl.style.display = 'block';
+      }
+    }
 
     // 1. Particle System animation
     const canvas = document.getElementById('starfield');
