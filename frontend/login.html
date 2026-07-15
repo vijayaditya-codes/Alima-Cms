@@ -1223,12 +1223,8 @@
       try {
         isAuthenticating = true;
 
-        // Detect mobile browsers to choose signInWithRedirect instead of signInWithPopup
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-        if (isMobile) {
-          await signInWithRedirect(auth, googleProvider);
-        } else {
+        // Try popup first (most reliable on iOS Safari due to tracking prevention blocking redirect state cookies)
+        try {
           const result = await signInWithPopup(auth, googleProvider);
           const user = result.user;
 
@@ -1240,14 +1236,27 @@
           }, { merge: true });
 
           await window.logActivity("Signed in with Google");
-
           triggerSuccessState(card, document.querySelector('#login-form button[type="submit"]'));
+        } catch (popupErr) {
+          // If popup is blocked by browser settings or fails, fallback to redirect
+          if (popupErr.code === 'auth/popup-blocked' || popupErr.code === 'auth/popup-closed-by-user') {
+            console.warn("Popup blocked or closed, falling back to redirect...", popupErr);
+            await signInWithRedirect(auth, googleProvider);
+          } else {
+            throw popupErr; // Re-throw other errors (e.g. domain unauthorized)
+          }
         }
       } catch (err) {
         isAuthenticating = false;
         shakeCard(card);
-        console.error("Google sign-in error details:", err);
-        AlimaToast.show("Google Sign In Failed", err.message || "Could not complete authentication with Google.", "error");
+        console.error("Google Sign-In Error:", err);
+        
+        let errorMsg = err.message || "Could not complete authentication with Google.";
+        if (err.code === 'auth/unauthorized-domain') {
+          errorMsg = "This domain is not authorized in Firebase Console. Please add it to your Firebase Auth settings.";
+        }
+        
+        AlimaToast.show("Google Sign In Failed", errorMsg, "error");
       }
     }
 
