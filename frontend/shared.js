@@ -193,6 +193,42 @@ window.logActivity = logActivity;
  * 4. Theme System Management
  */
 function initThemeToggle() {
+  // 1. Inject brand theme button if no toggle is on the page and sidebar is present
+  const sidebarBrand = document.querySelector('.sidebar-brand');
+  let themeBtn = document.querySelector('.theme-toggle-btn, #theme-btn, #theme-toggle');
+  
+  if (!themeBtn && sidebarBrand) {
+    const injectBtn = document.createElement('button');
+    injectBtn.className = 'theme-toggle-btn';
+    injectBtn.id = 'theme-toggle';
+    injectBtn.style.cssText = `
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border-color-light);
+      background: var(--bg-card);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      margin-left: auto;
+      margin-right: 8px;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    `;
+    injectBtn.innerHTML = `
+      <svg class="moon-icon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      <svg class="sun-icon" style="display:none;" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+    `;
+    const sidebarToggle = sidebarBrand.querySelector('.sidebar-toggle');
+    if (sidebarToggle) {
+      sidebarBrand.insertBefore(injectBtn, sidebarToggle);
+    } else {
+      sidebarBrand.appendChild(injectBtn);
+    }
+  }
+
   const toggleBtns = document.querySelectorAll('.theme-toggle-btn, #theme-btn, #theme-toggle');
   
   // Set initial icon state on all buttons
@@ -214,6 +250,7 @@ function toggleTheme() {
   const isDark = document.documentElement.classList.toggle('dark');
   localStorage.setItem('alima-theme', isDark ? 'dark' : 'light');
   updateThemeIcon();
+  updateThemeDropdownText();
   
   // Update canvas particles if they exist
   if (window.initCanvasParticles) {
@@ -234,6 +271,14 @@ function updateThemeIcon() {
   sunIcons.forEach(icon => {
     icon.style.display = isDark ? 'none' : 'block';
   });
+}
+
+function updateThemeDropdownText() {
+  const isDark = document.documentElement.classList.contains('dark');
+  const textEl = document.getElementById('theme-dropdown-text');
+  if (textEl) {
+    textEl.textContent = isDark ? 'Light Theme' : 'Dark Theme';
+  }
 }
 
 window.initThemeToggle = initThemeToggle;
@@ -279,6 +324,9 @@ function initProfileMenu() {
       <a class="profile-dropdown-item" id="prof-btn-recents">
         <i>⏱️</i> <span>Recent Logs</span>
       </a>
+      <a class="profile-dropdown-item" id="prof-btn-theme">
+        <i>🌗</i> <span id="theme-dropdown-text">Dark Theme</span>
+      </a>
       <hr style="border: none; border-top: 1px solid var(--border-color-light); margin: 4px 0;">
       <a class="profile-dropdown-item" style="color: var(--color-error);" id="prof-btn-signout">
         <i>🚪</i> <span>Sign Out</span>
@@ -315,7 +363,18 @@ function initProfileMenu() {
   const btnHelp = dropdown.querySelector('#prof-btn-help');
   const btnSupport = dropdown.querySelector('#prof-btn-support');
   const btnRecents = dropdown.querySelector('#prof-btn-recents');
+  const btnTheme = dropdown.querySelector('#prof-btn-theme');
   const btnSignout = dropdown.querySelector('#prof-btn-signout');
+
+  // Initialize dropdown theme text properly
+  updateThemeDropdownText();
+
+  if (btnTheme) {
+    btnTheme.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleTheme();
+    });
+  }
 
   if (btnHelp) {
     btnHelp.addEventListener('click', (e) => {

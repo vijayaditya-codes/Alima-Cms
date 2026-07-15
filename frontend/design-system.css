@@ -981,3 +981,8 @@ html.dark .profile-dropdown-item:hover {
     grid-template-columns: 1fr !important;
   }
 }
+
+/* Sidebar collapsed hidden theme button */
+.alima-sidebar.collapsed .theme-toggle-btn {
+  display: none !important;
+}
