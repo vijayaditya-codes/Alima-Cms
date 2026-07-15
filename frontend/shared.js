@@ -3,7 +3,7 @@
  * Handles core animations, sidebar layouts, and UI components
  */
 
-document.addEventListener('DOMContentLoaded', () => {
+function initSharedComponents() {
   // Initialize Sidebar Collapsing
   initSidebar();
   
@@ -15,7 +15,13 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Page load fade-in check
   document.body.classList.add('loaded');
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initSharedComponents);
+} else {
+  initSharedComponents();
+}
 
 /**
  * 1. Sidebar Management
